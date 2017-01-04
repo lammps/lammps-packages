@@ -61,13 +61,13 @@ node {
 
     //env.CCACHE_DIR=workdir + '/.ccache'
 
-    build_rpm('rbberger/lammps-testing:fedora_20')
+    build_rpm('rbberger/lammps-testing:fedora_25')
 
     stage 'Archive RPMs'
     archive includes:'rpmbuild/**/*.rpm'
 
-    sh 'mkdir -p ${LAMMPS_DOWNLOAD_RPM_DIR}/fedora/20'
-    sh 'cp -R rpmbuild/RPMS/x86_64 ${LAMMPS_DOWNLOAD_RPM_DIR}/fedora/20'
+    sh 'mkdir -p ${LAMMPS_DOWNLOAD_RPM_DIR}/fedora/25'
+    sh 'cp -R rpmbuild/RPMS/x86_64 ${LAMMPS_DOWNLOAD_RPM_DIR}/fedora/25'
 
     step([$class: 'WarningsPublisher', canComputeNew: false, consoleParsers: [[parserName: 'GNU Make + GNU C Compiler (gcc)']], defaultEncoding: '', excludePattern: '', healthy: '', includePattern: '', messagesPattern: '', unHealthy: ''])
 }

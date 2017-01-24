@@ -1,6 +1,6 @@
 folder('rpms/daily')
 
-def scripts = ['centos_6', 'centos_7', 'fedora_21', 'fedora_22', 'fedora_23', 'fedora_24', 'fedora_25']
+def scripts = ['centos_6', 'centos_7', 'fedora_21', 'fedora_22', 'fedora_23', 'fedora_24', 'fedora_25', 'opensuse_42.1']
 
 scripts.each { name ->
     pipelineJob("rpms/daily/${name}") {

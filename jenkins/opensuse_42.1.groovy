@@ -23,10 +23,10 @@ def build_rpm(image_name) {
             mkdir -p rpmbuild/BUILDROOT
 
             datestr=$(date +%Y%m%d)
-            sed -e "/^Version/s/\\(Version:[         ]\\+\\)[0-9].*$/\\1${datestr}/" tools/rpm/lammps.spec > rpmbuild/SPECS/lammps.spec
+            sed -e "/^Version/s/\\(Version:[         ]\\+\\)[0-9].*$/\\1${datestr}/" lammps-packages/rpm/lammps.spec > rpmbuild/SPECS/lammps.spec
             #sed -e "s/make/make \\%\\{\\?\\_smp\\_mflags\\}/" rpmbuild/SPECS/lammps.spec.tmp > ~/rpmbuild/SPECS/lammps.spec
-            cp -pv tools/rpm/lammps.sh rpmbuild/SOURCES/
-            cp -pv tools/rpm/lammps.csh rpmbuild/SOURCES/
+            cp -pv lammps-packages/rpm/lammps.sh rpmbuild/SOURCES/
+            cp -pv lammps-packages/rpm/lammps.csh rpmbuild/SOURCES/
             '''
 
             sh 'echo "%_topdir ' + workdir + '/rpmbuild" >> ~/.rpmmacros'
@@ -59,6 +59,10 @@ def build_rpm(image_name) {
 node {
     stage 'Checkout'
     git url: 'https://github.com/lammps/lammps.git', branch: 'lammps-icms'
+
+    dir('lammps-packages') {
+        git url: 'https://github.com/lammps/lammps-packages.git', credentialsId: 'lammps-jenkins', branch: 'rpm-build'
+    }
 
     def workdir = pwd()
 

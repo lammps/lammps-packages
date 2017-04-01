@@ -15,7 +15,7 @@ node {
     common.build_rpm('rbberger/lammps-testing:fedora_21')
 
     stage 'Archive RPMs'
-    archive includes:'rpmbuild/**/*.rpm'
+    archiveArtifacts artifacts: 'rpmbuild/**/*.rpm', onlyIfSuccessful: true
 
     sh 'mkdir -p ${LAMMPS_DOWNLOAD_RPM_DIR}/fedora/21'
     sh 'find ${LAMMPS_DOWNLOAD_RPM_DIR}/fedora/21 -mtime +30 -exec rm {} \\;'

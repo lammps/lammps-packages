@@ -15,7 +15,7 @@ node {
     common.build_rpm('rbberger/lammps-testing:centos_7')
 
     stage 'Archive RPMs'
-    archive includes:'rpmbuild/**/*.rpm'
+    archiveArtifacts artifacts: 'rpmbuild/**/*.rpm', onlyIfSuccessful: true
 
     sh 'mkdir -p ${LAMMPS_DOWNLOAD_RPM_DIR}/centos/7'
     sh 'find ${LAMMPS_DOWNLOAD_RPM_DIR}/centos/7 -mtime +30 -exec rm {} \\;'

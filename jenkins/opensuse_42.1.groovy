@@ -15,7 +15,7 @@ node {
     common.build_rpm('rbberger/lammps-testing:opensuse_42.1')
  
     stage 'Archive RPMs'
-    archive includes:'rpmbuild/**/*.rpm'
+    archiveArtifacts artifacts: 'rpmbuild/**/*.rpm', onlyIfSuccessful: true
 
     sh 'mkdir -p ${LAMMPS_DOWNLOAD_RPM_DIR}/opensuse/42.1'
     sh 'find ${LAMMPS_DOWNLOAD_RPM_DIR}/opensuse/42.1 -mtime +30 -exec rm {} \\;'

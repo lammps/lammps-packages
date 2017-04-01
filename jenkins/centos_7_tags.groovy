@@ -13,7 +13,7 @@ node {
 
     //env.CCACHE_DIR=workdir + '/.ccache'
 
-    common.build_rpm('rbberger/lammps-testing:centos_7')
+    common.build_rpm('rbberger/lammps-testing:centos_7', 'release')
 
     stage 'Archive RPMs'
     archiveArtifacts artifacts: 'rpmbuild/**/*.rpm', onlyIfSuccessful: true

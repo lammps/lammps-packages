@@ -1,4 +1,4 @@
-def build_rpm(image_name) {
+def build_rpm(image_name, version='date') {
     def envImage = docker.image(image_name)
 
     docker.withRegistry('https://registry.hub.docker.com', 'docker-registry-login') {
@@ -21,10 +21,21 @@ def build_rpm(image_name) {
             mkdir -p rpmbuild/SRPMS
             mkdir -p rpmbuild/BUILD
             mkdir -p rpmbuild/BUILDROOT
+            '''
 
-            datestr=$(date +%Y%m%d)
-            sed -e "/^Version/s/\\(Version:[         ]\\+\\)[0-9].*$/\\1${datestr}/" lammps-packages/rpm/lammps.spec > rpmbuild/SPECS/lammps.spec
-            #sed -e "s/make/make \\%\\{\\?\\_smp\\_mflags\\}/" rpmbuild/SPECS/lammps.spec.tmp > ~/rpmbuild/SPECS/lammps.spec
+            if (version == 'release') { 
+                sh '''
+                datestr=$(./lammps-packages/utils/get_lammps_version.py .)
+                sed -e "/^Version/s/\\(Version:[         ]\\+\\)[0-9].*$/\\1${datestr}/" lammps-packages/rpm/lammps.spec > rpmbuild/SPECS/lammps.spec
+                '''
+            } else {
+                sh '''
+                datestr=$(date +%Y%m%d)
+                sed -e "/^Version/s/\\(Version:[         ]\\+\\)[0-9].*$/\\1${datestr}/" lammps-packages/rpm/lammps.spec > rpmbuild/SPECS/lammps.spec
+                '''
+            }
+
+            sh '''
             cp -pv lammps-packages/rpm/lammps.sh rpmbuild/SOURCES/
             cp -pv lammps-packages/rpm/lammps.csh rpmbuild/SOURCES/
             '''

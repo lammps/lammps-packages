@@ -1,6 +1,6 @@
-def common = load 'common.groovy'
-
 node {
+    def common = load 'common.groovy'
+
     stage 'Checkout'
     git url: 'https://github.com/lammps/lammps.git', branch: 'lammps-icms'
 

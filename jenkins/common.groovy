@@ -52,3 +52,4 @@ def build_rpm(image_name) {
         }
     }
 }
+return this

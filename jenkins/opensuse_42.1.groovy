@@ -74,6 +74,7 @@ node {
     archive includes:'rpmbuild/**/*.rpm'
 
     sh 'mkdir -p ${LAMMPS_DOWNLOAD_RPM_DIR}/opensuse/42.1'
+    sh 'find ${LAMMPS_DOWNLOAD_RPM_DIR}/opensuse/42.1 -mtime +30 -exec rm {} \\;'
     sh 'cp -R rpmbuild/RPMS/x86_64 ${LAMMPS_DOWNLOAD_RPM_DIR}/opensuse/42.1'
 
     step([$class: 'WarningsPublisher', canComputeNew: false, consoleParsers: [[parserName: 'GNU Make + GNU C Compiler (gcc)']], defaultEncoding: '', excludePattern: '', healthy: '', includePattern: '', messagesPattern: '', unHealthy: ''])

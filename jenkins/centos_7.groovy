@@ -1,5 +1,4 @@
 node {
-    def common = load 'common.groovy'
 
     stage 'Checkout'
     git url: 'https://github.com/lammps/lammps.git', branch: 'lammps-icms'
@@ -7,6 +6,8 @@ node {
     dir('lammps-packages') {
         git url: 'https://github.com/lammps/lammps-packages.git', credentialsId: 'lammps-jenkins', branch: 'rpm-build'
     }
+
+    def common = load 'lammps-packages/jenkins/common.groovy'
 
     def workdir = pwd()
 

@@ -47,7 +47,15 @@ def build_rpm(image_name) {
             sh 'gzip -f -9 rpmbuild/SOURCES/lammps-current.tar'
 
             stage 'Build RPMs'
-            sh 'rpmbuild --clean --rmsource --rmspec -bb rpmbuild/SPECS/lammps.spec'
+
+            if (image_name.contains('opensuse')) {
+                sh '''
+                source /etc/profile.d/mpi-selector.sh
+                rpmbuild --clean --rmsource --rmspec -bb rpmbuild/SPECS/lammps.spec
+                '''
+            } else {
+                sh 'rpmbuild --clean --rmsource --rmspec -bb rpmbuild/SPECS/lammps.spec'
+            }
             //sh 'ccache -s'
         }
     }

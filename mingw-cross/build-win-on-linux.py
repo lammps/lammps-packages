@@ -8,6 +8,12 @@ import sys,os,shutil,glob,re,subprocess
 try: from urllib.request import urlretrieve as geturl
 except: from urllib import urlretrieve as geturl
 
+try:
+  import multiprocessing
+  numcpus = multiprocessing.cpu_count()
+except:
+  numcpus = 1
+
 # helper functions
 
 def error(str=None):
@@ -48,7 +54,7 @@ thrflag = 'no'
 verflag = 'stable'
 
 helpmsg = """
-Usage: python build-win-on-linux.py -b <bits> -d <dir> -p <mpi> -t <thread> -v <version>
+Usage: python build-win-on-linux.py -b <bits> -d <dir> -j <cpus> -p <mpi> -t <thread> -v <version>
 
 Flags (all flags are optional, defaults listed below):
   -b : select Windows variant (default value: %s)
@@ -56,6 +62,8 @@ Flags (all flags are optional, defaults listed below):
     -b 64 : build for 64-bit Windows
   -d : select build directory (default value: %s)
     -d <path> : point to any valid writable folder
+  -j : set number of CPUs for parallel make (default value: %d)
+    -j <num>  : set to any reasonable number or 1 for serial make
   -p : select message passing parallel build (default value: %s)
     -p mpi    : build an MPI parallel version with MPICH2 v1.4.1p1
     -p no     : build a serial version using MPI STUBS library
@@ -71,7 +79,7 @@ Flags (all flags are optional, defaults listed below):
 
 Example:
   python build-win-on-linux.py -v unstable -t omp -p mpi
-""" % (bitflag,dirflag,parflag,thrflag,verflag)
+""" % (bitflag,dirflag,numcpus,parflag,thrflag,verflag)
 
 
 # parse arguments
@@ -88,6 +96,8 @@ while i < argc:
         bitflag = argv[i+1]
     elif argv[i] == '-d':
         dirflag = fullpath(argv[i+1])
+    elif argv[i] == '-j':
+        numcpus = int(argv[i+1])
     elif argv[i] == '-p':
         parflag = argv[i+1]
     elif argv[i] == '-t':
@@ -190,7 +200,7 @@ os.chdir(vorodir)
 patchfile = "%s/patches/voro++.patch" % curpath
 if os.path.exists(patchfile):
     print(system("patch -p0 < %s" % patchfile))
-print(system("make -C src CXX=%s CFLAGS='-O3' AR=%s clean voro++" % (cxx_cmd,ar_cmd)))
+print(system("make -C src clean; make -j %d -C src CXX=%s CFLAGS='-O3' AR=%s voro++" % (numcpus,cxx_cmd,ar_cmd)))
 shutil.move('src/voro++',"%s/voro++.exe" % buildpath)
 os.chdir(buildpath)
 

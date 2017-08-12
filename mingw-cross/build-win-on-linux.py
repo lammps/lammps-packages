@@ -15,6 +15,7 @@ except:
   numcpus = 1
 
 # thirdparty library versions
+
 eigenver = '3.3.4'
 vorover = '0.4.6'
 
@@ -26,7 +27,11 @@ def error(str=None):
     sys.exit()
 
 def system(cmd):
-    txt = subprocess.check_output(cmd,stderr=subprocess.STDOUT,shell=True)
+    try:
+        txt = subprocess.check_output(cmd,stderr=subprocess.STDOUT,shell=True)
+    except subprocess.CalledProcessError as e:
+        print("Command '%s' returned non-zero exit status" % e.cmd)
+        error(e.output.decode('UTF-8'))
     return txt.decode('UTF-8')
 
 def getsrctar(url):
@@ -50,7 +55,7 @@ def getexe(url,name):
 def patch(name):
     patchfile = "%s/patches/%s.patch" % (homedir,name)
     if os.path.exists(patchfile):
-        print(system("patch -p0 < %s" % patchfile))
+        print("Patching:",name,system("patch -p0 < %s" % patchfile))
 
 def fullpath(path):
     return os.path.abspath(os.path.expanduser(path))
@@ -78,38 +83,39 @@ homedir, exename = os.path.split(fullpath(sys.argv[0]))
 # default settings help message and default settings
 
 bitflag = '64'
-dirflag = fullpath('.')
 parflag = 'no'
 thrflag = 'no'
-verflag = 'stable'
+revflag = 'stable'
+verbose = False
 
 helpmsg = """
-Usage: python %s -b <bits> -d <dir> -j <cpus> -p <mpi> -t <thread> -v <version>
+Usage: python %s -b <bits> -j <cpus> -p <mpi> -t <thread> -r <rev> -v <yes|no>
 
 Flags (all flags are optional, defaults listed below):
   -b : select Windows variant (default value: %s)
-    -b 32 : build for 32-bit Windows
-    -b 64 : build for 64-bit Windows
-  -d : select build directory (default value: %s)
-    -d <path> : point to any valid writable folder
+    -b 32       : build for 32-bit Windows
+    -b 64       : build for 64-bit Windows
   -j : set number of CPUs for parallel make (default value: %d)
-    -j <num>  : set to any reasonable number or 1 for serial make
+    -j <num>    : set to any reasonable number or 1 for serial make
   -p : select message passing parallel build (default value: %s)
-    -p mpi    : build an MPI parallel version with MPICH2 v1.4.1p1
-    -p no     : build a serial version using MPI STUBS library
+    -p mpi      : build an MPI parallel version with MPICH2 v1.4.1p1
+    -p no       : build a serial version using MPI STUBS library
   -t : select thread support (default value: %s)
-    -t omp    : build with threads via OpenMP enabled
-    -t no     : build with thread support disabled
-  -v : select LAMMPS source version to build (default value: %s)
-    -v stable   : download and build the latest stable LAMMPS version
-    -v unstable : download and build the latest patch release LAMMPS version
-    -v master   : download and build the latest development snapshot
-    -v patch_<date> : download and build a specific patch release
-    -v <sha256> : download and build a specific snapshot version
+    -t omp      : build with threads via OpenMP enabled
+    -t no       : build with thread support disabled
+  -r : select LAMMPS source revision to build (default value: %s)
+    -r stable   : download and build the latest stable LAMMPS version
+    -r unstable : download and build the latest patch release LAMMPS version
+    -r master   : download and build the latest development snapshot
+    -r patch_<date> : download and build a specific patch release
+    -r <sha256> : download and build a specific snapshot version
+  -v : select output verbosity
+    -v yes      : print progress messages and output of make commands
+    -v no       : print only progress messages
 
 Example:
-  python %s -v unstable -t omp -p mpi
-""" % (exename,bitflag,dirflag,numcpus,parflag,thrflag,verflag,exename)
+  python %s -r unstable -t omp -p mpi
+""" % (exename,bitflag,numcpus,parflag,thrflag,revflag,exename)
 
 
 # parse arguments
@@ -124,16 +130,21 @@ while i < argc:
         error()
     if argv[i] == '-b':
         bitflag = argv[i+1]
-    elif argv[i] == '-d':
-        dirflag = fullpath(argv[i+1])
     elif argv[i] == '-j':
         numcpus = int(argv[i+1])
     elif argv[i] == '-p':
         parflag = argv[i+1]
     elif argv[i] == '-t':
         thrflag = argv[i+1]
+    elif argv[i] == '-r':
+        revflag = argv[i+1]
     elif argv[i] == '-v':
-        verflag = argv[i+1]
+        if argv[i+1] in ['yes','Yes','Y','y','on','1','True','true']:
+            verbose = True
+        elif argv[i+1] in ['no','No','N','n','off','0','False','false']:
+            verbose = False
+        else:
+            error("\nUnknown verbose keyword:",argv[i+1])
     else:
         print("\nUnknown flag:",argv[i])
         error()
@@ -146,20 +157,20 @@ if parflag != 'no' and parflag != 'mpi':
     error("Unsupported parallel flag %s" % parflag)
 if thrflag != 'no' and thrflag != 'omp':
     error("Unsupported threading flag %s" % thrflag)
-# XXX add support to test for explicit patch labels and commit hashes
-if verflag != 'stable' and verflag != 'unstable' and verflag != 'master':
-    error("Unsupported version flag %s" % verflag)
+# test for valid revision name format: branch names, release tags, or commit hashes
+rev1 = re.compile("^(stable|unstable|master)$")
+rev2 = re.compile(r"^(patch|stable)_\d+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\d{4}$")
+rev3 = re.compile(r"^[a-f0-9]{40}$")
+if not rev1.match(revflag) and not rev2.match(revflag) and not rev3.match(revflag):
+    error("Unsupported revision flag %s" % revflag)
 
 # create working directory
-builddir = "%s/tmp-%s-%s-%s-%s" % (dirflag,bitflag,parflag,thrflag,verflag)
-if not os.path.isdir(dirflag):
-    error("Invalid build path %s" % dirflag)
-else:
-    shutil.rmtree(builddir,True)
-    try:
-        os.mkdir(builddir)
-    except:
-        error("Cannot create temporary build  path: %s" % builddir)
+builddir = "%s/tmp-%s-%s-%s-%s" % (fullpath('.'),bitflag,parflag,thrflag,revflag)
+shutil.rmtree(builddir,True)
+try:
+    os.mkdir(builddir)
+except:
+    error("Cannot create temporary build folder: %s" % builddir)
 
 # check for prerequisites and set up build environment
 if bitflag == '32':
@@ -185,14 +196,16 @@ else:
     mpi_inc = '-I../../src/STUBS'
 
 print("""
-Settings: building LAMMPS %s for %s-bit Windows, %s version with %s threading
+Settings: building LAMMPS revision %s for %s-bit Windows
+Message passing  : %s
+Multi-threading  : %s
 Home folder      : %s
 Build folder     : %s
 C compiler       : %s
 C++ compiler     : %s
 Fortran compiler : %s
 Library archiver : %s
-""" % (verflag,bitflag,parflag,thrflag,homedir,builddir,cc_cmd,cxx_cmd,fc_cmd,ar_cmd))
+""" % (revflag,bitflag,parflag,thrflag,homedir,builddir,cc_cmd,cxx_cmd,fc_cmd,ar_cmd))
 
 # switch to build folder
 os.chdir(builddir)
@@ -215,8 +228,8 @@ print("Voro++")
 getsrctar("%s/voro++-%s.tar.gz" % (url,vorover))
 vorodir = fullpath(glob.glob('voro++*')[0])
 print("LAMMPS")
-getsrctar("https://github.com/lammps/lammps/archive/%s.tar.gz" % verflag)
-lammpsdir = fullpath("lammps-%s" % verflag)
+getsrctar("https://github.com/lammps/lammps/archive/%s.tar.gz" % revflag)
+lammpsdir = fullpath("lammps-%s" % revflag)
 
 print("Building Voro++ in",vorodir)
 os.chdir(vorodir)
@@ -243,7 +256,7 @@ if parflag == 'mpi':
 elif parflag == 'no':
     txt = system(makecmd + "-f Makefile.serial " \
                  + "CPPFLAGS='-I../../src -I../../src/STUBS %s' " % lmp_size)
-print(txt)
+if verbose: print(txt)
     
 print("Awpmd")
 os.chdir(lammpsdir+"/lib/awpmd")
@@ -257,13 +270,13 @@ elif parflag == 'no':
     txt = system(makecmd + "CCFLAGS='-O3 -Isystems/interact/TCP/ " \
                  + "-Isystems/interact -Iivutils/include " \
                  + "-I../../src/STUBS -O3 ' -f Makefile.mpi")
-print(txt)
+if verbose: print(txt)
     
 print("Colvars")
 os.chdir(lammpsdir+"/lib/colvars")
 txt = system("make -j %d CXX=%s CXXFLAGS=-O3 AR=%s -f Makefile.serial" \
              % (numcpus,cxx_cmd,ar_cmd))
-print(txt)
+if verbose: print(txt)
 
 # nothing to do for "Compress"
 
@@ -274,23 +287,23 @@ makecmd = "make AR=%s LMP_INC=%s -f Makefile.linux_opencl " % (ar_cmd,lmp_size) 
           + "OCL_INC='-I../../../OpenCL/include' "
 
 if parflag == 'mpi':
-    makecmd = makecmd + "OCL_LINK='../../../OpenCL/lib_win%s/libOpenCL.dll " % bitflag \
+    makecmd += "OCL_LINK='-Wl,--enable-stdcall-fixup ../../../OpenCL/lib_win%s/libOpenCL.dll " % bitflag \
                 + "-L../../../mpich2-win%s/lib -lmpi' " % bitflag \
                 + "OCL_CPP='%s -O3 -DMPI_GERYON -DUCL_NO_EXIT " % cxx_cmd \
                 + "-I../../../mpich2-win%s/include $(LMP_INC) $(OCL_INC) " % bitflag \
                 + "-DMPICH_IGNORE_CXX_SEEK' "
     txt = system(makecmd + "ocl_get_devices")
-    print(txt)
+    if verbose: print(txt)
     txt = system(makecmd + "-j %d" % numcpus)
 elif parflag == 'no':
-    makecmd = makecmd + "OCL_LINK='../../../OpenCL/lib_win%s/libOpenCL.dll " % bitflag \
+    makecmd += "OCL_LINK='-Wl,--enable-stdcall-fixup ../../../OpenCL/lib_win%s/libOpenCL.dll " % bitflag \
                 + "-L../../src/STUBS -lmpi_stubs' " \
                 + "OCL_CPP='%s -O3 -DMPI_GERYON -DUCL_NO_EXIT " % cxx_cmd \
                 + "-I../../src/STUBS $(LMP_INC) $(OCL_INC)' "
     txt = system(makecmd + "ocl_get_devices")
-    print(txt)
+    if verbose: print(txt)
     txt = system(makecmd + "-j %d" % numcpus)
-print(txt)
+if verbose: print(txt)
 shutil.move('ocl_get_devices',"%s/ocl_get_devices.exe" % builddir)
 
 # skipping h5md, kim, kokkos
@@ -298,12 +311,12 @@ shutil.move('ocl_get_devices',"%s/ocl_get_devices.exe" % builddir)
 print("LinAlg")
 os.chdir(lammpsdir+"/lib/linalg")
 txt = system("make -j %d FC=%s FFLAGS='-O3 -ffast-math -fstrict-aliasing' FFLAGS0='-O0' ARCHIVE=%s -f Makefile.serial" % (numcpus,fc_cmd,ar_cmd))
-print(txt)
+if verbose: print(txt)
 
 print("MEAM")
 os.chdir(lammpsdir+"/lib/meam")
 txt = system("make -j %d F90=%s CC=%s ARCHIVE=%s -f Makefile.serial F90FLAGS='-O3 -ffast-math -fexpensive-optimizations' " % (numcpus,fc_cmd,cc_cmd,ar_cmd))
-print(txt)
+if verbose: print(txt)
 
 # nothing to do for molfile
 # skipping mscg, netcdf
@@ -312,7 +325,7 @@ print("POEMS")
 os.chdir(lammpsdir+"/lib/poems")
 txt = system("make -j %d CC=%s CCFLAGS=-O3 ARCHIVE=%s -f Makefile.serial" \
              % (numcpus,cxx_cmd,ar_cmd))
-print(txt)
+if verbose: print(txt)
 
 # skipping python, qmmm, quip, reax
 
@@ -327,39 +340,43 @@ os.symlink(vorodir+"/src","liblink")
 
 print("Done")
 
+print("Configuring and building LAMMPS itself")
+
 os.chdir(lammpsdir+"/src")
 system("make yes-all no-kokkos no-kim no-reax no-user-qmmm no-user-lb no-mpiio no-mscg no-user-netcdf no-user-intel no-user-quip no-python no-user-h5md no-user-vtk")
 if parflag == "mpi": system("make yes-mpiio yes-user-lb")
 
 makecmd = "make -j %d ARCHIVE=%s SHFLAG='' LINK='$(CC) -static' SIZE=echo " % (numcpus,ar_cmd)
 if thrflag == 'omp':
-    makecmd = makecmd + "CC='%s -fopenmp' " % cxx_cmd
+    makecmd += "CC='%s -fopenmp' " % cxx_cmd
 else:
-    makecmd = makecmd + "CC='%s' " % cxx_cmd
+    makecmd += "CC='%s' " % cxx_cmd
 
 if bitflag == '32':
-    makecmd = makecmd + "CCFLAGS='-O3 -march=i686 -mtune=generic -mfpmath=387 -mpc64' "
+    makecmd += "CCFLAGS='-O3 -march=i686 -mtune=generic -mfpmath=387 -mpc64' "
 elif bitflag == '64':
-    makecmd = makecmd + "CCFLAGS='-O3 -march=core2 -mtune=core2 -msse2 -mpc64 -ffast-math' "
+    makecmd += "CCFLAGS='-O3 -march=core2 -mtune=core2 -msse2 -mpc64 -ffast-math' "
 
-makecmd = makecmd + "LIB='--enable-stdcall-fixup -lwsock32 -static-libgcc -lquadmath -lpsapi' "
-makecmd = makecmd + "LMP_INC='%s -DLAMMPS_JPEG -DLAMMPS_PNG -DLAMMPS_XDR -DLAMMPS_GZIP -DLAMMPS_FFMPEG' " % lmp_size
+makecmd += "LIB='-lwsock32 -static-libgcc -lquadmath -lpsapi' "
+makecmd += "LMP_INC='%s -DLAMMPS_JPEG -DLAMMPS_PNG -DLAMMPS_XDR -DLAMMPS_GZIP -DLAMMPS_FFMPEG' " % lmp_size
 
-makecmd = makecmd + "JPG_LIB='-ljpeg -lpng -lz' molfile_SYSLIB='' "
-makecmd = makecmd + "gpu_SYSLIB='../../../OpenCL/lib_win%s/libOpenCL.dll' " % bitflag    
+makecmd += "JPG_LIB='-ljpeg -lpng -lz' molfile_SYSLIB='' "
+makecmd += "gpu_SYSLIB='-Wl,--enable-stdcall-fixup ../../../OpenCL/lib_win%s/libOpenCL.dll' " % bitflag    
 
 if parflag == 'mpi':
-    makecmd = makecmd + "MPI_INC='-I../../../mpich2-win%s/include -DMPICH_SKIP_MPICXX' " % bitflag
-    makecmd = makecmd + "MPI_PATH='-L../../../mpich2-win%s/lib' " % bitflag
-    makecmd = makecmd + "MPI_LIB='-lmpi' "
+    makecmd += "MPI_INC='-I../../../mpich2-win%s/include -DMPICH_SKIP_MPICXX' " % bitflag
+    makecmd += "MPI_PATH='-L../../../mpich2-win%s/lib' " % bitflag
+    makecmd += "MPI_LIB='-lmpi' "
     txt = system(makecmd + "mpi")
     shutil.move('lmp_mpi',"%s/lmp_mpi.exe" % builddir)
 
 elif parflag == 'no':
-    makecmd = makecmd + "MPI_INC='-I../STUBS' MPI_PATH='-L../STUBS' MPI_LIB='-lmpi_stubs' "
+    makecmd += "MPI_INC='-I../STUBS' MPI_PATH='-L../STUBS' MPI_LIB='-lmpi_stubs' "
     txt = system(makecmd + "serial")
     shutil.move('lmp_serial',"%s/lmp_serial.exe" % builddir)
-print(txt)
+if verbose: print(txt)
+
+print("Done")
 
 error("xxx")
 # clean up after successful build

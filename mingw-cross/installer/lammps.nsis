@@ -16,9 +16,9 @@ RequestExecutionLevel admin
 UserInfo::GetAccountType
 pop $0
 ${If} $0 != "admin"
-messageBox mb_iconstop "Administrator rights required!"
-setErrorLevel 740 ;ERROR_ELEVATION_REQUIRED
-quit
+  messageBox mb_iconstop "Administrator rights required!"
+  setErrorLevel 740 ;ERROR_ELEVATION_REQUIRED
+  quit
 ${EndIf}
 !macroend
 
@@ -55,7 +55,7 @@ Page instfiles
 DirText "Please select the LAMMPS installation folder."
 
 function .onInit
-setShellVarContext all
+  setShellVarContext all
 !insertmacro VerifyUserIsAdmin
 functionEnd
 
@@ -76,9 +76,9 @@ Section "${LAMMPS}"
   CreateShortCut  "$SMPROGRAMS\${LAMMPS}\LICENSE.lnk"        "$INSTDIR\LICENSE.txt"            "" ""
 
 !insertmacro CreateInternetShortcut "$SMPROGRAMS\${LAMMPS}\LAMMPS WWW Site" \
-"http://lammps.sandia.gov" "" "0"
+                  "http://lammps.sandia.gov" "" "0"
 !insertmacro CreateInternetShortcut "$SMPROGRAMS\${LAMMPS}\LAMMPS Commands" \
-"http://lammps.sandia.gov/doc/Section_commands.html#individual-commands" "" "0"
+                  "http://lammps.sandia.gov/doc/Section_commands.html#individual-commands" "" "0"
 
   SetOutPath "$INSTDIR"
   CreateDirectory "$INSTDIR\bin"

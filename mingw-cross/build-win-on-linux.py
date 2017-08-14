@@ -4,7 +4,7 @@
 # (c) 2017 Axel Kohlmeyer <akohlmey@gmail.com>
 
 from __future__ import print_function
-import sys,os,shutil,glob,re,subprocess,tarfile,gzip
+import sys,os,shutil,glob,re,subprocess,tarfile,gzip,time
 try: from urllib.request import urlretrieve as geturl
 except: from urllib import urlretrieve as geturl
 
@@ -341,7 +341,6 @@ os.symlink(vorodir+"/src","liblink")
 print("Done")
 
 print("Configuring and building LAMMPS itself")
-
 os.chdir(lammpsdir+"/src")
 system("make yes-all no-kokkos no-kim no-reax no-user-qmmm no-user-lb no-mpiio no-mscg no-user-netcdf no-user-intel no-user-quip no-python no-user-h5md no-user-vtk")
 if parflag == "mpi": system("make yes-mpiio yes-user-lb")
@@ -357,7 +356,7 @@ if bitflag == '32':
 elif bitflag == '64':
     makecmd += "CCFLAGS='-O3 -march=core2 -mtune=core2 -msse2 -mpc64 -ffast-math' "
 
-makecmd += "LIB='-lwsock32 -static-libgcc -lquadmath -lpsapi' "
+makecmd += "LIB='-lwsock32 -lquadmath -lpsapi' "
 makecmd += "LMP_INC='%s -DLAMMPS_JPEG -DLAMMPS_PNG -DLAMMPS_XDR -DLAMMPS_GZIP -DLAMMPS_FFMPEG' " % lmp_size
 
 makecmd += "JPG_LIB='-ljpeg -lpng -lz' molfile_SYSLIB='' "
@@ -378,9 +377,99 @@ if verbose: print(txt)
 
 print("Done")
 
-error("xxx")
+print("Building LAMMPS tools")
+
+os.chdir(lammpsdir+"/tools")
+if bitflag == '32':
+    cc_flags = "-DLAMMPS_SMALLSMALL -O2 -march=i686  -mtune=generic -mfpmath=387 -mpc64 "
+elif bitflag == '64':
+    cc_flags = "-DLAMMPS_SMALLBIG   -O2 -march=core2 -mtune=core2   -mpc64 -msse2"
+
+txt = system("%s %s -static -o %s/binary2txt.exe binary2txt.cpp" \
+             % (cxx_cmd,cc_flags,builddir))
+if verbose: print(txt)
+
+txt = system("%s %s -static -o %s/chain.exe chain.f " \
+             % (fc_cmd,cc_flags,builddir))
+if verbose: print(txt)
+
+txt = system("%s %s -static -o %s/createatoms.exe createatoms/createAtoms.f" \
+             % (fc_cmd,cc_flags,builddir))
+if verbose: print(txt)
+
+txt = system("make -C msi2lmp/src CC=%s CFLAGS='%s' LDFLAGS=-static TARGET=%s/msi2lmp.exe" \
+             % (cc_cmd,cc_flags,builddir))
+if verbose: print(txt)
+
+txt = system("make -C colvars EXT=.exe CXX=%s CXXFLAGS='%s' LDFLAGS=-static" \
+             % (cxx_cmd,cc_flags))
+for exe in glob.glob('colvars/*.exe'):
+    shutil.move(exe,builddir)
+if verbose: print(txt)
+
+print("Done")
+
+print("Building PDF manual")
+os.chdir(lammpsdir+"/doc")
+txt = system("make pdf")
+if verbose: print(txt)
+print("Done")
+
+print("Processing text files for inclusion into installer")
+os.chdir(lammpsdir)
+# prune outdated inputs or examples of packages we don't bundle
+for d in ['accelerate','kim','mscg','USER/quip','USER/vtk']:
+    shutil.rmtree(lammpsdir+"/examples"+d,True)
+for d in ['FERMI','KEPLER']:
+    shutil.rmtree(lammpsdir+"/bench"+d,True)
+shutil.rmtree(lammpsdir+"/tools/msi2lmp/test",True)
+
+# convert text files to CR-LF conventions
+txt = system("unix2dos LICENSE README tools/msi2lmp/README")
+if verbose: print(txt)
+txt = system("find bench examples potentials tools/msi2lmp/frc_files -type f -print | xargs unix2dos")
+if verbose: print(txt)
+# mass rename README to README.txt
+txt = system('for f in $(find tools bench examples potentials -name README -print); do  mv -v $f $f.txt; done')
+if verbose: print(txt)
+print("Done")
+
+print("Configuring and building installer")
+os.chdir(builddir)
+shutil.move("OpenCL/lib_win%s/libOpenCL.dll" % bitflag,builddir)
+shutil.copy("%s/installer/lammps.nsis" % homedir,builddir)
+shutil.copy("%s/installer/EnvVarUpdate.nsh" % homedir,builddir)
+
+# define version flag of the installer:
+# - use current timestamp, when pulling from master (for daily builds)
+# - parse version from src/version.h when pulling from stable, unstable, or specific tag
+# - otherwise use revflag, i.e. the commit hash
+version = revflag
+if revflag == 'stable' or revflag == 'unstable' or rev2.match(revflag):
+  with open("lammps-%s/src/version.h" % revflag,'r') as v_file:
+    verexp = re.compile(r'^.*"(\w+) (\w+) (\w+)".*$')
+    vertxt = v_file.readline()
+    verseq = verexp.match(vertxt).groups()
+    version = "".join(verseq)
+elif revflag == 'master':
+    version = time.strftime('%Y-%m-%d')
+
+if bitflag == '32':
+    mingwdir = '/usr/i686-w64-mingw32/sys-root/mingw/bin/'
+    libgcc = 'libgcc_s_sjlj-1.dll'
+elif bitflag == '64':
+    mingwdir = '/usr/x86_64-w64-mingw32/sys-root/mingw/bin/'
+    libgcc = 'libgcc_s_seh-1.dll'
+
+if parflag == 'mpi':
+    txt = system("makensis -DMINGW=%s -DVERSION=%s-MPI -DBIT=%s -DLIBGCC=%s -DLMPREV=%s lammps.nsis" % (mingwdir,version,bitflag,libgcc,revflag))
+    if verbose: print(txt)
+else:
+    txt = system("makensis -DMINGW=%s -DVERSION=%s -DBIT=%s -DLIBGCC=%s -DLMPREV=%s lammps.nsis" % (mingwdir,version,bitflag,libgcc,revflag))
+    if verbose: print(txt)
+
 # clean up after successful build
-os.chdir(homepath)
+os.chdir('..')
 print("Cleaning up...")
 shutil.rmtree(builddir,True)
 print("Done.")

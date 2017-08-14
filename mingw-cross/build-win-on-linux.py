@@ -84,7 +84,7 @@ homedir, exename = os.path.split(fullpath(sys.argv[0]))
 
 bitflag = '64'
 parflag = 'no'
-thrflag = 'no'
+thrflag = 'omp'
 revflag = 'stable'
 verbose = False
 

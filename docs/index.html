@@ -9,18 +9,47 @@
     <div style="display: inline; margin-left: 10px; margin-bottom: 5px; border: 5px; border-style: groove; float: right;">
       <img src="lammpsrpmlogo.png" border="0" style="" width="250" height="150">
     </div>
-    <h1>LAMMPS Precompiled Packages</h1>
+    <h1>Building and Installing LAMMPS Precompiled Packages</h1>
     <p align="justify">
-      This webpage documents the scripts and tools for building and installing
-      precompiled binary packages of the molecular dynamics simulation
-      software <a href="http://lammps.sandia.gov/" target="_blank">LAMMPS</a>
-      on a variety of operating systems.
+      The LAMMPS molecular dynamics simulation packages is usually
+      installed and customized by its users from source code, which can
+      be obtained from its
+      <a href="http://lammps.sandia.gov" target="_blank">Sandia home page</a>
+      as tar archives or from its
+      <a href="http://gihub.com/lammps/lammps/" target="_blank">GitHub
+        project page</a> as snapshot zip archive or git repository clone.
+      However, for bignners, or people wanting to try something out quickly,
+      or for tutorials, or for people running on platforms like windows,
+      where compilers are not as commonly and conveniently available,
+      having precompile LAMMPS packages can be very convenient and helpful.
+    </p>
+    <p align="justify">The purpose of this webpage is to provide access
+    to such precompiled packages that have been curated by the LAMMPS
+    developers and contain as complete a set of features as technically
+    meaningful and legally possible with the restrictions on some of the
+    licenses for add-on libraries (typically the burden for the latter
+    is higher for precompiled and bundled binaries, than for source code
+      packages obtained from different sources).
+    </p>
+    <p align="justify"> The second part of this webpage is to document
+      the tools and scripts used in the process of building these packages
+      and descrbing the process or building the packages or repositories,
+      so that people can go about and customize it or contribute solutions
+      or iproved, alternate approaches for the procedures used.
     </p>
     <hr width="100%">
 
     <h2>Downloading, Installing and Using Pre-compiled LAMMPS Packages</h2>
     <h3><a href="windows.html">Installer packages for 32-bit and 64-bit Windows</a></h3>
-    <p align="justify">
+    <p align="justify">These packages are single executables containing
+      a <a href="http://nsis.sourceforge.net/" target="_blank">
+        Nullsoft scriptable installer</a> for Windows versions from
+      Windows XP (SP2) to Windows 10. The packages are available for
+      32-bit and 64-bit Windows systems, with and without support for
+      MPI (a link for a compatible MPI library installer is provided).
+      These packages also contain several PDF format files with the
+      LAMMPS manual and associated documentation, most of the example
+      inputs, bundled potential files, benchmark input and some tools.
     </p>
     <h3>Downloading, Installing, Updating binary RPM packages for Fedora, CentOS and RedHat Enterprise Linux</h3>
     <p align="justify">

@@ -5,7 +5,7 @@
     <link rel="shortcut icon" href="ICMS_icon.png" type="image/png">
   </head>
 
-  
+
   <body style="font-family: sans-serif; margin-bottom: 4%; margin-top: 4%; margin-left: 5%; margin-right: 10%;">
     <div style="display: inline; margin-right: 10px; float: left; valign: center;">
       <a href="http://packages.lammps.org"><img src="arrowup.png" border="0" style=""
@@ -27,7 +27,7 @@
       The LAMMPS binaries contain <b>all</b> optional packages included in
       the source distribution <b>except</b>: <u>KIM</u> (license is not GPL
         compatible for binary distribution outside the KIM project),
-      <u>KOKKOS</u> and <u>USER-INTEL</u> 
+      <u>KOKKOS</u> and <u>USER-INTEL</u>
       (do not fully support cross-compilation with GCC),
       <u>MSCG</u> (requires an external library),
       <u>USER-H5MD</u> (requires an external library)
@@ -61,7 +61,7 @@
       It <u>does not yet</u> work with OpenCL drivers for CPUs (like those included
       in the Intel and AMD OpenCL SDKs).
       <br>
-      In the case of having multiple Vendor provided OpenCL runtimes installed, you may run into the situation of the "wrong" runtime being set as the default and used by LAMMPS. In this case, you may need to remove unwanted vendors from the windows registry database. Look for the key: <code>HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\OpenCL\Vendors</code>, and remove vendors such as Intel. 
+      In the case of having multiple Vendor provided OpenCL runtimes installed, you may run into the situation of the "wrong" runtime being set as the default and used by LAMMPS. In this case, you may need to remove unwanted vendors from the windows registry database. Look for the key: <code>HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\OpenCL\Vendors</code>, and remove vendors such as Intel.
       When reporting problems, please always include the exact
       <u>version of the installer</u> and the output of the
       <strong><code>ocl_get_devices</code></strong> tool.
@@ -74,7 +74,7 @@
     </div>
     <div style="background-color: #e8e8f0;">
       <div align="justify">
-        There are installer packages for 32-bit and 64-bit 
+        There are installer packages for 32-bit and 64-bit
         versions of Windows available.
         <ul>
           <li><a href="http://rpm.lammps.org/windows/">Latest versions</a></li>
@@ -97,7 +97,7 @@
           This should <u>always</u> work.</li>
 
         <li><u>Or:</u> a multi-threaded LAMMPS executable that also supports
-          parallel execution via MPI message passing. This 
+          parallel execution via MPI message passing. This
           executable is called  <strong><code>lmp_mpi</code></strong>
           and requires installation of a suitable MPICH2 package to work.</li>
 
@@ -112,7 +112,7 @@
         <li>the tools <strong><code>binary2txt, chain, msi2lmp, abf_integrate,
               createatoms, ocl_get_devices</code></strong></li>
       </ul>
-      
+
       <p align="justify">Both executables will run in serial when executed directly.
         Please see below for instructions on how to perform parallel runs.
         To use the MPI based parallelism, you also need to install
@@ -165,7 +165,7 @@
       however by default only one thread is enabled. To enable more threads, e.g. four,
       you need to either set it at the command line prompt via
       <strong><code>set OMP_NUM_THREADS=4</code></strong>, via the
-      <strong><code>-pk&nbsp;omp&nbsp;4</code></strong> command line flag, or via the 
+      <strong><code>-pk&nbsp;omp&nbsp;4</code></strong> command line flag, or via the
       <a href="http://lammps.sandia.gov/doc/package.html" target="_blank">package omp 4</a>
       command in your input script.</p>
 
@@ -194,9 +194,9 @@
     <p align="justify">
       After the installation of the MPICH software, it needs to be integrated into the system.
       For this you need to start a <i>Command Prompt</i> in <i>Administrator Mode</i> (right
-      click on the icon and select it). Change into the MPICH2 installation directory, then 
-      into the subdirectory <code>bin</code> and execute 
-      <strong><code>smpd.exe -install</code></strong>. 
+      click on the icon and select it). Change into the MPICH2 installation directory, then
+      into the subdirectory <code>bin</code> and execute
+      <strong><code>smpd.exe -install</code></strong>.
     </p>
 
     <p align="justify">
@@ -214,7 +214,7 @@
       not affected.  Also when running under mpiexec, you should not use
       multi-threading since MPICH restricts processes to a single
       physical CPU thus it will run less efficient. </p>
-      
+
       For more details, please refer
       to the <a href="http://www.mpich.org/documentation/guides/" target="_blank">
         MPICH2 Documentation</a>.

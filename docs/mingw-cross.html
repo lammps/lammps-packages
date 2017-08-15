@@ -5,8 +5,16 @@
   </head>
 
   <body style="font-family: Helvetica,Arial,Verdana, sans-serif; margin-bottom: 2%; margin-top: 2%; margin-left: 5%; margin-right: 5%;">
+    <div style="display: inline; margin-right: 10px; float: left">
+      <a href="http://packages.lammps.org"><img src="arrowup.png" border="0" style=""
+                                                width="56" height="55">
+        &nbsp;Back to LAMMPS Packages Overview</a>
+    </div>
+
+    <hr width="100%">
+
     <div style="display: inline; margin-left: 10px; margin-bottom: 5px; border: 5px; border-style: groove; float: right;">
-      <img src="lammpsrpmlogo.png" border="0" style="" width="250" height="150">
+      <img src="lammpswinlogo.png" border="0" style="" width="300" height="182">
     </div>
     <h1>Building Windows Installer Packages with MinGW64 Cross-compilers on Fedora Linux</h1>
     <p align="justify">
@@ -20,13 +28,102 @@
       done with similar tools, makefiles and scripts than what is
       used routinely on Linux/Unix-like machines, which makes it easy
       to automate the process and minimizes the maintenance effort.
-      It <b>is</b> possible to build and run LAMMPS on Windows using
-      a Cygwin environment. Another alternative for running LAMMPS
-      on Windows is to install the Windows Subsystem for Linux on
-      Windows 10 and then install or compile and run executables in the
-      embedded Ubuntu Linux subsystem.
+      It <b>is</b> possible to build and run LAMMPS natively on
+      Windows using a Cygwin or MinGW environment. Another alternative
+      for running LAMMPS on Windows is to install the Windows Subsystem
+      for Linux on Windows 10 and then install or compile and run Linux
+      executables in the embedded Ubuntu Linux subsystem with Bash on Windows.
     </p>
-     <hr>
+    <h2>Prerequisites</h2>
+    The cross-compilation is currently tested on Fedora Linux 25 and
+    the following packages and their dependencies should be installed:
+    <div style="background-color: #e8e8f0;">
+    <ul>
+      <li>make</li>
+      <li>python</li>
+      <li>ccache (optional)</li>
+      <li>git</li>
+      <li>dos2unix</li>
+      <li>htmldoc</li>
+      <li>mingw32-nsis</li>
+      <li>mingw32-gcc-c++</li>
+      <li>mingw32-gcc-gfortran</li>
+      <li>mingw32-libjpeg-static</li>
+      <li>mingw32-pthreads-static</li>
+      <li>mingw32-libgomp</li>
+      <li>mingw32-libpng-static</li>
+      <li>patch</li>
+    </ul>
+    </div>
+    <p align="justify">As a next step, a clone or snapshot file of the
+      <tt>lammps-packages</tt> git repository from
+      <a href="https://github.com/lammps/lammps-packages">https://github.com/lammps/lammps-packages</a> should be obtained. The scripts and files required
+      to build Windows installer packages are located in the
+      <strong><code>mingw-cross</code></strong> folder inside the
+      lammps-packages directory.
+    </p>
+    <h2>The build-win-on-linux.py script</h2>
+    <p align="justify">
+      The main tasks of downloading sources, configuring, compiling
+      and packaging the resulting files are managed by a script called
+      <strong><code>build-win-on-linux.py</code></strong>.
+      This script supports a number of flags that can be used to
+      customize the build process and select what kind of binary
+      to build and package.
+    </p>
+    <p align="justify">
+      Please note, that the <strong><code>build-win-on-linux.py</code></strong>
+      only supports building LAMMPS versions from 11Aug2017 onward.
+      The script makes assumptions about files and options, that are not
+      available in older LAMMPS versions. and thus building older versions
+      with this script is not likely to work.
+    </p>
+
+    Below is a list of the supported command line options:
+    <div style="background-color: #e8e8f0;">
+    <pre>
+Usage: python build-win-on-linux.py -b <bits> -j <cpus> -p <mpi> -t <thread> -r <rev> -v <yes|no>
+
+Flags (all flags are optional, defaults listed below):
+  -b : select Windows variant (default value: 64)
+    -b 32       : build for 32-bit Windows
+    -b 64       : build for 64-bit Windows
+  -j : set number of CPUs for parallel make (default value: automatic)
+    -j <num>    : set to any reasonable number or 1 for serial make
+  -p : select message passing parallel build (default value: no)
+    -p mpi      : build an MPI parallel version with MPICH2 v1.4.1p1
+    -p no       : build a serial version using MPI STUBS library
+  -t : select thread support (default value: omp)
+    -t omp      : build with threads via OpenMP enabled
+    -t no       : build with thread support disabled
+  -r : select LAMMPS source revision to build (default value: stable)
+    -r stable   : download and build the latest stable LAMMPS version
+    -r unstable : download and build the latest patch release LAMMPS version
+    -r master   : download and build the latest development snapshot
+    -r patch_<date>  : download and build a specific patch release
+    -r stable_<date> : download and build a specific patch release
+    -r <sha256> : download and build a specific snapshot version
+  -v : select output verbosity
+    -v yes      : print progress messages and output of make commands
+    -v no       : print only progress messages
+
+Example:
+  python build-win-on-linux.py -r unstable -t omp -p mpi
+    </pre>
+    </div>
+    <h2>Compiling LAMMPS and building the installer package</h2>
+    <p align="justify">
+      After changing to a folder where the installer package or packages
+      should be built, the python script is called and then a temporary
+      directory is created - named after the various options selected -
+      where the build is then performed. The script will print out messages
+      about the progress of the build. With the option <tt>-v yes</tt>
+      also, the screen output of all shell commands will be printed to
+      the screen. At the end of the script run, the final installer package
+      will be written to the current working directory, and the temporary
+      folder and all its contents will be removed.
+    </p>
+    <hr>
     <address><a href="http://goo.gl/1wk0" target="_blank">Axel Kohlmeyer</a></address>
   </body>
 </html>

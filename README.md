@@ -6,8 +6,7 @@ Here is an overview of the contents of the individual folders:
 
 ## docs
 
-Webpages to document the packages and the scripts.
-(packages.lammps.org)[http://packages.lammps.org]
+Webpages to document the packages and the scripts. http://packages.lammps.org
 
 ## mingw-cross
 

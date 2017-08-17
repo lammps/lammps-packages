@@ -1,0 +1,48 @@
+# LAMMPS repos for Fedora Linux installations
+
+[lammps-stable]
+name=Fedora $releasever - $basearch - LAMMPS stable version
+enabled=1
+gpgcheck=1
+baseurl=http://git.icms.temple.edu/rpm/stable/fedora/$releasever/$basearch/
+gpgkey=http://git.icms.temple.edu/rpm/RPM-GPG-KEY-lammps
+
+[lammps-stable-debuginfo]
+name=Fedora $releasever - $basearch - LAMMPS stable version - Debug
+enabled=0
+gpgcheck=1
+baseurl=http://git.icms.temple.edu/rpm/stable/fedora/$releasever/$basearch/debug
+gpgkey=http://git.icms.temple.edu/rpm/RPM-GPG-KEY-lammps
+
+
+[lammps-unstable]
+name=Fedora $releasever - $basearch - LAMMPS unstable version
+enabled=1
+gpgcheck=1
+baseurl=http://git.icms.temple.edu/rpm/unstable/fedora/$releasever/$basearch/
+gpgkey=http://git.icms.temple.edu/rpm/RPM-GPG-KEY-lammps
+
+[lammps-unstable-debuginfo]
+name=Fedora $releasever - $basearch - LAMMPS unstable version - Debug
+enabled=0
+gpgcheck=1
+baseurl=http://git.icms.temple.edu/rpm/unstable/fedora/$releasever/$basearch/debug
+gpgkey=http://git.icms.temple.edu/rpm/RPM-GPG-KEY-lammps
+
+
+
+[lammps-nightly]
+name=Fedora $releasever - $basearch - LAMMPS nightly build
+enabled=1
+gpgcheck=1
+baseurl=http://git.icms.temple.edu/rpm/nightly/fedora/$releasever/$basearch/
+gpgkey=http://git.icms.temple.edu/rpm/RPM-GPG-KEY-lammps
+
+[lammps-nightly-debuginfo]
+name=Fedora $releasever - $basearch - LAMMPS nightly build - Debug
+enabled=0
+gpgcheck=1
+baseurl=http://git.icms.temple.edu/rpm/nightly/fedora/$releasever/$basearch/debug
+gpgkey=http://git.icms.temple.edu/rpm/RPM-GPG-KEY-lammps
+
+

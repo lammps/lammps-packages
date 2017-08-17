@@ -1,0 +1,19 @@
+%distribution LAMMPS
+%packager LAMMPS Packages <packages@lammps.org>
+%_gpg_name LAMMPS Packages <packages@lammps.org>
+
+%_rpmfilename %%{NAME}-%%{VERSION}-%%{RELEASE}.%%{ARCH}.rpm
+%_query_all_fmt %%{name}-%%{version}-%%{release}.%%{arch}
+
+%_smp_mflags %( \
+    [ -z "$RPM_BUILD_NCPUS" ] \\\
+        && RPM_BUILD_NCPUS="`/usr/bin/nproc 2>/dev/null || \\\
+                             /usr/bin/getconf _NPROCESSORS_ONLN`"; \\\
+    if [ "$RPM_BUILD_NCPUS" -gt 8 ]; then \\\
+        echo "-j8"; \\\
+    elif [ "$RPM_BUILD_NCPUS" -gt 3 ]; then \\\
+        echo "-j$RPM_BUILD_NCPUS"; \\\
+    else \\\
+        echo "-j3"; \\\
+    fi )
+

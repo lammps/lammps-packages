@@ -14,7 +14,7 @@ node {
 
     def mingw_cross = load 'lammps-packages/jenkins/mingw_cross.groovy'
 
-    mingw_cross.build_installer('-b ' + arch + ' -r ' + lammps_branch + ' -t omp -p mpi')
+    mingw_cross.build_installer('-b ' + arch + ' -r ' + lammps_branch + ' -t omp -p mpi -j 8')
 
     stage('Publish') {
         archiveArtifacts artifacts: '*.exe', fingerprint: true, onlyIfSuccessful: true

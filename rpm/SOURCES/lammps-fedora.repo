@@ -4,59 +4,59 @@
 name=LAMMPS Repository Data
 enabled=1
 gpgcheck=1
-metadata_expire=1d
+metadata_expire=7d
 baseurl=http://download.lammps.org/rpms/repos/
-gpgkey=http://download.lammps.org/rpms/RPM-GPG-KEY-lammps
+gpgkey=file:///etc/pki/gpg-rpm/RPM-GPG-KEY-lammps-2017.1
 
 # stable release channel
 [lammps-stable]
 name=Fedora $releasever - $basearch - LAMMPS stable version
 enabled=1
 gpgcheck=1
-metadata_expire=1d
+metadata_expire=7d
 baseurl=http://download.lammps.org/rpms/stable/fedora/$releasever/$basearch/
-gpgkey=http://download.lammps.org/rpms/RPM-GPG-KEY-lammps
+gpgkey=file:///etc/pki/gpg-rpm/RPM-GPG-KEY-lammps-2017.1
 
 [lammps-stable-debuginfo]
 name=Fedora $releasever - $basearch - LAMMPS stable version - Debug
 enabled=0
 gpgcheck=1
-metadata_expire=1d
+metadata_expire=7d
 baseurl=http://download.lammps.org/rpms/stable/fedora/$releasever/$basearch/debug
-gpgkey=http://download.lammps.org/rpms/RPM-GPG-KEY-lammps
+gpgkey=file:///etc/pki/gpg-rpm/RPM-GPG-KEY-lammps-2017.1
 
 # unstable release channel
 [lammps-unstable]
 name=Fedora $releasever - $basearch - LAMMPS unstable version
 enabled=0
 gpgcheck=1
-metadata_expire=1d
+metadata_expire=7d
 baseurl=http://download.lammps.org/rpms/unstable/fedora/$releasever/$basearch/
-gpgkey=http://download.lammps.org/rpms/RPM-GPG-KEY-lammps
+gpgkey=file:///etc/pki/gpg-rpm/RPM-GPG-KEY-lammps-2017.1
 
 [lammps-unstable-debuginfo]
 name=Fedora $releasever - $basearch - LAMMPS unstable version - Debug
 enabled=0
 gpgcheck=1
-metadata_expire=1d
+metadata_expire=7d
 baseurl=http://download.lammps.org/rpms/unstable/fedora/$releasever/$basearch/debug
-gpgkey=http://download.lammps.org/rpms/RPM-GPG-KEY-lammps
+gpgkey=file:///etc/pki/gpg-rpm/RPM-GPG-KEY-lammps-2017.1
 
 # nightly build channel
 [lammps-nightly]
 name=Fedora $releasever - $basearch - LAMMPS nightly build
 enabled=0
 gpgcheck=1
-metadata_expire=1d
+metadata_expire=7d
 baseurl=http://download.lammps.org/rpms/nightly/fedora/$releasever/$basearch/
-gpgkey=http://download.lammps.org/rpms/RPM-GPG-KEY-lammps
+gpgkey=file:///etc/pki/gpg-rpm/RPM-GPG-KEY-lammps-2017.1
 
 [lammps-nightly-debuginfo]
 name=Fedora $releasever - $basearch - LAMMPS nightly build - Debug
 enabled=0
 gpgcheck=1
-metadata_expire=1d
+metadata_expire=7d
 baseurl=http://download.lammps.org/rpms/nightly/fedora/$releasever/$basearch/debug
-gpgkey=http://download.lammps.org/rpms/RPM-GPG-KEY-lammps
+gpgkey=file:///etc/pki/gpg-rpm/RPM-GPG-KEY-lammps-2017.1
 
 

@@ -36,7 +36,7 @@ EOF
       fi
     done
     # then all file entries
-    for e in $(/bin/ls -1r "$d")
+    for e in $(/bin/ls -1t "$d")
       do [ "$e" = "index.html" ] && continue
       if [ -f "$d/$e" ]
       then

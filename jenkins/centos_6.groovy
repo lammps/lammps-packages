@@ -1,6 +1,6 @@
 node {
     stage 'Checkout'
-    git url: 'https://github.com/lammps/lammps.git', branch: 'lammps-icms'
+    git url: 'https://github.com/lammps/lammps.git', branch: 'master'
 
     dir('lammps-packages') {
         git url: 'https://github.com/lammps/lammps-packages.git', credentialsId: 'lammps-jenkins', branch: 'rpm-build'

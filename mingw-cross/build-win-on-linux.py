@@ -224,6 +224,9 @@ getsrctar("%s/opencl-win-devel.tar.gz" % url)
 print("Eigen3")
 getsrctar("%s/eigen-%s.tar.gz" % (url,eigenver))
 eigendir = fullpath(glob.glob('eigen-*')[0])
+print("LATTE")
+getsrctar("%s/LATTE-1.1.1.tar.gz" % url)
+lattedir = fullpath("LATTE-1.1.1")
 print("Voro++")
 getsrctar("%s/voro++-%s.tar.gz" % (url,vorover))
 vorodir = fullpath(glob.glob('voro++*')[0])
@@ -231,11 +234,25 @@ print("LAMMPS")
 getsrctar("https://github.com/lammps/lammps/archive/%s.tar.gz" % revflag)
 lammpsdir = fullpath("lammps-%s" % revflag)
 
+print("Building LATTE in",lattedir)
+os.chdir(lattedir)
+patch('latte')
+cmd = "make -C src FC=%s AR=%s " % (fc_cmd,ar_cmd)
+if thrflag:
+  cmd += "FFLAGS='-O3 -fopenmp -cpp' "
+else:
+  cmd += "FFLAGS='-O3 -cpp' "
+cmd += " liblatte"
+system("sed -i -e 's,-fopenmp,,' makefile.CHOICES")
+txt = system(cmd)
+if verbose: print(txt)
+
 print("Building Voro++ in",vorodir)
 os.chdir(vorodir)
 patch('voro++')
-system("make -j %d -C src CXX=%s CFLAGS='-O3' AR=%s voro++" \
+txt = system("make -j %d -C src CXX=%s CFLAGS='-O3' AR=%s voro++" \
        % (numcpus,cxx_cmd,ar_cmd))
+if verbose: print(txt)
 shutil.move('src/voro++',"%s/voro++.exe" % builddir)
 os.chdir(builddir)
 
@@ -244,7 +261,8 @@ print("Configuring and building LAMMPS libraries")
 if parflag == 'no':
   print("MPI STUBS")
   os.chdir(lammpsdir+"/src/STUBS")
-  system("make CC=%s CCFLAGS='-O2 -I.' ARCHIVE=%s " % (cc_cmd,ar_cmd))
+  txt = system("make CC=%s CCFLAGS='-O2 -I.' ARCHIVE=%s " % (cc_cmd,ar_cmd))
+  if verbose: print(txt)
 
 print("AtC")
 os.chdir(lammpsdir+"/lib/atc")
@@ -257,7 +275,7 @@ elif parflag == 'no':
     txt = system(makecmd + "-f Makefile.serial " \
                  + "CPPFLAGS='-I../../src -I../../src/STUBS %s' " % lmp_size)
 if verbose: print(txt)
-    
+
 print("Awpmd")
 os.chdir(lammpsdir+"/lib/awpmd")
 makecmd = "make CC=%s ARCHIVE=%s " % (cxx_cmd,ar_cmd)
@@ -271,7 +289,7 @@ elif parflag == 'no':
                  + "-Isystems/interact -Iivutils/include " \
                  + "-I../../src/STUBS -O3 ' -f Makefile.mpi")
 if verbose: print(txt)
-    
+
 print("Colvars")
 os.chdir(lammpsdir+"/lib/colvars")
 txt = system("make -j %d CXX=%s CXXFLAGS=-O3 AR=%s -f Makefile.serial" \
@@ -313,6 +331,16 @@ os.chdir(lammpsdir+"/lib/linalg")
 txt = system("make -j %d FC=%s FFLAGS='-O3 -ffast-math -fstrict-aliasing' FFLAGS0='-O0' ARCHIVE=%s -f Makefile.serial" % (numcpus,fc_cmd,ar_cmd))
 if verbose: print(txt)
 
+print("LATTE")
+os.chdir(lammpsdir+"/lib/latte")
+os.symlink(lattedir+"/src","includelink")
+os.symlink(lattedir,"liblink")
+os.symlink(lattedir+"/src/latte_c_bind.o","filelink.o")
+shutil.copy("Makefile.lammps.gfortran","Makefile.lammps")
+if not thrflag:
+  system("sed -i -e 's,-fopenmp,,' Makefile.lammps")
+system("sed -i -e 's,-llapack -lblas,-llinalg,' -e 's,SYSPATH =,SYSPATH = -L../../lib/linalg,' Makefile.lammps")
+
 print("MEAM")
 os.chdir(lammpsdir+"/lib/meam")
 txt = system("make -j %d F90=%s CC=%s ARCHIVE=%s -f Makefile.serial F90FLAGS='-O3 -ffast-math -fexpensive-optimizations' " % (numcpus,fc_cmd,cc_cmd,ar_cmd))
@@ -342,7 +370,7 @@ print("Done")
 
 print("Configuring and building LAMMPS itself")
 os.chdir(lammpsdir+"/src")
-system("make yes-all no-kokkos no-kim no-reax no-user-qmmm no-user-lb no-mpiio no-mscg no-user-netcdf no-user-intel no-user-quip no-python no-user-h5md no-user-vtk")
+system("make yes-all no-kokkos no-kim no-reax no-user-qmmm no-user-lb no-latte no-mpiio no-mscg no-user-netcdf no-user-intel no-user-quip no-python no-user-h5md no-user-vtk")
 if parflag == "mpi": system("make yes-mpiio yes-user-lb")
 
 makecmd = "make -j %d ARCHIVE=%s SHFLAG='' LINK='$(CC) -static' SIZE=echo " % (numcpus,ar_cmd)

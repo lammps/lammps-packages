@@ -370,7 +370,7 @@ print("Done")
 
 print("Configuring and building LAMMPS itself")
 os.chdir(lammpsdir+"/src")
-system("make yes-all no-kokkos no-kim no-reax no-user-qmmm no-user-lb no-latte no-mpiio no-mscg no-user-netcdf no-user-intel no-user-quip no-python no-user-h5md no-user-vtk")
+system("make yes-all no-latte no-kokkos no-kim no-reax no-user-qmmm no-user-lb no-mpiio no-mscg no-user-netcdf no-user-intel no-user-quip no-python no-user-h5md no-user-vtk")
 if parflag == "mpi": system("make yes-mpiio yes-user-lb")
 
 makecmd = "make -j %d ARCHIVE=%s SHFLAG='' LINK='$(CC) -static' SIZE=echo " % (numcpus,ar_cmd)

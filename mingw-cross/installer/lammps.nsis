@@ -110,7 +110,7 @@ Section "${LAMMPS}"
   File /oname=PDLAMMPS-VES.pdf lammps-${LMPREV}/doc/src/PDF/PDLammps_VES.pdf
   File /oname=SPH-Manual.pdf lammps-${LMPREV}/doc/src/PDF/SPH_LAMMPS_userguide.pdf
   File /oname=SMD-Manual.pdf lammps-${LMPREV}/doc/src/PDF/SMD_LAMMPS_userguide.pdf
-  File /oname=CGDNA-Manual.pdf lammps-${LMPREV}/doc/src/PDF/USER-CGDNA-overview.pdf
+  File /oname=CGDNA-Manual.pdf lammps-${LMPREV}/doc/src/PDF/USER-CGDNA.pdf
 
   SetOutPath "$INSTDIR\Potentials"
   File lammps-${LMPREV}/potentials/*

@@ -338,7 +338,10 @@ elif parflag == 'no':
     if verbose: print(txt)
     txt = system(makecmd + "-j %d" % numcpus)
 if verbose: print(txt)
-shutil.move('ocl_get_devices',"%s/ocl_get_devices.exe" % builddir)
+if os.path.exists('ocl_get_devices.exe'):
+  shutil.move('ocl_get_devices.exe',"%s/ocl_get_devices.exe" % builddir)
+else:
+  shutil.move('ocl_get_devices',"%s/ocl_get_devices.exe" % builddir)
 
 # skipping h5md, kim, kokkos
 
@@ -411,12 +414,18 @@ if parflag == 'mpi':
     makecmd += "MPI_PATH='-L../../../mpich2-win%s/lib' " % bitflag
     makecmd += "MPI_LIB='-lmpi' "
     txt = system(makecmd + "mpi")
-    shutil.move('lmp_mpi',"%s/lmp_mpi.exe" % builddir)
+    if os.path.exists('lmp_mpi.exe'):
+      shutil.move('lmp_mpi.exe',"%s/lmp_mpi.exe" % builddir)
+    else:
+      shutil.move('lmp_mpi',"%s/lmp_mpi.exe" % builddir)
 
 elif parflag == 'no':
     makecmd += "MPI_INC='-I../STUBS' MPI_PATH='-L../STUBS' MPI_LIB='-lmpi_stubs' "
     txt = system(makecmd + "serial")
-    shutil.move('lmp_serial',"%s/lmp_serial.exe" % builddir)
+    if os.path.exists('lmp_serial.exe'):
+      shutil.move('lmp_serial.exe',"%s/lmp_serial.exe" % builddir)
+    else:
+      shutil.move('lmp_serial',"%s/lmp_serial.exe" % builddir)
 if verbose: print(txt)
 
 print("Done")

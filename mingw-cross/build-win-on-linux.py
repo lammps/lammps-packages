@@ -16,8 +16,10 @@ except:
 
 # thirdparty library versions
 
-eigenver = '3.3.4'
+eigenver = '3.3.5'
 vorover = '0.4.6'
+plumedver = '2.4.3'
+lattever = '1.2.1'
 
 # helper functions
 
@@ -225,8 +227,11 @@ print("Eigen3")
 getsrctar("%s/eigen-%s.tar.gz" % (url,eigenver))
 eigendir = fullpath(glob.glob('eigen-*')[0])
 print("LATTE")
-getsrctar("%s/LATTE-1.1.1.tar.gz" % url)
-lattedir = fullpath("LATTE-1.1.1")
+getsrctar("%s/LATTE-%s.tar.gz" % (url,lattever)
+lattedir = fullpath("LATTE-%s" % lattever)
+print("Plumed")
+getsrctar("%s/plumed-src-%s.tar.gz" % (url,plumedver))
+plumeddir = fullpath(glob.glob('plumed-2')[0])
 print("Voro++")
 getsrctar("%s/voro++-%s.tar.gz" % (url,vorover))
 vorodir = fullpath(glob.glob('voro++*')[0])
@@ -247,13 +252,24 @@ system("sed -i -e 's,-fopenmp,,' makefile.CHOICES")
 txt = system(cmd)
 if verbose: print(txt)
 
+#print("Building Plumed2 in",plumeddir)
+#os.chdir(plumeddir)
+#txt = system("mingw%s-configure CPPFLAGS=%s --prefix=$PWD/../plumed2 && make -j%d && make install" \
+#       % (mpi_inc,numcpus))
+#if verbose: print(txt)
+#shutil.move('src/voro++',"%s/voro++.exe" % builddir)
+#os.chdir(builddir)
+
 print("Building Voro++ in",vorodir)
 os.chdir(vorodir)
 patch('voro++')
 txt = system("make -j %d -C src CXX=%s CFLAGS='-O3' AR=%s voro++" \
        % (numcpus,cxx_cmd,ar_cmd))
 if verbose: print(txt)
-shutil.move('src/voro++',"%s/voro++.exe" % builddir)
+if os.path.exists('src/voro++'):
+  shutil.move('src/voro++',"%s/voro++.exe" % builddir)
+else:
+  shutil.move('src/voro++.exe',"%s/voro++.exe" % builddir)
 os.chdir(builddir)
 
 print("Configuring and building LAMMPS libraries")

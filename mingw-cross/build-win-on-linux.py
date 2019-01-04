@@ -360,11 +360,6 @@ if not thrflag:
   system("sed -i -e 's,-fopenmp,,' Makefile.lammps")
 system("sed -i -e 's,-llapack -lblas,-llinalg,' -e 's,SYSPATH =,SYSPATH = -L../../lib/linalg,' Makefile.lammps")
 
-print("MEAM")
-os.chdir(lammpsdir+"/lib/meam")
-txt = system("make -j %d F90=%s CC=%s ARCHIVE=%s -f Makefile.serial F90FLAGS='-O3 -ffast-math -fexpensive-optimizations' " % (numcpus,fc_cmd,cc_cmd,ar_cmd))
-if verbose: print(txt)
-
 # nothing to do for molfile
 # skipping mscg, netcdf
 

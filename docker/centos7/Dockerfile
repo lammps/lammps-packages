@@ -36,6 +36,7 @@ RUN cmake3 -C /tmp/lammps/cmake/presets/all_on.cmake \
 RUN make -j8 install
 
 FROM centos:7
+RUN useradd -m lammps
 RUN yum update -y && yum install -y epel-release && yum install -y fftw libjpeg libpng python blas lapack hdf5 openmpi netcdf && yum clean -y all
 COPY --from=builder /usr/bin/lmp /usr/bin/lmp
 COPY --from=builder /usr/share/lammps /usr/share/lammps
@@ -52,7 +53,6 @@ COPY --from=builder /tmp/lammps/LICENSE /home/lammps/LICENSE
 
 ENV LD_LIBRARY_PATH /usr/lib64/openmpi/lib
 ENV LAMMPS_POTENTIALS /usr/share/lammps/potentials
-RUN useradd -m lammps
 USER lammps
 WORKDIR /home/lammps
 CMD /bin/bash

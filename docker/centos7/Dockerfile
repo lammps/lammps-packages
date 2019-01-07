@@ -36,8 +36,7 @@ RUN cmake3 -C /tmp/lammps/cmake/presets/all_on.cmake \
 RUN make -j8 install
 
 FROM centos:7
-RUN yum update -y && yum install -y epel-release
-RUN yum update -y && yum install -y fftw libjpeg libpng python blas lapack hdf5 openmpi netcdf
+RUN yum update -y && yum install -y epel-release && yum install -y fftw libjpeg libpng python blas lapack hdf5 openmpi netcdf && yum clean -y all
 COPY --from=builder /usr/bin/lmp /usr/bin/lmp
 COPY --from=builder /usr/share/lammps /usr/share/lammps
 COPY --from=builder /usr/lib64/python2.7/site-packages/lammps.py /usr/lib64/python2.7/site-packages/lammps.py
@@ -45,7 +44,7 @@ COPY --from=builder /usr/lib64/liblammps.so.0 /usr/lib64/liblammps.so.0
 COPY --from=builder /usr/lib64/liblammps.so /usr/lib64/liblammps.so
 COPY --from=builder /usr/include/lammps/library.h /usr/include/lammps/library.h
 COPY --from=builder /usr/lib64/pkgconfig/liblammps.pc /usr/lib64/pkgconfig/liblammps.pc
-COPY --from=builder /usr/share/cmake/Module/FindLAMMPS.cmake /usr/share/cmake/Module/FindLAMMPS.cmake
+COPY --from=builder /usr/share/cmake/Modules/FindLAMMPS.cmake /usr/share/cmake/Modules/FindLAMMPS.cmake
 COPY --from=builder /usr/share/man/man1/lmp.1 /usr/share/man/man1/lmp.1
 COPY --from=builder /tmp/lammps/examples /home/lammps/examples
 COPY --from=builder /tmp/lammps/bench /home/lammps/bench

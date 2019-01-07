@@ -7,8 +7,7 @@ RUN yum install -y openmpi-devel libpng-devel libjpeg-devel openmpi-devel fftw-d
 ENV PATH=/usr/lib64/openmpi/bin${PATH:+:}${PATH}
 ENV LD_LIBRARY_PATH=/usr/lib64/openmpi/lib${LD_LIBRARY_PATH:+:}${LD_LIBRARY_PATH}
 
-WORKDIR /tmp
-RUN git clone -b 'stable_12Dec2018' --single-branch --depth 1 https://github.com/lammps/lammps.git
+COPY lammps /tmp/lammps
 RUN mkdir build
 
 WORKDIR /tmp/build

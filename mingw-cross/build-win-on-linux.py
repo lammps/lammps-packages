@@ -399,7 +399,7 @@ makecmd += "LIB='-lwsock32 -lquadmath -lpsapi' "
 makecmd += "LMP_INC='%s -DLAMMPS_JPEG -DLAMMPS_PNG -DLAMMPS_XDR -DLAMMPS_GZIP -DLAMMPS_FFMPEG' " % lmp_size
 
 makecmd += "JPG_LIB='-ljpeg -lpng -lz' molfile_SYSLIB='' "
-makecmd += "gpu_SYSLIB='-Wl,--enable-stdcall-fixup ../../../OpenCL/lib_win%s/libOpenCL.dll' " % bitflag    
+makecmd += "gpu_SYSLIB='-Wl,--enable-stdcall-fixup ../../../OpenCL/lib_win%s/libOpenCL.dll' " % bitflag
 
 if parflag == 'mpi':
     makecmd += "MPI_INC='-I../../../mpich2-win%s/include -DMPICH_SKIP_MPICXX' " % bitflag

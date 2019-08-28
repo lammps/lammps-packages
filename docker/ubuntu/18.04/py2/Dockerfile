@@ -1,6 +1,5 @@
 FROM ubuntu:18.04 as builder
 MAINTAINER richard.berger@outlook.com
-ARG VERSION=stable_7Aug2019
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -29,11 +28,10 @@ RUN apt-get update -y && \
         libkim-api-dev \
         openkim-models
 
-RUN cd /tmp && \
-    git clone --depth=1000 https://github.com/lammps/lammps && \
-    mkdir -p /tmp/lammps/build && \
+ADD lammps /tmp/lammps/
+
+RUN mkdir -p /tmp/lammps/build && \
     cd /tmp/lammps/build && \
-    git checkout $VERSION && \
     cmake -C /tmp/lammps/cmake/presets/most.cmake \
           -D CMAKE_BUILD_TYPE=Release \
           -D CMAKE_INSTALL_PREFIX=/usr \

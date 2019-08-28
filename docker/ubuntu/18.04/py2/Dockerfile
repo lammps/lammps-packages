@@ -45,7 +45,8 @@ RUN cd /tmp && \
           -D PKG_USER-PLUMED=off \
           /tmp/lammps/cmake && \
     make -j 24 && \
-    make install
+    make install && \
+    rm -rf /tmp/lammps/build /tmp/lammps/.git
 
 FROM ubuntu:18.04
 MAINTAINER richard.berger@outlook.com
@@ -74,7 +75,7 @@ RUN apt-get update -y && \
         ssh && \
     rm -rf /var/lib/apt/lists/*
 
-COPY --from=builder /tmp/lammps/examples /home/lammps/examples
+COPY --from=builder /tmp/lammps /home/lammps
 COPY --from=builder /usr/bin/lmp_mpi /usr/bin/lmp_mpi
 COPY --from=builder /usr/lib/x86_64-linux-gnu/liblammps.so.0 /usr/lib/x86_64-linux-gnu/liblammps.so.0
 COPY --from=builder /usr/lib/x86_64-linux-gnu/liblammps.so /usr/lib/x86_64-linux-gnu/liblammps.so
@@ -87,7 +88,7 @@ COPY --from=builder /usr/bin/msi2lmp /usr/bin/msi2lmp
 COPY --from=builder /usr/share/man/man1/msi2lmp.1 /usr/share/man/man1/msi2lmp.1
 COPY --from=builder /usr/share/lammps /usr/share/lammps
 COPY --from=builder /usr/lib/python2.7/dist-packages/lammps.py /usr/lib/python2.7/dist-packages/lammps.py
-RUN chown -R lammps:lammps /home/lammps/examples
+RUN chown -R lammps:lammps /home/lammps/
 
 USER lammps
 WORKDIR /home/lammps

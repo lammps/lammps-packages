@@ -1,4 +1,5 @@
 FROM ubuntu:18.04 as builder
+MAINTAINER richard.berger@outlook.com
 ARG VERSION=stable_7Aug2019
 
 ENV DEBIAN_FRONTEND noninteractive
@@ -48,6 +49,7 @@ RUN cd /tmp && \
     make install
 
 FROM ubuntu:18.04
+MAINTAINER richard.berger@outlook.com
 ENV DEBIAN_FRONTEND noninteractive
 ENV LAMMPS_POTENTIALS=/usr/share/lammps/potentials
 ENV MSI2LMP_LIBRARY=/usr/share/lammps/frc_files

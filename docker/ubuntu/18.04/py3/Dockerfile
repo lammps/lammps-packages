@@ -3,7 +3,6 @@ MAINTAINER richard.berger@outlook.com
 ARG VERSION=stable_7Aug2019
 
 ENV DEBIAN_FRONTEND noninteractive
-RUN groupadd -r lammps && useradd -m -g lammps lammps
 
 RUN apt-get update -y
 RUN apt-get -y install software-properties-common --no-install-recommends
@@ -55,7 +54,6 @@ ENV DEBIAN_FRONTEND noninteractive
 ENV LAMMPS_POTENTIALS=/usr/share/lammps/potentials
 ENV MSI2LMP_LIBRARY=/usr/share/lammps/frc_files
 
-RUN groupadd -r lammps && useradd -m -g lammps lammps
 RUN apt-get update -y
 RUN apt-get -y install software-properties-common --no-install-recommends
 RUN add-apt-repository -y ppa:openkim/latest
@@ -75,6 +73,8 @@ RUN apt-get update -y && \
         libpython3.6 \
         ssh && \
     rm -rf /var/lib/apt/lists/*
+
+RUN useradd -m lammps && usermod -aG rdma lammps
 
 COPY --from=builder /tmp/lammps /home/lammps
 COPY --from=builder /usr/bin/lmp_mpi /usr/bin/lmp_mpi

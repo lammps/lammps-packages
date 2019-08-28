@@ -92,3 +92,4 @@ RUN chown -R lammps:lammps /home/lammps/
 
 USER lammps
 WORKDIR /home/lammps
+CMD /usr/bin/lmp_mpi

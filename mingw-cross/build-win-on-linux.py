@@ -318,7 +318,7 @@ makecmd = "make AR=%s LMP_INC=%s -f Makefile.linux_opencl " % (ar_cmd,lmp_size) 
           + "OCL_INC='-I../../../OpenCL/include' "
 
 if parflag == 'mpi':
-    makecmd += "OCL_LINK='-Wl,--enable-stdcall-fixup ../../../OpenCL/lib_win%s/libOpenCL.dll " % bitflag \
+    makecmd += "OCL_LINK='-static -Wl,--enable-stdcall-fixup ../../../OpenCL/lib_win%s/libOpenCL.dll " % bitflag \
                 + "-L../../../mpich2-win%s/lib -lmpi' " % bitflag \
                 + "OCL_CPP='%s -O3 -DMPI_GERYON -DUCL_NO_EXIT " % cxx_cmd \
                 + "-I../../../mpich2-win%s/include $(LMP_INC) $(OCL_INC) " % bitflag \
@@ -327,7 +327,7 @@ if parflag == 'mpi':
     if verbose: print(txt)
     txt = system(makecmd + "-j %d" % numcpus)
 elif parflag == 'no':
-    makecmd += "OCL_LINK='-Wl,--enable-stdcall-fixup ../../../OpenCL/lib_win%s/libOpenCL.dll " % bitflag \
+    makecmd += "OCL_LINK='-static -Wl,--enable-stdcall-fixup ../../../OpenCL/lib_win%s/libOpenCL.dll " % bitflag \
                 + "-L../../src/STUBS -lmpi_stubs' " \
                 + "OCL_CPP='%s -O3 -DMPI_GERYON -DUCL_NO_EXIT " % cxx_cmd \
                 + "-I../../src/STUBS $(LMP_INC) $(OCL_INC)' "

@@ -15,6 +15,7 @@ RUN mkdir -p /tmp/lammps/build && \
     git checkout $VERSION && \
     cmake3 -C /tmp/lammps/cmake/presets/most.cmake \
           -D CMAKE_BUILD_TYPE=Release \
+          -D CMAKE_CXX_STANDARD=11 \
           -D CMAKE_INSTALL_PREFIX=/usr \
           -D LAMMPS_MACHINE=mpi \
           -D BUILD_LIB=on \

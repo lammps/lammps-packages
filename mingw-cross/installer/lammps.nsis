@@ -78,7 +78,7 @@ Section "${LAMMPS}"
 !insertmacro CreateInternetShortcut "$SMPROGRAMS\${LAMMPS}\LAMMPS WWW Site" \
                   "http://lammps.sandia.gov" "" "0"
 !insertmacro CreateInternetShortcut "$SMPROGRAMS\${LAMMPS}\LAMMPS Commands" \
-                  "http://lammps.sandia.gov/doc/Section_commands.html#individual-commands" "" "0"
+                  "http://lammps.sandia.gov/doc/Commands_all.html" "" "0"
 
   SetOutPath "$INSTDIR"
   CreateDirectory "$INSTDIR\bin"

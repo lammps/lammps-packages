@@ -36,7 +36,6 @@ RUN mkdir -p /tmp/lammps/build && \
           -D CMAKE_BUILD_TYPE=Release \
           -D CMAKE_INSTALL_PREFIX=/usr \
           -D LAMMPS_MACHINE=mpi \
-          -D BUILD_LIB=on \
           -D BUILD_TOOLS=on \
           -D BUILD_SHARED_LIBS=on \
           -D PKG_USER-PLUMED=off \
@@ -76,8 +75,8 @@ RUN useradd -m lammps && usermod -aG rdma lammps
 
 COPY --from=builder /tmp/lammps /home/lammps
 COPY --from=builder /usr/bin/lmp_mpi /usr/bin/lmp_mpi
-COPY --from=builder /usr/lib/x86_64-linux-gnu/liblammps.so.0 /usr/lib/x86_64-linux-gnu/liblammps.so.0
-COPY --from=builder /usr/lib/x86_64-linux-gnu/liblammps.so /usr/lib/x86_64-linux-gnu/liblammps.so
+COPY --from=builder /usr/lib/x86_64-linux-gnu/liblammps_mpi.so.0 /usr/lib/x86_64-linux-gnu/liblammps_mpi.so.0
+COPY --from=builder /usr/lib/x86_64-linux-gnu/liblammps_mpi.so /usr/lib/x86_64-linux-gnu/liblammps_mpi.so
 COPY --from=builder /usr/include/lammps/ /usr/include/lammps/
 COPY --from=builder /usr/lib/x86_64-linux-gnu/pkgconfig/liblammps.pc /usr/lib/x86_64-linux-gnu/pkgconfig/liblammps.pc
 COPY --from=builder /usr/share/cmake/Modules/FindLAMMPS.cmake /usr/share/cmake/Modules/FindLAMMPS.cmake

@@ -18,7 +18,6 @@ RUN mkdir -p /tmp/lammps/build && \
           -D CMAKE_CXX_STANDARD=11 \
           -D CMAKE_INSTALL_PREFIX=/usr \
           -D LAMMPS_MACHINE=mpi \
-          -D BUILD_LIB=on \
           -D BUILD_TOOLS=on \
           -D BUILD_SHARED_LIBS=on \
           -D PKG_USER-PLUMED=off \
@@ -33,8 +32,8 @@ RUN useradd -m lammps
 RUN yum update -y && yum install -y epel-release && yum install -y fftw libjpeg libpng python python-pip blas lapack openmpi && yum clean -y all
 COPY --from=builder /tmp/lammps /home/lammps
 COPY --from=builder /usr/bin/lmp_mpi /usr/bin/lmp_mpi
-COPY --from=builder /usr/lib64/liblammps.so.0 /usr/lib64/liblammps.so.0
-COPY --from=builder /usr/lib64/liblammps.so /usr/lib64/liblammps.so
+COPY --from=builder /usr/lib64/liblammps_mpi.so.0 /usr/lib64/liblammps_mpi.so.0
+COPY --from=builder /usr/lib64/liblammps_mpi.so /usr/lib64/liblammps_mpi.so
 COPY --from=builder /usr/include/lammps/ /usr/include/lammps/
 COPY --from=builder /usr/lib64/pkgconfig/liblammps.pc /usr/lib64/pkgconfig/liblammps.pc
 COPY --from=builder /usr/share/cmake/Modules/FindLAMMPS.cmake /usr/share/cmake/Modules/FindLAMMPS.cmake

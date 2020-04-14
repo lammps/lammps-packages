@@ -20,6 +20,7 @@ RUN mkdir -p /tmp/lammps/build && \
           -D LAMMPS_MACHINE=mpi \
           -D BUILD_TOOLS=on \
           -D BUILD_SHARED_LIBS=on \
+          -D PYTHON_EXECUTABLE=/usr/bin/python2 \
           -D PKG_USER-PLUMED=off \
           /tmp/lammps/cmake && \
     make -j 24 && \

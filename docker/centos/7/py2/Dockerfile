@@ -36,7 +36,6 @@ COPY --from=builder /usr/lib64/liblammps_mpi.so.0 /usr/lib64/liblammps_mpi.so.0
 COPY --from=builder /usr/lib64/liblammps_mpi.so /usr/lib64/liblammps_mpi.so
 COPY --from=builder /usr/include/lammps/ /usr/include/lammps/
 COPY --from=builder /usr/lib64/pkgconfig/liblammps_mpi.pc /usr/lib64/pkgconfig/liblammps_mpi.pc
-COPY --from=builder /usr/share/cmake/Modules/FindLAMMPS.cmake /usr/share/cmake/Modules/FindLAMMPS.cmake
 COPY --from=builder /usr/lib64/cmake/LAMMPS/LAMMPS_Targets.cmake /usr/lib64/cmake/LAMMPS/LAMMPS_Targets.cmake
 COPY --from=builder /usr/lib64/cmake/LAMMPS/LAMMPS_Targets-release.cmake /usr/lib64/cmake/LAMMPS/LAMMPS_Targets-release.cmake
 COPY --from=builder /usr/lib64/cmake/LAMMPS/LAMMPSConfig.cmake /usr/lib64/cmake/LAMMPS/LAMMPSConfig.cmake

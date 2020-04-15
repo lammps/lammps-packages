@@ -39,6 +39,7 @@ RUN mkdir -p /tmp/lammps/build && \
           -D BUILD_TOOLS=on \
           -D BUILD_SHARED_LIBS=on \
           -D PKG_USER-PLUMED=off \
+          -D Python_EXECUTABLE=/usr/bin/python2 \
           /tmp/lammps/cmake && \
     make -j 24 && \
     make install && \

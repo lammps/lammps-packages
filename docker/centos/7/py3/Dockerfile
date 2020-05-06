@@ -2,8 +2,14 @@ FROM centos:7 as builder
 MAINTAINER richard.berger@outlook.com
 
 RUN yum update -y && yum install -y epel-release
-RUN yum install -y make gcc gcc-c++ gcc-gfortran cmake3 git
-RUN yum install -y openmpi-devel libpng-devel libjpeg-devel openmpi-devel fftw-devel zlib-devel python36-devel blas-devel lapack-devel eigen3-devel
+RUN yum -y install vim-enhanced \
+                   ccache gcc-c++ gcc-gfortran clang gdb valgrind-openmpi \
+                   make cmake cmake3 ninja-build patch which file git Lmod \
+                   libpng-devel libjpeg-devel openmpi-devel python36-devel \
+                   hdf5-devel python36-virtualenv python36-pip \
+                   netcdf-devel netcdf-openmpi-devel \
+                   python-virtualenv fftw-devel voro++-devel eigen3-devel gsl-devel openblas-devel enchant \
+                   blas-devel lapack-devel
 
 ENV PATH=/usr/lib64/openmpi/bin${PATH:+:}${PATH}
 ENV LD_LIBRARY_PATH=/usr/lib64/openmpi/lib${LD_LIBRARY_PATH:+:}${LD_LIBRARY_PATH}
@@ -30,7 +36,14 @@ RUN mkdir -p /tmp/lammps/build && \
 FROM centos:7
 MAINTAINER richard.berger@outlook.com
 RUN useradd -m lammps
-RUN yum update -y && yum install -y epel-release && yum install -y fftw libjpeg libpng python36 python36-pip blas lapack openmpi && yum clean -y all
+RUN yum update -y && yum install -y epel-release && yum -y install \
+                   gdb valgrind-openmpi \
+                   patch which file git Lmod \
+                   libpng libjpeg openmpi python \
+                   hdf5 python-pip \
+                   netcdf-openmpi \
+                   python-virtualenv fftw voro++ gsl openblas enchant \
+                   blas lapack && yum clean -y all
 COPY --from=builder /tmp/lammps /home/lammps
 COPY --from=builder /usr/bin/lmp_mpi /usr/bin/lmp_mpi
 COPY --from=builder /usr/lib64/liblammps_mpi.so.0 /usr/lib64/liblammps_mpi.so.0

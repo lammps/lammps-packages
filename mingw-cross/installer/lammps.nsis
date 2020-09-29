@@ -29,7 +29,7 @@ WriteINIStr "${FILENAME}.url" "InternetShortcut" "IconIndex" "${ICONINDEX}"
 !macroend
 
 !ifndef LIBGCC
-!define LIBGCC libgcc_s_sjlj-1.dll
+!define LIBGCC libgcc_s_dw2-1.dll
 !endif
 
 !define LAMMPS "LAMMPS ${BIT}-bit ${VERSION}"
@@ -98,32 +98,23 @@ Section "${LAMMPS}"
   File *.dll
 
   SetOutPath "$INSTDIR\Doc"
-  File /oname=LAMMPS-Manual.pdf  lammps-${LMPREV}/doc/Manual.pdf
-  File /oname=LAMMPS-Developer.pdf  lammps-${LMPREV}/doc/Developer.pdf
-  File /oname=Colvars-Manual.pdf lammps-${LMPREV}/doc/src/PDF/colvars-refman-lammps.pdf
-  File /oname=CreateAtoms-Manual.pdf  lammps-${LMPREV}/tools/createatoms/Manual.pdf
-  File /oname=Kspace-Extra-Info.pdf lammps-${LMPREV}/doc/src/PDF/kspace.pdf
-  File /oname=PairGayBerne-Manual.pdf lammps-${LMPREV}/doc/src/PDF/pair_gayberne_extra.pdf
-  File /oname=PairReSquared-Manual.pdf lammps-${LMPREV}/doc/src/PDF/pair_resquared_extra.pdf
-  File /oname=PDLAMMPS-Overview.pdf lammps-${LMPREV}/doc/src/PDF/PDLammps_overview.pdf
-  File /oname=PDLAMMPS-EPS.pdf lammps-${LMPREV}/doc/src/PDF/PDLammps_EPS.pdf
-  File /oname=PDLAMMPS-VES.pdf lammps-${LMPREV}/doc/src/PDF/PDLammps_VES.pdf
-  File /oname=SPH-Manual.pdf lammps-${LMPREV}/doc/src/PDF/SPH_LAMMPS_userguide.pdf
-  File /oname=SMD-Manual.pdf lammps-${LMPREV}/doc/src/PDF/SMD_LAMMPS_userguide.pdf
-  File /oname=CGDNA-Manual.pdf lammps-${LMPREV}/doc/src/PDF/USER-CGDNA.pdf
+  File *.pdf
 
   SetOutPath "$INSTDIR\Potentials"
-  File lammps-${LMPREV}/potentials/*
+  File potentials/*
 
   SetOutPath "$INSTDIR\Examples"
-  File /r /x log.*.4 lammps-${LMPREV}/examples/*
+  File /r /x log.*.4 examples/*
 
   SetOutPath "$INSTDIR\frc_files"
-  File /oname=README-msi2lmp.txt lammps-${LMPREV}/tools/msi2lmp/README.txt
-  File /r lammps-${LMPREV}/tools/msi2lmp/frc_files/*
+  File /oname=README-msi2lmp.txt tools/msi2lmp/README.txt
+  File /r tools/msi2lmp/frc_files/*
 
   SetOutPath "$INSTDIR\Benchmarks"
-  File /r /x log.*.4 lammps-${LMPREV}/bench/*
+  File /r /x log.*.4 bench/*
+
+  SetOutPath "$INSTDIR\Python"
+  File /r /x __pycache__ python/*
 
   # add MPICH2 path
   Push "${MPICHDIR}"
@@ -167,6 +158,7 @@ Section "Uninstall"
   RMDir /r /REBOOTOK "$INSTDIR\Doc"
   RMDir /r /REBOOTOK "$INSTDIR\Examples"
   RMDir /r /REBOOTOK "$INSTDIR\Potentials"
+  RMDir /r /REBOOTOK "$INSTDIR\Python"
   RMDir /r /REBOOTOK "$INSTDIR\frc_files"
   RMDir /REBOOTOK "$INSTDIR"
 SectionEnd

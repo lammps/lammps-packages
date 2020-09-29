@@ -270,12 +270,17 @@ shutil.copy(os.path.join(gitdir,"doc","src","PDF","SPH_LAMMPS_userguide.pdf"),os
 shutil.copy(os.path.join(gitdir,"doc","src","PDF","SMD_LAMMPS_userguide.pdf"),os.path.join(builddir,"SMD-Manual.pdf"))
 shutil.copy(os.path.join(gitdir,"doc","src","PDF","USER-CGDNA.pdf"),os.path.join(builddir,"CGDNA-Manual.pdf"))
 
-# prune outdated inputs or examples of packages we don't bundle
+# prune outdated inputs, too large files, or examples of packages we don't bundle
 for d in ['accelerate','kim','mscg','USER/quip','USER/vtk']:
     shutil.rmtree(os.path.join("examples",d),True)
 for d in ['FERMI','KEPLER']:
     shutil.rmtree(os.path.join("bench",d),True)
 shutil.rmtree("tools/msi2lmp/test",True)
+os.remove("python/install.py")
+os.remove("potentials/C_10_10.mesocnt")
+os.remove("potentials/TABTP_10_10.mesont")
+os.remove("examples/USER/mesont/C_10_10.mesocnt")
+os.remove("examples/USER/mesont/TABTP_10_10.mesont")
 
 # convert text files to CR-LF conventions
 txt = system("unix2dos LICENSE.txt README.txt tools/msi2lmp/README")

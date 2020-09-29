@@ -88,13 +88,22 @@ Section "${LAMMPS}"
   CreateDirectory "$INSTDIR\Benchmarks"
   CreateDirectory "$INSTDIR\Examples"
   CreateDirectory "$INSTDIR\Potentials"
+  CreateDirectory "$INSTDIR\Python"
   CreateDirectory "$INSTDIR\frc_files"
 
-  File /oname=License.txt lammps-${LMPREV}/LICENSE
-  File /oname=README.txt  lammps-${LMPREV}/README
+  File License.txt
+  File README.txt
 
   SetOutPath "$INSTDIR\bin"
   File ${MINGW}/${LIBGCC}
+  File ${MINGW}/libstdc++-6.dll
+  File ${MINGW}/libgfortran-5.dll
+  File ${MINGW}/libgomp-1.dll
+  File ${MINGW}/libjpeg-62.dll
+  File ${MINGW}/libpng16-16.dll
+  File ${MINGW}/zlib1.dll
+  File ${MINGW}/libquadmath-0.dll
+  File ${MINGW}/libwinpthread-1.dll
 
   File *.exe
   File *.dll
@@ -104,6 +113,9 @@ Section "${LAMMPS}"
 
   SetOutPath "$INSTDIR\Potentials"
   File potentials/*
+
+  SetOutPath "$INSTDIR\Python"
+  File python/*
 
   SetOutPath "$INSTDIR\Examples"
   File /r /x log.*.4 examples/*
@@ -140,8 +152,6 @@ functionEnd
 
 Section "Uninstall"
   SetRegView ${BIT}
-  File lammps-logo.bmp
-  SetBrandingImage "lammps-logo.bmp"
 
   # update path variables
   EnVar::SetHKLM

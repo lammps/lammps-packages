@@ -296,7 +296,7 @@ print("Configuring and building installer")
 os.chdir(builddir)
 shutil.move("OpenCL/lib_win%s/libOpenCL.dll" % bitflag,builddir)
 shutil.copy(os.path.join(homedir,"installer","lammps.nsis"),builddir)
-shutil.copytree(os.path.join(gitdir,"installer/envvar"),builddir),symlinks=False)
+shutil.copytree(os.path.join(homedir,"installer","envvar"),os.path.join(builddir,"envvar"),symlinks=False)
 
 # define version flag of the installer:
 # - use current timestamp, when pulling from master (for daily builds)

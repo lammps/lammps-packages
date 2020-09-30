@@ -6,6 +6,8 @@
 # ${LIBGCC}  = name of libgcc dll file to use
 # ${MINGW}   = <path to mingw windows dlls>
 
+!include "MUI2.nsh"
+
 Unicode true
 
 !include "LogicLib.nsh"
@@ -46,22 +48,27 @@ InstallDir "$ProgramFiles\${LAMMPS}"
 !define MPICHDIR "$ProgramFiles\MPICH2\bin"
 !endif
 
-XPStyle on
 ShowInstDetails show
 ShowUninstDetails show
 SetCompressor lzma
 
-Page directory
-Page instfiles
+!define MUI_ABORTWARNING
 
-DirText "Please select the LAMMPS installation folder."
+!insertmacro MUI_PAGE_LICENSE "./LICENSE.txt"
+!insertmacro MUI_PAGE_DIRECTORY
+!insertmacro MUI_PAGE_INSTFILES
+
+!insertmacro MUI_UNPAGE_CONFIRM
+!insertmacro MUI_UNPAGE_INSTFILES
+
+!insertmacro MUI_LANGUAGE "English"
 
 function .onInit
   setShellVarContext all
 !insertmacro VerifyUserIsAdmin
 functionEnd
 
-Section "${LAMMPS}"
+Section "${LAMMPS}" SecLammps
   SectionIn RO
   SetRegView ${BIT}
 
@@ -143,7 +150,16 @@ Section "${LAMMPS}"
   # add python module to path
   EnVar::AddValue "PYTHONPATH" "$INSTDIR\Python"
   EnVar::SetHKCU
+
+  WriteUninstaller "$INSTDIR\Uninstall.exe"
 SectionEnd
+
+LangString DESC_SecLammps ${LANG_ENGLISH} "LAMMPS Installation"
+
+;Assign language strings to sections
+!insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
+  !insertmacro MUI_DESCRIPTION_TEXT ${SecLammps} $(DESC_SecLammps)
+!insertmacro MUI_FUNCTION_DESCRIPTION_END
 
 function un.onInit
   SetShellVarContext all
@@ -179,11 +195,6 @@ Section "Uninstall"
   RMDir /r /REBOOTOK "$INSTDIR\Python"
   RMDir /r /REBOOTOK "$INSTDIR\frc_files"
   RMDir /REBOOTOK "$INSTDIR"
-SectionEnd
-
-Section -post
-  SetRegView ${BIT}
-  WriteUninstaller "$INSTDIR\Uninstall.exe"
 SectionEnd
 
 # Local Variables:

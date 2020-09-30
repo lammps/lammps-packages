@@ -154,13 +154,6 @@ Section "${LAMMPS}" SecLammps
   WriteUninstaller "$INSTDIR\Uninstall.exe"
 SectionEnd
 
-LangString DESC_SecLammps ${LANG_ENGLISH} "LAMMPS Installation"
-
-;Assign language strings to sections
-!insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
-  !insertmacro MUI_DESCRIPTION_TEXT ${SecLammps} $(DESC_SecLammps)
-!insertmacro MUI_FUNCTION_DESCRIPTION_END
-
 function un.onInit
   SetShellVarContext all
 !insertmacro VerifyUserIsAdmin

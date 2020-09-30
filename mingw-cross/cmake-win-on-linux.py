@@ -330,7 +330,6 @@ else:
 
 # clean up after successful build
 os.chdir('..')
-sys.exit("Normal exit")
 
 print("Cleaning up...")
 shutil.rmtree(builddir,True)

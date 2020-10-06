@@ -111,6 +111,9 @@ Section "${LAMMPS}" SecLammps
   File ${MINGW}/zlib1.dll
   File ${MINGW}/libquadmath-0.dll
   File ${MINGW}/libwinpthread-1.dll
+  File ${MINGW}/libhistory8.dll
+  File ${MINGW}/libreadline8.dll
+  File ${MINGW}/libtermcap-0.dll
 
   File *.exe
   File *.dll
@@ -152,6 +155,12 @@ Section "${LAMMPS}" SecLammps
   EnVar::SetHKCU
 
   WriteUninstaller "$INSTDIR\Uninstall.exe"
+
+  # Launch LAMMPS shell in the user's personal documents folder (not elegant or clean but seems to work)
+  CreateDirectory "%HOMEDRIVE%%HOMEPATH%\Documents\LAMMPS"
+  SetOutPath "%HOMEDRIVE%%HOMEPATH%\Documents\LAMMPS"
+  CreateShortCut  "$SMPROGRAMS\${LAMMPS}\LAMMPS-Shell.lnk"          "$WINDIR\system32\cmd.exe"       \
+                  '/c "$INSTDIR\Bin\lammps-shell.exe"' ""  "" SW_SHOWNORMAL "" "The LAMMPS Shell"
 SectionEnd
 
 function un.onInit

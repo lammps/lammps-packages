@@ -4,7 +4,7 @@
 # (c) 2017 Axel Kohlmeyer <akohlmey@gmail.com>
 
 from __future__ import print_function
-import sys,os,shutil,glob,re,subprocess,tarfile,gzip,time
+import sys,os,shutil,glob,re,subprocess,tarfile,gzip,time,inspect
 try: from urllib.request import urlretrieve as geturl
 except: from urllib import urlretrieve as geturl
 
@@ -60,7 +60,7 @@ def which(program):
     return None
 
 # record location and name of python script
-homedir, exename = os.path.split(fullpath(sys.argv[0]))
+homedir, exename = os.path.split(os.path.abspath(inspect.getsourcefile(lambda:0)))
 
 # default settings help message and default settings
 
@@ -100,7 +100,7 @@ Flags (all flags are optional, defaults listed below):
 
 Example:
   python %s -r unstable -t omp -p mpi
-""" % (exename,bitflag,numcpus,parflag,thrflag,revflag,exename,gitdir)
+""" % (exename,bitflag,numcpus,parflag,thrflag,revflag,gitdir,exename)
 
 # parse arguments
 
@@ -231,7 +231,7 @@ cmd = "mingw%s-cmake -G Ninja -D CMAKE_BUILD_TYPE=Release" % bitflag
 cmd += " -C %s/cmake/presets/mingw-cross.cmake %s/cmake" % (gitdir,gitdir)
 cmd += " -DBUILD_SHARED_LIBS=on -DBUILD_MPI=%s -DBUILD_OPENMP=%s" % (mpiflag,ompflag)
 cmd += " -DWITH_GZIP=on -DWITH_FFMPEG=on -DLAMMPS_EXCEPTIONS=on"
-cmd += " -DINTEL_LRT_MODE=c++11"
+cmd += " -DINTEL_LRT_MODE=c++11 -DBUILD_LAMMPS_SHELL=on"
 
 print("Running: ",cmd)
 txt = system(cmd)

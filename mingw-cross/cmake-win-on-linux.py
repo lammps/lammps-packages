@@ -143,7 +143,7 @@ if parflag != 'no' and parflag != 'mpi':
     error("Unsupported parallel flag %s" % parflag)
 if thrflag != 'no' and thrflag != 'omp':
     error("Unsupported threading flag %s" % thrflag)
-    
+
 # test for valid revision name format: branch names, release tags, or commit hashes
 rev1 = re.compile("^(stable|unstable|master)$")
 rev2 = re.compile(r"^(patch|stable)_\d+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\d{4}$")
@@ -176,7 +176,6 @@ else:
     size_cmd = which('x86_64-w64-mingw32-size')
     nsis_cmd = which('makensis')
     lmp_size = 'smallbig'
-
 
 print("""
 Settings: building LAMMPS revision %s for %s-bit Windows
@@ -228,6 +227,8 @@ else:
 
 print("Configuring build with CMake")
 cmd = "mingw%s-cmake -G Ninja -D CMAKE_BUILD_TYPE=Release" % bitflag
+cmd += " -D ADD_PKG_CONFIG_PATH=%s/mingw%s-pkgconfig" % (homedir,bitflag)
+cmd += " -C %s/mingw%s-pkgconfig/addpkg.cmake" % (homedir,bitflag)
 cmd += " -C %s/cmake/presets/mingw-cross.cmake %s/cmake" % (gitdir,gitdir)
 cmd += " -DBUILD_SHARED_LIBS=on -DBUILD_MPI=%s -DBUILD_OPENMP=%s" % (mpiflag,ompflag)
 cmd += " -DWITH_GZIP=on -DWITH_FFMPEG=on -DLAMMPS_EXCEPTIONS=on"

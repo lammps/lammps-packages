@@ -70,9 +70,10 @@ thrflag = 'omp'
 revflag = 'stable'
 verbose = False
 gitdir  = os.path.join(homedir,"lammps")
+adminflag = True
 
 helpmsg = """
-Usage: python %s -b <bits> -j <cpus> -p <mpi> -t <thread> -r <rev> -v <yes|no> -g <folder>
+Usage: python %s -b <bits> -j <cpus> -p <mpi> -t <thread> -r <rev> -v <yes|no> -g <folder> -a <yes|no>
 
 Flags (all flags are optional, defaults listed below):
   -b : select Windows variant (default value: %s)
@@ -97,6 +98,11 @@ Flags (all flags are optional, defaults listed below):
     -v no       : print only progress messages
   -g : select folder with git checkout of LAMMPS sources
     -g <folder> : use LAMMPS checkout in <folder>  (default value: %s)
+  -a : select admin level installation (default value: yes)
+    -a yes      : the created installer requires to be run at admin level
+                  and LAMMPS is installed to be accessible by all users
+    -a no       : the created installer runs without admin privilege and
+                  LAMMPS is installed into the current user's appdata folder
 
 Example:
   python %s -r unstable -t omp -p mpi
@@ -129,6 +135,13 @@ while i < argc:
             verbose = False
         else:
             error("\nUnknown verbose keyword:",argv[i+1])
+    elif argv[i] == '-a':
+        if argv[i+1] in ['yes','Yes','Y','y','on','1','True','true']:
+            adminflag = True
+        elif argv[i+1] in ['no','No','N','n','off','0','False','false']:
+            adminflag = False
+        else:
+            error("\nUnknown admin flag option:",argv[i+1])
     elif argv[i] == '-g':
         gitdir = fullpath(argv[i+1])
     else:
@@ -296,7 +309,12 @@ print("Done")
 print("Configuring and building installer")
 os.chdir(builddir)
 shutil.move("OpenCL/lib_win%s/libOpenCL.dll" % bitflag,builddir)
-shutil.copy(os.path.join(homedir,"installer","lammps.nsis"),builddir)
+if adminflag:
+    nsisfile = os.path.join(homedir,"installer","lammps-admin.nsis")
+else:
+    nsisfile = os.path.join(homedir,"installer","lammps-noadmin.nsis")
+
+shutil.copy(nsisfile,os.path.join(builddir,"lammps.nsis"))
 shutil.copytree(os.path.join(homedir,"installer","envvar"),os.path.join(builddir,"envvar"),symlinks=False)
 
 # define version flag of the installer:

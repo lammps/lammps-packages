@@ -13,6 +13,3 @@ Webpages to document the packages and the scripts. http://packages.lammps.org
 Scripts for building Windows NSIS installer packages with
 MinGW64 cross compilers under Fedora Linux.
 
-## rpm
-
-

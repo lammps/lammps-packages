@@ -5,13 +5,8 @@
     <link rel="shortcut icon" href="ICMS_icon.png" type="image/png">
   </head>
 
-
-  <body style="font-family: sans-serif; margin-bottom: 4%; margin-top: 4%; margin-left: 5%; margin-right: 10%;">
-    <div style="display: inline; margin-right: 10px; float: left; valign: center;">
-      <a href="http://packages.lammps.org"><img src="arrowup.png" border="0" style=""
-                                                width="56" height="55">
-        &nbsp;Back to LAMMPS Packages Overview</a>
-    </div>
+  <body style="font-family: sans-serif; margin-bottom: 2%; margin-top: 2%; margin-left: 5%; margin-right: 5%;">
+    <a href="index.html"> &nbsp;Back to LAMMPS Packages for Windows Overview</a>
     <hr width="100%">
     <div style="display: inline; margin-left: 10px; margin-bottom: 5px; border: 5px; border-style: groove; float: right;">
       <img src="lammpswinlogo.png" border="0" style="" width="300" height="182">
@@ -55,12 +50,16 @@
       to an <a href="http://www.khronos.org/opencl/" target="_blank">OpenCL v1.2</a>
       compatible ICD loader. This means the executables do not contain any vendor
       provided code and should be compatible with GPUs from both
-      <a href="http://developer.amd.com/tools-and-sdks/opencl-zone/" target="_blank">AMD</a>
-      and <a href="http://www.nvidia.com/opencl/" target="_blank">Nvidia</a>.
-      The GPU package has been compiled for mixed precision computation and
-      is currently somewhat tuned for Nvidia (Kepler generation) GPUs.
-      It <u>does not yet</u> work with OpenCL drivers for CPUs (like those included
-      in the Intel and AMD OpenCL SDKs).
+      <a href="http://developer.amd.com/tools-and-sdks/opencl-zone/"
+      target="_blank">AMD</a>
+      and <a href="http://www.nvidia.com/opencl/"
+      target="_blank">Nvidia</a>.  The GPU package has been compiled for
+      mixed precision computation and is currently somewhat tuned for
+      Nvidia (Kepler generation) GPUs.  Its compatibility with OpenCL
+      drivers is varied. This is in part due to the code for the GPU
+      kernels seeing only minimal maintenance on OpenCL platforms, and
+      in part due to not fully backward compatible behavior of OpenCL
+      drivers.
       <br>
     </div>
     <div align="justify">
@@ -88,6 +87,14 @@
       the Python interpreters bundled with <i>Microsoft Visual
       Studio</i>, but should be usable with any Python interpreter that
       is for the same architecture (32-bit or 64-bit x86).<br>
+    </div>
+    <div style="clear:both;"></div>
+    <hr width="100%">
+    <h3>LAMMPS Shell</h3>
+    <div align="justify">
+      These Windows packages also include the
+      <a href="https://docs.lammps.org/Tools.html#lammps-shell">LAMMPS Shell</a/>,
+      a customized LAMMPS executable enhanced for interactive use.
     </div>
     <div style="clear:both;"></div>
     <hr width="100%">
@@ -132,7 +139,7 @@
         <li>most of the example inputs, reference outputs and related files</li>
         <li>the benchmark inputs and reference outputs</li>
         <li>the tools <strong><code>binary2txt, chain, msi2lmp, abf_integrate,
-              createatoms, ocl_get_devices</code></strong></li>
+              createatoms, ocl_get_devices, lammps-shell</code></strong></li>
       </ul>
 
       <p align="justify">Both executables will run in serial when executed directly.
@@ -148,6 +155,18 @@
             mpich2-1.4.1p1-win-x86-64.msi</a>. This is the latest available binary 64-bit
           MPI package compatible with the GNU cross compilers used to compile LAMMPS.
       </p>
+    </div>
+    <hr width="100%">
+    <h2>Installing LAMMPS on Windows without administrator privilege</h2>
+    <div align="justify">
+      The installer packages listed above require administrator privilege and will
+      install LAMMPS so it can be used by all users.  This is not always possible
+      and particularly for Windows 10 there are additional restrictions that will
+      make it difficult or even impossible to install those packages. Thus we also
+      are now building packages that do a user-level installation into the individual
+      user's "appdata" folder. These can be found in
+      <a href="http://rpm.lammps.org/windows/noadmin/">their own download area</a>.
+      The content is otherwise the same, only the packaging is different.
     </div>
     <hr width="100%">
 
@@ -237,10 +256,10 @@
       multi-threading since MPICH restricts processes to a single
       physical CPU thus it will run less efficient. </p>
     <hr>
-    <p>Last modified: Wed Sep 03:08:35 UTC 2020 by akohlmey</p>
+    <p>Last modified: Sun Oct 11 02:59:06 UTC 2020 by akohlmey</p>
   </body>
 </html>
 <!-- Local Variables: -->
-<!-- time-stamp-pattern: "-8/<p>Last modified:[ \t]+%3a %3b %02H:%02M:%02S %Z %:y by %u</p>" -->
+<!-- time-stamp-pattern: "-8/<p>Last modified:[ \t]+%3a %3b %2d %02H:%02M:%02S %Z %:y by %u</p>" -->
 <!-- time-stamp-time-zone: "UTC" -->
 <!-- End: -->

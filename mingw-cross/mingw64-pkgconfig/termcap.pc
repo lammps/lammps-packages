@@ -1,0 +1,11 @@
+prefix=/usr/x86_64-w64-mingw32/sys-root/mingw
+exec_prefix=/usr/x86_64-w64-mingw32/sys-root/mingw
+libdir=/usr/x86_64-w64-mingw32/sys-root/mingw/lib
+includedir=/usr/x86_64-w64-mingw32/sys-root/mingw/include
+
+Name: Termcap
+Description: GNU/MinGW terminal feature database
+URL: ftp://ftp.gnu.org/gnu/termcap/
+Version: 1.3
+Libs: -L${libdir} -ltermcap
+Cflags:

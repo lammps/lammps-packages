@@ -2,17 +2,12 @@
 <html>
   <head>
     <title>Building Windows Installer Packages with MinGW64 Cross-compilers on Fedora Linux</title>
+    <link rel="shortcut icon" href="ICMS_icon.png" type="image/png">
   </head>
 
-  <body style="font-family: Helvetica,Arial,Verdana, sans-serif; margin-bottom: 2%; margin-top: 2%; margin-left: 5%; margin-right: 5%;">
-    <div style="display: inline; margin-right: 10px; float: left">
-      <a href="http://packages.lammps.org"><img src="arrowup.png" border="0" style=""
-                                                width="56" height="55">
-        &nbsp;Back to LAMMPS Packages Overview</a>
-    </div>
-
+  <body style="font-family: sans-serif; margin-bottom: 2%; margin-top: 2%; margin-left: 5%; margin-right: 5%;">
+    <a href="index.html"> &nbsp;Back to LAMMPS Packages for Windows Overview</a>
     <hr width="100%">
-
     <div style="display: inline; margin-left: 10px; margin-bottom: 5px; border: 5px; border-style: groove; float: right;">
       <img src="lammpswinlogo.png" border="0" style="" width="300" height="182">
     </div>
@@ -23,81 +18,147 @@
       <a href="https://mingw-w64.org" target="_blank">MinGW64</a>
       cross-compiler <a href="http://fedoraproject.org/wiki/MinGW"
                         target="_blank">toolchain as bundled
-        with Fedora Linux</a>. Using a Linux-hosted cross compiler
-      has the advantage, that the process of building LAMMPS can be
-      done with similar tools, makefiles and scripts than what is
-      used routinely on Linux/Unix-like machines, which makes it easy
-      to automate the process and minimizes the maintenance effort.
-      It <b>is</b> possible to build and run LAMMPS natively on
-      Windows using a Cygwin or MinGW environment. Another alternative
-      for running LAMMPS on Windows is to install the Windows Subsystem
-      for Linux on Windows 10 and then install or compile and run Linux
-      executables in the embedded Ubuntu Linux subsystem with Bash on Windows.
+        with Fedora Linux</a>. There are two reasons for this:
+      <il>
+        <li>LAMMPS is developed primarily on Linux, so building the
+          Windows executables with a cross-compiler allows using
+          familiar tools and the process can be scripted and automated
+          in the same way.
+        <li>LAMMPS is not ported to the "native" Visual C++ compilers
+          but does support the MinGW64 toolchain, which is available
+          as a native and a cross-compiler.
+      </il>
+    </p>
+    <p align="justify">
+      An alternative for running LAMMPS on Windows machines is to
+      install the Windows Subsystem for Linux on Windows 10 and then
+      install or compile and run Linux executables in the embedded
+      Ubuntu Linux subsystem with Bash on Windows.
     </p>
     <h2>Prerequisites</h2>
-    The cross-compilation is currently tested on Fedora Linux 27 and
-    the following packages and their dependencies should be installed:
+    <p align="justify">
+      The cross-compilation is currently performed and tested on Fedora Linux 32
+      with the (many) prerequisite rpm packages installed that are listed below.
+      A simpler way to obtain a compatible build environment is to download and use the
+      <a href="https://cloud.sylabs.io/library/lammps/default/lammps_development">
+        Fedora32-MinGW singularity image for LAMMPS development</a> with
+      <pre>
+        singularity pull --arch amd64 fedora32_mingw.sif library://lammps/default/lammps_development:fedora32_mingw
+        singularity shell fedora32_mingw.sif
+      </pre>
+    </p>
+
+    Here is the list of packages which should be installed (and their dependencies):
     <div style="background-color: #e8e8f0;">
-    <ul>
-      <li>make</li>
-      <li>python</li>
-      <li>ccache</li>
-      <li>git</li>
-      <li>patch</li>
-      <li>dos2unix</li>
-      <li>htmldoc</li>
-      <li>mingw32-nsis</li>
-      <li>mingw32-gcc-c++</li>
-      <li>mingw32-gcc-gfortran</li>
-      <li>mingw32-libjpeg-turbo-static</li>
-      <li>mingw32-winpthreads-static</li>
-      <li>mingw32-libgomp</li>
-      <li>mingw32-libpng-static</li>
-      <li>mingw32-zlib-static</li>
-      <li>mingw64-gcc-c++</li>
-      <li>mingw64-gcc-gfortran</li>
-      <li>mingw64-libjpeg-turbo-static</li>
-      <li>mingw64-winpthreads-static</li>
-      <li>mingw64-libgomp</li>
-      <li>mingw64-libpng-static</li>
-      <li>mingw64-zlib-static</li>
-    </ul>
+      <ul>
+        <li>vim-enhanced</li>
+        <li>git</li>
+        <li>file</li>
+        <li>make</li>
+        <li>cmake</li>
+        <li>patch</li>
+        <li>which</li>
+        <li>ninja-build</li>
+        <li>diffutils</li>
+        <li>dos2unix</li>
+        <li>findutils</li>
+        <li>rsync</li>
+        <li>ccache</li>
+        <li>gcc-c++</li>
+        <li>eigen3-devel</li>
+        <li>python3-pyyaml</li>
+        <li>mingw-filesystem-base</li>
+        <li>mingw32-nsis</li>
+        <li>mingw-binutils-generic</li>
+        <li>mingw32-filesystem</li>
+        <li>mingw32-pkg-config</li>
+        <li>mingw64-filesystem</li>
+        <li>mingw64-pkg-config</li>
+        <li>mingw32-crt</li>
+        <li>mingw32-headers</li>
+        <li>mingw32-binutils</li>
+        <li>mingw64-crt</li>
+        <li>mingw64-headers</li>
+        <li>mingw64-binutils</li>
+        <li>mingw32-cpp</li>
+        <li>mingw32-gcc</li>
+        <li>mingw32-gcc-gfortran</li>
+        <li>mingw32-gcc-c++</li>
+        <li>mingw64-cpp</li>
+        <li>mingw64-gcc</li>
+        <li>mingw64-gcc-gfortran</li>
+        <li>mingw64-gcc-c++</li>
+        <li>mingw32-libgomp</li>
+        <li>mingw64-libgomp</li>
+        <li>mingw32-winpthreads</li>
+        <li>mingw64-winpthreads</li>
+        <li>mingw32-eigen3</li>
+        <li>mingw64-eigen3</li>
+        <li>mingw32-fftw</li>
+        <li>mingw64-fftw</li>
+        <li>mingw32-libjpeg-turbo</li>
+        <li>mingw64-libjpeg-turbo</li>
+        <li>mingw32-libpng</li>
+        <li>mingw64-libpng</li>
+        <li>mingw32-readline</li>
+        <li>mingw64-readline</li>
+        <li>mingw32-termcap</li>
+        <li>mingw64-termcap</li>
+        <li>mingw32-zlib</li>
+        <li>mingw64-zlib</li>
+        <li>enchant</li>
+        <li>python3-virtualenv</li>
+        <li>doxygen</li>
+        <li>latexmk</li>
+        <li>texlive-latex-fonts</li>
+        <li>texlive-pslatex</li>
+        <li>texlive-collection-latexrecommended</li>
+        <li>texlive-latex</li>
+        <li>texlive-latexconfig</li>
+        <li>doxygen-latex</li>
+        <li>texlive-collection-latex</li>
+        <li>texlive-latex-bin</li>
+        <li>texlive-lualatex-math</li>
+        <li>texlive-fncychap</li>
+        <li>texlive-tabulary</li>
+        <li>texlive-framed</li>
+        <li>texlive-wrapfig</li>
+        <li>texlive-upquote</li>
+        <li>texlive-capt-of</li>
+        <li>texlive-needspace</li>
+        <li>texlive-titlesec</li>
+        <li>texlive-anysize</li>
+        <li>texlive-dvipng</li>
+        <li>texlive-xindy</li>
+      </ul>
     </div>
+
+    <h2>The cmake-win-on-linux.py script</h2>
+    
     <p align="justify">As a next step, a clone or snapshot file of the
       <tt>lammps-packages</tt> git repository from
-      <a href="https://github.com/lammps/lammps-packages">https://github.com/lammps/lammps-packages</a> should be obtained. The scripts and files required
-      to build Windows installer packages are located in the
+      <a href="https://github.com/lammps/lammps-packages">https://github.com/lammps/lammps-packages</a> is needed.
+      The scripts and files required to build Windows installer packages are located in the
       <strong><code>mingw-cross</code></strong> folder inside the
       lammps-packages directory.
     </p>
-    <h2>The build-win-on-linux.py script</h2>
     <p align="justify">
-      The main tasks of downloading sources, configuring, compiling
-      and packaging the resulting files are managed by a script called
-      <strong><code>build-win-on-linux.py</code></strong>.
-      This script supports a number of flags that can be used to
-      customize the build process and select what kind of binary
-      to build and package.
-    </p>
+      This script performs all the tasks of downloading third party sources, packages
+      and binaries, configuring, compiling, and packaging.</p>
     <p align="justify">
-      Please note, that the <strong><code>build-win-on-linux.py</code></strong>
-      only supports building LAMMPS versions from 11Aug2017 onward.
-      The script makes assumptions about files and options, that are not
-      available in older LAMMPS versions. and thus building older versions
-      with this script is not likely to work.
-    </p>
+      Below is a list of the supported command line options:
 
-    Below is a list of the supported command line options:
-    <div style="background-color: #e8e8f0;">
-    <pre>
-Usage: python build-win-on-linux.py -b <bits> -j <cpus> -p <mpi> -t <thread> -r <rev> -v <yes|no>
+
+      <div style="background-color: #e8e8f0;">
+        <pre>
+Usage: python3 cmake-win-on-linux.py -b &lt;bits&gt; -j &lt;cpus&gt; -p &lt;mpi&gt; -t &lt;thread&gt; -r &lt;rev&gt; -v &lt;yes|no&gt; -g &lt;folder&gt; -a &lt;yes|no&gt;
 
 Flags (all flags are optional, defaults listed below):
   -b : select Windows variant (default value: 64)
     -b 32       : build for 32-bit Windows
     -b 64       : build for 64-bit Windows
-  -j : set number of CPUs for parallel make (default value: automatic)
-    -j <num>    : set to any reasonable number or 1 for serial make
+  -j : set number of CPUs for parallel make (default value: 8)
+    -j &lt;num&gt;    : set to any reasonable number or 1 for serial make
   -p : select message passing parallel build (default value: no)
     -p mpi      : build an MPI parallel version with MPICH2 v1.4.1p1
     -p no       : build a serial version using MPI STUBS library
@@ -108,17 +169,29 @@ Flags (all flags are optional, defaults listed below):
     -r stable   : download and build the latest stable LAMMPS version
     -r unstable : download and build the latest patch release LAMMPS version
     -r master   : download and build the latest development snapshot
-    -r patch_<date>  : download and build a specific patch release
-    -r stable_<date> : download and build a specific patch release
-    -r <sha256> : download and build a specific snapshot version
+    -r patch_&lt;date&gt; : download and build a specific patch release
+    -r &lt;sha256&gt; : download and build a specific snapshot version
   -v : select output verbosity
     -v yes      : print progress messages and output of make commands
     -v no       : print only progress messages
+  -g : select folder with git checkout of LAMMPS sources
+    -g &lt;folder&gt; : use LAMMPS checkout in &lt;folder&gt;  (default value: /home/akohlmey/compile/lammps-packages/mingw-cross/lammps)
+  -a : select admin level installation (default value: yes)
+    -a yes      : the created installer requires to be run at admin level
+                  and LAMMPS is installed to be accessible by all users
+    -a no       : the created installer runs without admin privilege and
+                  LAMMPS is installed into the current user's appdata folder
 
 Example:
-  python build-win-on-linux.py -r unstable -t omp -p mpi
-    </pre>
+       python3 cmake-win-on-linux.py -r unstable -t omp -p mpi
+      </pre>
     </div>
+    <p align="justify">
+      Please note, that the <strong><code>cmake-win-on-linux.py</code></strong>
+      script evolves as LAMMPS versions change, so it should be regularly updated
+      when compiling newer LAMMPS versions.
+    </p>
+
     <h2>Compiling LAMMPS and building the installer package</h2>
     <p align="justify">
       After changing to a folder where the installer package or packages
@@ -132,10 +205,10 @@ Example:
       folder and all its contents will be removed.
     </p>
     <hr>
-    <p>Last modified: Wed Aug 20:07:12 UTC 2017 by akohlmey</p>
+    <p>Last modified: Sun Oct 11 03:30:34 UTC 2020 by akohlmey</p>
   </body>
 </html>
 <!-- Local Variables: -->
-<!-- time-stamp-pattern: "-8/<p>Last modified:[ \t]+%3a %3b %02H:%02M:%02S %Z %:y by %u</p>" -->
+<!-- time-stamp-pattern: "-8/<p>Last modified:[ \t]+%3a %3b %2d %02H:%02M:%02S %Z %:y by %u</p>" -->
 <!-- time-stamp-time-zone: "UTC" -->
 <!-- End: -->

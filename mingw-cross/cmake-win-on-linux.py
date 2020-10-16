@@ -71,6 +71,7 @@ revflag = 'stable'
 verbose = False
 gitdir  = os.path.join(homedir,"lammps")
 adminflag = True
+msixflag = False
 
 helpmsg = """
 Usage: python %s -b <bits> -j <cpus> -p <mpi> -t <thread> -r <rev> -v <yes|no> -g <folder> -a <yes|no>
@@ -103,6 +104,7 @@ Flags (all flags are optional, defaults listed below):
                   and LAMMPS is installed to be accessible by all users
     -a no       : the created installer runs without admin privilege and
                   LAMMPS is installed into the current user's appdata folder
+    -a msix     : same a "no" but adjust for creating an MSIX package
 
 Example:
   python %s -r unstable -t omp -p mpi
@@ -138,8 +140,13 @@ while i < argc:
     elif argv[i] == '-a':
         if argv[i+1] in ['yes','Yes','Y','y','on','1','True','true']:
             adminflag = True
+            msixflag = False
         elif argv[i+1] in ['no','No','N','n','off','0','False','false']:
             adminflag = False
+            msixflag = False
+        elif argv[i+1] in ['msix','MSIX']:
+            adminflag = False
+            msixflag = True
         else:
             error("\nUnknown admin flag option:",argv[i+1])
     elif argv[i] == '-g':
@@ -165,7 +172,13 @@ if not rev1.match(revflag) and not rev2.match(revflag) and not rev3.match(revfla
     error("Unsupported revision flag %s" % revflag)
 
 # create working directory
-builddir = os.path.join(fullpath('.'),"tmp-%s-%s-%s-%s" % (bitflag,parflag,thrflag,revflag))
+if adminflag:
+    builddir = os.path.join(fullpath('.'),"tmp-%s-%s-%s-%s" % (bitflag,parflag,thrflag,revflag))
+else:
+    if msixflag:
+        builddir = os.path.join(fullpath('.'),"tmp-%s-%s-%s-%s-msix" % (bitflag,parflag,thrflag,revflag))
+    else:
+        builddir = os.path.join(fullpath('.'),"tmp-%s-%s-%s-%s-noadmin" % (bitflag,parflag,thrflag,revflag))
 shutil.rmtree(builddir,True)
 try:
     os.mkdir(builddir)
@@ -312,7 +325,10 @@ shutil.move("OpenCL/lib_win%s/libOpenCL.dll" % bitflag,builddir)
 if adminflag:
     nsisfile = os.path.join(homedir,"installer","lammps-admin.nsis")
 else:
-    nsisfile = os.path.join(homedir,"installer","lammps-noadmin.nsis")
+    if msixflag:
+        nsisfile = os.path.join(homedir,"installer","lammps-msix.nsis")
+    else:
+        nsisfile = os.path.join(homedir,"installer","lammps-noadmin.nsis")
 
 shutil.copy(nsisfile,os.path.join(builddir,"lammps.nsis"))
 shutil.copytree(os.path.join(homedir,"installer","envvar"),os.path.join(builddir,"envvar"),symlinks=False)

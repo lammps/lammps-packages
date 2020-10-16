@@ -1,0 +1,202 @@
+#!Nsis Installer Command Script
+#
+# The following external defines are recognized:
+# ${VERSION} = YYYYMMDD
+# ${BIT}     = 32 or 64
+# ${LIBGCC}  = name of libgcc dll file to use
+# ${MINGW}   = <path to mingw windows dlls>
+
+!include "MUI2.nsh"
+
+Unicode true
+
+!include "LogicLib.nsh"
+!addplugindir "envvar/Plugins/x86-unicode"
+!include "x64.nsh"
+
+RequestExecutionLevel user
+
+!macro VerifyUserIsAdmin
+UserInfo::GetAccountType
+pop $0
+${If} $0 != "admin"
+  messageBox mb_iconstop "Administrator rights required!"
+  setErrorLevel 740 ;ERROR_ELEVATION_REQUIRED
+  quit
+${EndIf}
+!macroend
+
+!macro CreateInternetShortcut FILENAME URL ICONFILE ICONINDEX
+WriteINIStr "${FILENAME}.url" "InternetShortcut" "URL" "${URL}"
+WriteINIStr "${FILENAME}.url" "InternetShortcut" "IconFile" "${ICONFILE}"
+WriteINIStr "${FILENAME}.url" "InternetShortcut" "IconIndex" "${ICONINDEX}"
+!macroend
+
+!ifndef LIBGCC
+!define LIBGCC libgcc_s_dw2-1.dll
+!endif
+
+!define LAMMPS "LAMMPS"
+OutFile "../LAMMPS-${BIT}bit-${VERSION}-msix.exe"
+
+Name "${LAMMPS}"
+!if ${BIT} == 64
+InstallDir "$LOCALAPPDATA\${LAMMPS}"
+!define MPICHDIR "$ProgramFiles64\MPICH2\bin"
+!else
+InstallDir "$LOCALAPPDATA\${LAMMPS}"
+!define MPICHDIR "$ProgramFiles\MPICH2\bin"
+!endif
+
+ShowInstDetails show
+ShowUninstDetails show
+SetCompressor lzma
+
+!define MUI_ABORTWARNING
+
+!insertmacro MUI_PAGE_LICENSE "./LICENSE.txt"
+!insertmacro MUI_PAGE_DIRECTORY
+!insertmacro MUI_PAGE_INSTFILES
+
+!insertmacro MUI_UNPAGE_CONFIRM
+!insertmacro MUI_UNPAGE_INSTFILES
+
+!insertmacro MUI_LANGUAGE "English"
+
+function .onInit
+  setShellVarContext all
+functionEnd
+
+Section "${LAMMPS}" SecLammps
+  SectionIn RO
+  SetRegView ${BIT}
+  SetShellVarContext current
+
+  CreateDirectory "$SMPROGRAMS\${LAMMPS}"
+  CreateShortCut  "$SMPROGRAMS\${LAMMPS}\Uninstall.lnk"      "$INSTDIR\Uninstall.exe"          "" ""
+  CreateShortCut  "$SMPROGRAMS\${LAMMPS}\README.lnk"         "$INSTDIR\README.txt"             "" ""
+  CreateShortCut  "$SMPROGRAMS\${LAMMPS}\LAMMPS Manual.lnk"  "$INSTDIR\doc\LAMMPS-Manual.pdf"  "" ""
+  CreateShortCut  "$SMPROGRAMS\${LAMMPS}\Manuals.lnk"        "$WINDIR\explorer.exe"  \
+                                                     '/e,"$INSTDIR\Doc"'  ""
+  CreateShortCut  "$SMPROGRAMS\${LAMMPS}\Benchmarks.lnk"     "$WINDIR\explorer.exe"  \
+                                                     '/e,"$INSTDIR\Benchmarks"'  ""
+  CreateShortCut  "$SMPROGRAMS\${LAMMPS}\Examples.lnk"       "$WINDIR\explorer.exe"    \
+                                                     '/e,"$INSTDIR\Examples"'    ""
+  CreateShortCut  "$SMPROGRAMS\${LAMMPS}\LICENSE.lnk"        "$INSTDIR\LICENSE.txt"            "" ""
+
+!insertmacro CreateInternetShortcut "$SMPROGRAMS\${LAMMPS}\LAMMPS WWW Site" \
+                  "http://lammps.sandia.gov" "" "0"
+!insertmacro CreateInternetShortcut "$SMPROGRAMS\${LAMMPS}\LAMMPS Commands" \
+                  "http://lammps.sandia.gov/doc/Commands_all.html" "" "0"
+
+  SetOutPath "$INSTDIR"
+  CreateDirectory "$INSTDIR\bin"
+  CreateDirectory "$INSTDIR\Doc"
+  CreateDirectory "$INSTDIR\Benchmarks"
+  CreateDirectory "$INSTDIR\Examples"
+  CreateDirectory "$INSTDIR\Potentials"
+  CreateDirectory "$INSTDIR\Python"
+  CreateDirectory "$INSTDIR\frc_files"
+
+  File License.txt
+  File README.txt
+
+  SetOutPath "$INSTDIR\bin"
+  File ${MINGW}/${LIBGCC}
+  File ${MINGW}/libstdc++-6.dll
+  File ${MINGW}/libgfortran-5.dll
+  File ${MINGW}/libgomp-1.dll
+  File ${MINGW}/libjpeg-62.dll
+  File ${MINGW}/libpng16-16.dll
+  File ${MINGW}/zlib1.dll
+  File ${MINGW}/libquadmath-0.dll
+  File ${MINGW}/libwinpthread-1.dll
+  File ${MINGW}/libhistory8.dll
+  File ${MINGW}/libreadline8.dll
+  File ${MINGW}/libtermcap-0.dll
+  File ${MINGW}/libfftw3-3.dll
+
+  File *.exe
+  File *.dll
+
+  SetOutPath "$INSTDIR\Doc"
+  File *.pdf
+
+  SetOutPath "$INSTDIR\Potentials"
+  File potentials/*
+
+  SetOutPath "$INSTDIR\Python"
+  File python/*
+
+  SetOutPath "$INSTDIR\Examples"
+  File /r /x log.*.4 examples/*
+
+  SetOutPath "$INSTDIR\frc_files"
+  File /oname=README-msi2lmp.txt tools/msi2lmp/README.txt
+  File /r tools/msi2lmp/frc_files/*
+
+  SetOutPath "$INSTDIR\Benchmarks"
+  File /r /x log.*.4 bench/*
+
+  SetOutPath "$INSTDIR\Python"
+  File /r /x __pycache__ python/*
+
+  # update path variables
+  EnVar::SetHKCU
+  # add MPICH2 path
+  EnVar::AddValue "PATH" "${MPICHDIR}"
+  # add LAMMPS executable path
+  EnVar::AddValue "PATH" "$INSTDIR\bin"
+  # add Potentials folder to LAMMPS_POTENTIALS
+  EnVar::AddValue "LAMMPS_POTENTIALS" "$INSTDIR\Potentials"
+  # add msi2lmp force fields
+  EnVar::AddValue "MSI2LMP_LIBRARY" "$INSTDIR\frc_files"
+  # add python module to path
+  EnVar::AddValue "PYTHONPATH" "$INSTDIR\Python"
+
+  WriteUninstaller "$INSTDIR\Uninstall.exe"
+
+  # Launch LAMMPS shell in the user's personal documents folder (not elegant or clean but seems to work)
+  SetOutPath "%HOMEDRIVE%%HOMEPATH%\Documents"
+  CreateShortCut  "$SMPROGRAMS\${LAMMPS}\LAMMPS-Shell.lnk"          "$WINDIR\system32\cmd.exe"       \
+                  '/c "$INSTDIR\Bin\lammps-shell.exe"' ""  "" SW_SHOWNORMAL "" "The LAMMPS Shell"
+SectionEnd
+
+function un.onInit
+  SetShellVarContext current
+functionEnd
+
+Section "Uninstall"
+  SetRegView ${BIT}
+  SetShellVarContext current
+
+  # update path variables
+  EnVar::SetHKCU
+  # add MPICH2 path
+  EnVar::DeleteValue "PATH" "${MPICHDIR}"
+  # add LAMMPS executable path
+  EnVar::DeleteValue "PATH" "$INSTDIR\bin"
+  # add Potentials folder to LAMMPS_POTENTIALS
+  EnVar::Delete "LAMMPS_POTENTIALS"
+  # add msi2lmp force fields
+  EnVar::Delete "MSI2LMP_LIBRARY"
+  # add python module to path
+  EnVar::DeleteValue "PYTHONPATH" "$INSTDIR\Python"
+
+  RMDir /r "$SMPROGRAMS\${LAMMPS}"
+
+  Delete /REBOOTOK   "$INSTDIR\*.txt"
+  Delete /REBOOTOK   "$INSTDIR\Uninstall.exe"
+  RMDir /r /REBOOTOK "$INSTDIR\bin"
+  RMDir /r /REBOOTOK "$INSTDIR\Benchmarks"
+  RMDir /r /REBOOTOK "$INSTDIR\Doc"
+  RMDir /r /REBOOTOK "$INSTDIR\Examples"
+  RMDir /r /REBOOTOK "$INSTDIR\Potentials"
+  RMDir /r /REBOOTOK "$INSTDIR\Python"
+  RMDir /r /REBOOTOK "$INSTDIR\frc_files"
+  RMDir /REBOOTOK "$INSTDIR"
+SectionEnd
+
+# Local Variables:
+# mode: sh
+# End:

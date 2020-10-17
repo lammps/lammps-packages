@@ -104,7 +104,7 @@ Flags (all flags are optional, defaults listed below):
                   and LAMMPS is installed to be accessible by all users
     -a no       : the created installer runs without admin privilege and
                   LAMMPS is installed into the current user's appdata folder
-    -a msix     : same a "no" but adjust for creating an MSIX package
+    -a msix     : same as "no" but adjust for creating an MSIX package
 
 Example:
   python %s -r unstable -t omp -p mpi

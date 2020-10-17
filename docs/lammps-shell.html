@@ -1,0 +1,216 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <title>Online Help for the LAMMPS Shell App</title>
+    <link rel="shortcut icon" href="lammps.ico">
+  </head>
+
+  <body style="font-family: sans-serif; margin-bottom: 2%; margin-top: 2%; margin-left: 5%; margin-right: 5%;">
+    <a href="index.html"> &nbsp;Back to LAMMPS Packages for Windows Overview</a>
+    <hr width="100%">
+    <div style="display: inline; margin-left: 10px; margin-bottom: 5px; border: 5px; border-style: groove; float: right;">
+      <img src="lammps-logo.png" border="0" style="" width="310" height="150">
+    </div>
+
+    <h1>Online Help for the LAMMPS Shell App</h1>
+    <p align="justify">
+      This page provides documentation and additional files to download
+      for use with the LAMMPS Shell. The downloads are especially aimed
+      at users that have
+      <a href="https://www.microsoft.com/en-us/p/lammps/9pgqct71smdw"
+         target="_blank">
+         installed LAMMPS on Windows 10 through
+         Microsoft Store</a>, since those are lacking those files.
+      The alternative would be to download <a href="windows.html">
+        "complete" installer packages</a>, however those are not
+      cryptographically signed.  Those usually require administrator
+      privileges to install and are the only option when you want
+      to use an MPI parallel version.
+    </p>
+    <hr>
+
+    <p>Please see the <a href="https://lammps.sandia.gov/doc/Manual.html" target="_blank">
+        online version of the LAMMPS manual</a> for documentation of the
+      LAMMPS software itself.</a>
+    </p>
+    <hr>
+
+    <p>The following archives are available for download:</p>
+    <ul>
+      <li>LAMMPS example inputs and outputs:
+        <a href="LAMMPS-examples.zip">48MB .zip archive</a></li>
+      <li>LAMMPS potential files:
+        <a href="LAMMPS-potentials.zip">15MB .zip archive</a></li>
+    </ul>
+    <hr>
+
+    <h2>Overview</h2>
+    <p align="justify">The LAMMPS Shell, <code>lammps-shell</code> is a
+      program that functions very similar to the regular LAMMPS executable but
+      has several modifications and additions that make it more powerful for
+      interactive sessions, i.e. where you type LAMMPS commands from the
+      prompt instead of reading them from a file.</p>
+    <ul>
+      <li>It uses the readline and history libraries to provide command line
+        editing and context aware TAB-expansion (details on that below).</li>
+      <li>When processing an input file with the "-in" or "-i" flag from the
+        command line, it behaves similar to the Python interpreter, i.e. it
+        does not exit at the end of that input file but rather stops at a
+        prompt, so that additional commands can be issued interactively.</li>
+      <li>Errors will not abort the shell but return to the prompt.</li>
+      <li>It has additional commands aimed at interactive use (details
+      below).</li>
+      <li>Interrupting a calculation with CTRL-C will not terminate the
+        session but rather enforce a timer timeout to cleanly stop an
+        ongoing run (more info on timeouts is in the documentation for
+        the <code>timer</code> command documentation).</li>
+    </ul>
+
+    <p align="justify">These enhancements makes the LAMMPS shell an
+      attractive choice for interactive LAMMPS sessions in graphical
+      desktop environments (e.g. Gnome, KDE, Cinnamon, XFCE,
+      Windows).</p>
+    <hr>
+
+    <h2>TAB-expansion</h2>
+    <p align="justify">When writing commands interactively at the shell
+      prompt, you can hit the TAB key at any time to try and complete the
+      text.  This completion is context aware and will expand any first word
+      only to commands available in that executable.</p>
+    <ul>
+      <li>For style commands it will expand to available styles of the
+        corresponding category (e.g. pair styles after a
+        <code>pair_style</code> command).</li>
+      <li>For <code>compute</code>, <code>fix</code>, or <code>dump</code>
+        commands it will also expand only to already defined groups for
+        the "group-ID" keyword.</li>
+      <li>For commands like <code>compute_modify</code>,
+        <code>fix_modify</code>, or <code>dump_modify</code> it will expand
+        to known compute/fix/dump IDs only.</li>
+      <li>When typing references to computes, fixes, or variables with a
+        "c_", "f_", or "v_" prefix, respectively, then the expansion will
+        be to known compute/fix IDs and variable names. Variable name
+        expansion is also available for the ${name} variable syntax.</li>
+      <li>In all other cases TAB expansion will complete to names of files
+        and directories.</li>
+    </ul>
+    <hr>
+
+    <h2>Command line editing and history</h2>
+    <p align="justify">
+      When typing commands, command line editing similar to what BASH
+      provides is available.  Thus it is possible to move around the
+      currently line and perform various cut and insert and edit operations.
+      Previous commands can be retrieved by scrolling up (and down)
+      or searching (e.g. with CTRL-r).</p>
+    <p align="justify">Also history expansion through using the exclamation mark "!"
+      can be performed.  Examples: "!!" will be replaced with the previous
+      command, "!-2" will repeat the command before that, "!30" will be
+      replaced with event number 30 in the command history list, and
+      "!run" with the last command line that started with <code>run</code>.  Adding
+      a ":p" to such a history expansion will result that the expansion is
+      printed and added to the history list, but NOT executed.
+      On exit the LAMMPS shell will write the history list to a file
+      <code>.lammps_history</code> in the current working directory.  If such a
+      file exists when the LAMMPS shell is launched it will be read to
+      populate the history list.</p>
+    <p align="justify">
+      This is realized via the readline library and can thus be customized
+      with an <code>.inputrc</code> file in the home directory.  For application
+      specific customization, the LAMMPS shell uses the name "lammps-shell".
+      For more information about using and customizing an application using
+      readline, please see the available documentation at:
+      <a href="http://www.gnu.org/s/readline/#Documentation" target="_blank">http://www.gnu.org/s/readline/#Documentation</a></p>
+    <hr>
+
+    <h2>Additional commands</h2>
+    <p align="justify">The following commands are added to the LAMMPS shell
+      on top of the regular LAMMPS commands:</p>
+    <pre class="literal-block">
+help (or ?)    print a brief help message
+history        display the current command history list
+clear_history  wipe out the current command history list
+save_history &lt;range&gt; &lt;file&gt;
+               write commands from the history to file.
+               The range is given as &lt;from&gt;-&lt;to&gt;, where &lt;from&gt; and &lt;to&gt;
+               may be empty. Example: save_history 100- in.recent
+source &lt;file&gt;  read commands from file (same as &quot;include&quot;)
+pwd            print current working directory
+cd &lt;directory&gt; change current working directory (same as pwd if no directory)
+mem            print current and maximum memory usage
+|&lt;command&gt;     execute &lt;command&gt; as a shell command and return to the command prompt
+exit           exit the LAMMPS shell cleanly (unlike the &quot;quit&quot; command)</pre>
+
+    <p>Please note that some known shell operations are implemented in the LAMMPS
+      <code>shell</code> command in a platform neutral fashion, while using the "|"
+      character will always pass the following text to the operating system's shell
+      command.</p>
+
+    <hr>
+    <h2>Readline customization</h2>
+    <p align="justify">The behavior of the readline functionality can be customized in the
+      <code>${HOME}/.inputrc</code> file.  This can be used to alter the default
+      settings or change the key-bindings.  The LAMMPS Shell sets the
+      application name <code>lammps-shell</code>, so settings can be either applied
+      globally or only for the LAMMPS shell by bracketing them between
+      <pre>
+$if lammps-shell
+# disable "beep" or "screen flash"
+set bell-style none
+# bind the "Insert" key to toggle overwrite mode
+"\e[2~": overwrite-mode
+$endif
+</pre>
+    <p>More details about this are in the <a href="https://tiswww.cwru.edu/php/chet/readline/rluserman.html#SEC9" target="_blank">readline documentation</a>.
+    </p>
+    <hr>
+    <h2>LAMMPS Shell tips and tricks</h2>
+    <h3>Enable tilde expansion</h3>
+<p>Adding <code class="docutils literal notranslate"><span class="pre">set</span> <span class="pre">expand-tilde</span> <span class="pre">on</span></code> to <code class="docutils literal notranslate"><span class="pre">${HOME}/.inputrc</span></code> is recommended as
+this will change the filename expansion behavior to replace any text
+starting with "~" by the full path to the corresponding user's home
+directory.  While the expansion of filenames <strong>will</strong> happen on all
+arguments where the context is not known (e.g. <code class="docutils literal notranslate"><span class="pre">~/compile/lamm&lt;TAB&gt;</span></code>
+will expand to <code class="docutils literal notranslate"><span class="pre">~/compile/lammps/</span></code>), it will not replace the tilde by
+default.  But since LAMMPS does not do tilde expansion itself (unlike a
+shell), this will result in errors.  Instead the tilde-expression should
+be expanded into a valid path, where the plain "~/" stands for the
+current user's home directory and "~someuser/" stands for
+"/home/someuser" or whatever the full path to that user's home directory
+is.</p>
+</div>
+<div class="section" id="file-extension-association">
+<h3>File extension association</h3>
+<p>Since the LAMMPS shell (unlike the regular LAMMPS executable) does not
+exit when an input file is passed on the command line with the "-in" or
+"-i" flag (the behavior is like for <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-i</span> <span class="pre">&lt;filename&gt;</span></code>), it makes
+the LAMMPS shell suitable for associating it with input files based on
+their filename extension (e.g. ".lmp").  Since <code class="docutils literal notranslate"><span class="pre">lammps-shell</span></code> is a
+console application, you have to run it inside a terminal program with a
+command line like this:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>xterm -title <span class="s2">&quot;LAMMPS Shell&quot;</span> -e /path/to/lammps-shell -i in.file.lmp
+</pre></div>
+</div>
+</div>
+<div class="section" id="use-history-create-input-file">
+<h3>Use history create input file</h3>
+<p>When experimenting with commands to interactively to figure out a
+suitable choice of settings or simply the correct syntax, you may want
+to record part of your commands to a file for later use.  This can be
+done with the <code class="docutils literal notranslate"><span class="pre">save_history</span></code> commands, which allows to selectively
+write a section of the command history to a file (Example:
+<code class="docutils literal notranslate"><span class="pre">save_history</span> <span class="pre">25-30</span> <span class="pre">in.run</span></code>).  This file can be further edited
+(Example: <code class="docutils literal notranslate"><span class="pre">|vim</span> <span class="pre">in.run</span></code>) and then the file read back in and tried out
+(Example: <code class="docutils literal notranslate"><span class="pre">source</span> <span class="pre">in.run</span></code>).  If the input also creates a system box,
+you first need to use the <code>clear</code> command command.</p>
+<hr>
+</div>
+</div>
+</div>
+    <p>Last modified: Sat Oct 17 02:28:25 UTC 2020 by akohlmey</p>
+  </body>
+</html>
+<!-- Local Variables: -->
+<!-- time-stamp-pattern: "-8/<p>Last modified:[ \t]+%3a %3b %2d %02H:%02M:%02S %Z %:y by %u</p>" -->
+<!-- time-stamp-time-zone: "UTC" -->
+<!-- End: -->

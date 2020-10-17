@@ -2,14 +2,14 @@
 <html>
   <head>
     <title>Building Windows Installer Packages with MinGW64 Cross-compilers on Fedora Linux</title>
-    <link rel="shortcut icon" href="ICMS_icon.png" type="image/png">
+    <link rel="shortcut icon" href="lammps.ico">
   </head>
 
   <body style="font-family: sans-serif; margin-bottom: 2%; margin-top: 2%; margin-left: 5%; margin-right: 5%;">
     <a href="index.html"> &nbsp;Back to LAMMPS Packages for Windows Overview</a>
     <hr width="100%">
     <div style="display: inline; margin-left: 10px; margin-bottom: 5px; border: 5px; border-style: groove; float: right;">
-      <img src="lammpswinlogo.png" border="0" style="" width="300" height="182">
+      <img src="lammps-logo.png" border="0" style="" width="310" height="150">
     </div>
     <h1>Building Windows Installer Packages with MinGW64 Cross-compilers on Fedora Linux</h1>
     <p align="justify">
@@ -181,6 +181,7 @@ Flags (all flags are optional, defaults listed below):
                   and LAMMPS is installed to be accessible by all users
     -a no       : the created installer runs without admin privilege and
                   LAMMPS is installed into the current user's appdata folder
+    -a msix     : same as "no" but adjust for creating a simpler MSIX package
 
 Example:
        python3 cmake-win-on-linux.py -r unstable -t omp -p mpi
@@ -205,7 +206,7 @@ Example:
       folder and all its contents will be removed.
     </p>
     <hr>
-    <p>Last modified: Sun Oct 11 03:30:34 UTC 2020 by akohlmey</p>
+    <p>Last modified: Sat Oct 17 02:27:12 UTC 2020 by akohlmey</p>
   </body>
 </html>
 <!-- Local Variables: -->

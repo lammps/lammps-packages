@@ -7,6 +7,7 @@
 # ${MINGW}   = <path to mingw windows dlls>
 
 !include "MUI2.nsh"
+!include "FileAssociation.nsh"
 
 Unicode true
 
@@ -141,6 +142,9 @@ Section "${LAMMPS}" SecLammps
   SetOutPath "$INSTDIR\Python"
   File /r /x __pycache__ python/*
 
+  SetOutPath "$INSTDIR"
+  ${registerExtension} "$INSTDIR\bin\lammps-shell.exe" ".lmp" "LAMMPS Input File"
+
   # update path variables
   EnVar::SetHKLM
   # add MPICH2 path
@@ -170,6 +174,8 @@ functionEnd
 
 Section "Uninstall"
   SetRegView ${BIT}
+
+  ${unregisterExtension} ".lmp" "LAMMPS Input File"
 
   # update path variables
   EnVar::SetHKLM

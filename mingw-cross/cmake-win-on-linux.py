@@ -331,6 +331,7 @@ else:
         nsisfile = os.path.join(homedir,"installer","lammps-noadmin.nsis")
 
 shutil.copy(nsisfile,os.path.join(builddir,"lammps.nsis"))
+shutil.copy(os.path.join(homedir,"installer","FileAssociation.nsh"),os.path.join(builddir,"FileAssociation.nsh"))
 shutil.copytree(os.path.join(homedir,"installer","envvar"),os.path.join(builddir,"envvar"),symlinks=False)
 
 # define version flag of the installer:

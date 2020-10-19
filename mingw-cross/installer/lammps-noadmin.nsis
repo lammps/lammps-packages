@@ -9,7 +9,14 @@
 !include "MUI2.nsh"
 !include "FileAssociation.nsh"
 
+!define MUI_ICON "lammps.ico"
+!define MUI_UNICON "lammps.ico"
+!define MUI_HEADERIMAGE
+!define MUI_HEADERIMAGE_BITMAP "lammps-text-logo-wide.bmp"
+!define MUI_HEADERIMAGE_RIGHT
+
 Unicode true
+XPStyle on
 
 !include "LogicLib.nsh"
 !addplugindir "envvar/Plugins/x86-unicode"
@@ -38,7 +45,7 @@ WriteINIStr "${FILENAME}.url" "InternetShortcut" "IconIndex" "${ICONINDEX}"
 !endif
 
 !define LAMMPS "LAMMPS ${BIT}-bit ${VERSION}"
-OutFile "../LAMMPS-${BIT}bit-${VERSION}-noadmin.exe"
+OutFile "../LAMMPS-${BIT}bit-${VERSION}.exe"
 
 Name "${LAMMPS}"
 !if ${BIT} == 64
@@ -101,6 +108,7 @@ Section "${LAMMPS}" SecLammps
 
   File License.txt
   File README.txt
+  File lammps.ico
 
   SetOutPath "$INSTDIR\bin"
   File ${MINGW}/${LIBGCC}
@@ -163,7 +171,7 @@ Section "${LAMMPS}" SecLammps
   # Launch LAMMPS shell in the user's personal documents folder (not elegant or clean but seems to work)
   SetOutPath "%HOMEDRIVE%%HOMEPATH%\Documents"
   CreateShortCut  "$SMPROGRAMS\${LAMMPS}\LAMMPS-Shell.lnk"          "$WINDIR\system32\cmd.exe"       \
-                  '/c "$INSTDIR\Bin\lammps-shell.exe"' ""  "" SW_SHOWNORMAL "" "The LAMMPS Shell"
+                  '/c "$INSTDIR\Bin\lammps-shell.exe"' "$INSTDIR\lammps.ico"  "" SW_SHOWNORMAL "" "The LAMMPS Shell"
 SectionEnd
 
 function un.onInit
@@ -192,6 +200,7 @@ Section "Uninstall"
   RMDir /r "$SMPROGRAMS\${LAMMPS}"
 
   Delete /REBOOTOK   "$INSTDIR\*.txt"
+  Delete /REBOOTOK   "$INSTDIR\*.ico"
   Delete /REBOOTOK   "$INSTDIR\Uninstall.exe"
   RMDir /r /REBOOTOK "$INSTDIR\bin"
   RMDir /r /REBOOTOK "$INSTDIR\Benchmarks"

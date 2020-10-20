@@ -124,6 +124,7 @@ Section "${LAMMPS}" SecLammps
   File ${MINGW}/libreadline8.dll
   File ${MINGW}/libtermcap-0.dll
   File ${MINGW}/libfftw3-3.dll
+  File ${MINGW}/libssp-0.dll
 
   File *.exe
   File *.dll

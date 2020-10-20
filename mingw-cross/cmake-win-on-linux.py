@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 # Script to build windows installer packages for LAMMPS
-# (c) 2017 Axel Kohlmeyer <akohlmey@gmail.com>
+# (c) 2017,2018,2019,2020 Axel Kohlmeyer <akohlmey@gmail.com>
 
 from __future__ import print_function
 import sys,os,shutil,glob,re,subprocess,tarfile,gzip,time,inspect

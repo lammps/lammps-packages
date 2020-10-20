@@ -11,7 +11,7 @@ for b in 64 32 ; do \
     done
 done
 
-for b in 64 ; do \
+for b in 64 32 ; do \
     for m in no mpi ; do \
         python3 cmake-win-on-linux.py -v yes -r unstable -p ${m} -t omp -b ${b} -a no
     done

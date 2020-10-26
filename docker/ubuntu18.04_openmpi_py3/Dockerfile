@@ -1,49 +1,39 @@
-FROM ubuntu:18.04 as builder
+FROM lammps/buildenv:ubuntu18.04 as builder
 MAINTAINER richard.berger@outlook.com
-
-ENV DEBIAN_FRONTEND noninteractive
-
-RUN apt-get update -y
-RUN apt-get -y install software-properties-common --no-install-recommends
-RUN add-apt-repository -y ppa:openkim/latest
-RUN apt-get update -y && \
-    apt-get upgrade -y && \
-    apt-get install -y \
-        make \
-        git \
-        gcc \
-        g++ \
-        cmake \
-        gfortran \
-        openmpi-bin \
-        libopenmpi-dev \
-        libfftw3-dev \
-        libjpeg-dev \
-        libpng-dev \
-        python3-dev \
-        libblas-dev \
-        liblapack-dev \
-        libeigen3-dev \
-        python3-virtualenv \
-        libkim-api-dev \
-        openkim-models
 
 ADD lammps /tmp/lammps/
 
-RUN mkdir -p /tmp/lammps/build && \
-    cd /tmp/lammps/build && \
+RUN mkdir -p /tmp/lammps/build-serial && \
+    cd /tmp/lammps/build-serial && \
     cmake -C /tmp/lammps/cmake/presets/most.cmake \
           -D CMAKE_BUILD_TYPE=Release \
           -D CMAKE_INSTALL_PREFIX=/usr \
+          -D CMAKE_INSTALL_SYSCONFDIR=/etc \
+          -D LAMMPS_MACHINE=serial \
+          -D BUILD_MPI=off \
+          -D BUILD_TOOLS=on \
+          -D BUILD_SHARED_LIBS=on \
+          -D Python_EXECUTABLE=/usr/bin/python3 \
+          /tmp/lammps/cmake && \
+    make -j 8 && \
+    make install && \
+    tar czvf /tmp/lammps-serial.tgz -T install_manifest.txt
+
+RUN mkdir -p /tmp/lammps/build-openmpi && \
+    cd /tmp/lammps/build-openmpi && \
+    cmake -C /tmp/lammps/cmake/presets/most.cmake \
+          -D CMAKE_BUILD_TYPE=Release \
+          -D CMAKE_INSTALL_PREFIX=/usr \
+          -D CMAKE_INSTALL_SYSCONFDIR=/etc \
           -D LAMMPS_MACHINE=mpi \
           -D BUILD_TOOLS=on \
           -D BUILD_SHARED_LIBS=on \
           -D PKG_USER-PLUMED=off \
           -D Python_EXECUTABLE=/usr/bin/python3 \
           /tmp/lammps/cmake && \
-    make -j 24 && \
+    make -j 8 && \
     make install && \
-    rm -rf /tmp/lammps/build /tmp/lammps/.git
+    tar czvf /tmp/lammps-mpi.tgz -T install_manifest.txt
 
 FROM ubuntu:18.04
 MAINTAINER richard.berger@outlook.com
@@ -64,31 +54,19 @@ RUN apt-get update -y && \
         python3 \
         libblas3 \
         liblapack3 \
-        python3-virtualenv \
+        python3-venv \
         libkim-api-dev \
         openkim-models \
-        libpython3.6 \
+        libpython3 \
         ssh && \
     rm -rf /var/lib/apt/lists/*
 
 RUN useradd -m lammps && usermod -aG rdma lammps
 
-COPY --from=builder /tmp/lammps /home/lammps
-COPY --from=builder /usr/bin/lmp_mpi /usr/bin/lmp_mpi
-COPY --from=builder /usr/lib/x86_64-linux-gnu/liblammps_mpi.so.0 /usr/lib/x86_64-linux-gnu/liblammps_mpi.so.0
-COPY --from=builder /usr/lib/x86_64-linux-gnu/liblammps_mpi.so /usr/lib/x86_64-linux-gnu/liblammps_mpi.so
-COPY --from=builder /usr/include/lammps/ /usr/include/lammps/
-COPY --from=builder /usr/lib/x86_64-linux-gnu/pkgconfig/liblammps_mpi.pc /usr/lib/x86_64-linux-gnu/pkgconfig/liblammps_mpi.pc
-COPY --from=builder /usr/lib/x86_64-linux-gnu/cmake/LAMMPS/LAMMPS_Targets.cmake /usr/lib/x86_64-linux-gnu/cmake/LAMMPS/LAMMPS_Targets.cmake
-COPY --from=builder /usr/lib/x86_64-linux-gnu/cmake/LAMMPS/LAMMPS_Targets-release.cmake /usr/lib/x86_64-linux-gnu/cmake/LAMMPS/LAMMPS_Targets-release.cmake
-COPY --from=builder /usr/lib/x86_64-linux-gnu/cmake/LAMMPS/LAMMPSConfig.cmake /usr/lib/x86_64-linux-gnu/cmake/LAMMPS/LAMMPSConfig.cmake
-COPY --from=builder /usr/lib/x86_64-linux-gnu/cmake/LAMMPS/LAMMPSConfigVersion.cmake /usr/lib/x86_64-linux-gnu/cmake/LAMMPS/LAMMPSConfigVersion.cmake
-COPY --from=builder /usr/share/man/man1/lmp_mpi.1 /usr/share/man/man1/lmp_mpi.1
-COPY --from=builder /usr/bin/binary2txt /usr/bin/binary2txt
-COPY --from=builder /usr/bin/msi2lmp /usr/bin/msi2lmp
-COPY --from=builder /usr/share/man/man1/msi2lmp.1 /usr/share/man/man1/msi2lmp.1
-COPY --from=builder /usr/share/lammps /usr/share/lammps
-COPY --from=builder /usr/lib/python3/dist-packages/lammps.py /usr/lib/python3/dist-packages/lammps.py
+COPY --from=builder /tmp/lammps-serial.tgz /tmp/
+COPY --from=builder /tmp/lammps-mpi.tgz /tmp/
+RUN tar -xvzf /tmp/lammps-serial.tgz -C / && rm -f /tmp/lammps-serial.tgz
+RUN tar -xvzf /tmp/lammps-mpi.tgz -C / && rm -f /tmp/lammps-mpi.tgz
 RUN chown -R lammps:lammps /home/lammps/
 
 USER lammps

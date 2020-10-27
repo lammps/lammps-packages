@@ -11,6 +11,7 @@ RUN mkdir -p /tmp/lammps/build-serial && \
           -D CMAKE_INSTALL_SYSCONFDIR=/etc \
           -D LAMMPS_MACHINE=serial \
           -D BUILD_MPI=off \
+          -D BUILD_LAMMPS_SHELL=on \
           -D BUILD_TOOLS=on \
           -D BUILD_SHARED_LIBS=on \
           -D Python_EXECUTABLE=/usr/bin/python3 \
@@ -37,14 +38,40 @@ RUN mkdir -p /tmp/lammps/build-openmpi && \
 FROM centos:8
 MAINTAINER richard.berger@outlook.com
 RUN useradd -m lammps
-RUN yum update -y && yum install -y epel-release && yum -y install \
-                   gdb valgrind \
-                   patch which file git Lmod \
-                   libpng libjpeg openmpi python3 \
-                   hdf5 python36 \
+RUN dnf update -y && \
+    dnf -y install epel-release dnf-utils && \
+    dnf config-manager --set-enabled PowerTools && \
+    dnf install -y  \
+                   blas \
+                   fftw \
+                   file \
+                   gdb \
+                   gsl \
+                   hdf5 \
+                   kim-api-devel \
+                   lapack \
+                   libasan \
+                   libjpeg \
+                   libomp \
+                   libpng \
+                   libyaml \
+                   libzstd \
+                   mpich \
+                   netcdf-cxx \
+                   netcdf \
+                   netcdf-mpich \
                    netcdf-openmpi \
-                   fftw voro++ gsl openblas \
-                   blas lapack && yum clean -y all
+                   openblas-devel \
+                   openkim-models \
+                   openmpi \
+                   platform-python-devel \
+                   readline \
+                   valgrind \
+                   vim-enhanced \
+                   voro++ \
+                   which \
+                   zstd && \
+    dnf clean -y all
 COPY --from=builder /tmp/lammps-serial.tgz /tmp/
 COPY --from=builder /tmp/lammps-mpi.tgz /tmp/
 RUN tar -xvzf /tmp/lammps-serial.tgz -C / && rm -f /tmp/lammps-serial.tgz

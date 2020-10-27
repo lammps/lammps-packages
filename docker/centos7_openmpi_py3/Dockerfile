@@ -11,6 +11,7 @@ RUN mkdir -p /tmp/lammps/build-serial && \
           -D CMAKE_INSTALL_SYSCONFDIR=/etc \
           -D LAMMPS_MACHINE=serial \
           -D BUILD_MPI=off \
+          -D BUILD_LAMMPS_SHELL=on \
           -D BUILD_TOOLS=on \
           -D BUILD_SHARED_LIBS=on \
           -D Python_EXECUTABLE=/usr/bin/python3 \
@@ -38,13 +39,39 @@ FROM centos:7
 MAINTAINER richard.berger@outlook.com
 RUN useradd -m lammps
 RUN yum update -y && yum install -y epel-release && yum -y install \
-                   gdb valgrind-openmpi \
-                   patch which file git Lmod \
-                   libpng libjpeg openmpi python3 \
-                   hdf5 python3-pip \
+                   Lmod \
+                   blas \
+                   fftw \
+                   gdb \
+                   gsl \
+                   hdf5 \
+                   kim-api-devel \
+                   lapack \
+                   libjpeg \
+                   libpng \
+                   libyaml \
+                   libzstd \
+                   mpich \
+                   netcdf-cxx \
+                   netcdf \
+                   netcdf-mpich \
                    netcdf-openmpi \
-                   python3-venv fftw voro++ gsl openblas enchant \
-                   blas lapack && yum clean -y all
+                   ninja-build \
+                   openblas \
+                   openkim-models \
+                   openmpi \
+                   patch \
+                   python3-PyYAML \
+                   python3-devel \
+                   python3-pip \
+                   python3-venv \
+                   readline \
+                   valgrind-openmpi \
+                   vim-enhanced \
+                   voro++ \
+                   which \
+                   zstd && \
+    yum clean -y all
 COPY --from=builder /tmp/lammps-serial.tgz /tmp/
 COPY --from=builder /tmp/lammps-mpi.tgz /tmp/
 RUN tar -xvzf /tmp/lammps-serial.tgz -C / && rm -f /tmp/lammps-serial.tgz

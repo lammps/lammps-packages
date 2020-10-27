@@ -1,4 +1,4 @@
-FROM lammps/buildenv:ubuntu18.04 as builder
+FROM lammps/buildenv:ubuntu20.04 as builder
 MAINTAINER richard.berger@outlook.com
 
 ADD lammps /tmp/lammps/
@@ -36,7 +36,7 @@ RUN mkdir -p /tmp/lammps/build-openmpi && \
     make install && \
     tar czvf /tmp/lammps-mpi.tgz -T install_manifest.txt
 
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 MAINTAINER richard.berger@outlook.com
 ENV DEBIAN_FRONTEND noninteractive
 ENV LAMMPS_POTENTIALS=/usr/share/lammps/potentials
@@ -48,10 +48,19 @@ RUN add-apt-repository -y ppa:openkim/latest
 RUN apt-get update -y && \
     apt-get upgrade -y && \
     apt-get install -y --no-install-recommends \
+        openmpi-bin \
+        libfftw3-bin \
+        libjpeg8 \
+        libpng-tools \
+        python3 \
+        liblapack3 \
+        python3-venv \
+        libkim-api-dev \
+        openkim-models \
+        libpython3.6 \
         hdf5-tools \
         less \
-        libblas \
-        libeigen3 \
+        libblas3 \
         libfftw3 \
         libgsl \
         libhdf5-serial \
@@ -77,8 +86,6 @@ RUN apt-get update -y && \
         ssh \
         vim-nox \
         voro++ \
-        wget \
-        xxd \
         valgrind \
         gdb \
         zstd \

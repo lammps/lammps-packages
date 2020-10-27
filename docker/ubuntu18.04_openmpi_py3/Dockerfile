@@ -52,24 +52,23 @@ RUN apt-get update -y && \
     apt-get install -y --no-install-recommends \
         hdf5-tools \
         less \
-        libblas \
-        libeigen3 \
-        libfftw3 \
-        libgsl \
-        libhdf5-serial \
-        libhwloc \
-        libjpeg \
-        liblapack \
-        libnetcdf \
-        libomp \
-        libopenblas \
-        libnuma \
-        libpng \
-        libproj \
-        libreadline \
-        libvtk6 \
-        libyaml \
-        libzstd \
+        libc6 \
+        libexpat1 \
+        libfftw3-double3 \
+        libgcc1 \
+        libgomp1 \
+        libhwloc5 \
+        libjpeg-turbo8 \
+        libltdl7 \
+        libnuma1 \
+        libopenmpi2 \
+        libpng16-16 \
+        libpython3.6 \
+        libreadline7 \
+        libstdc++6 \
+        libvoro++1 \
+        python3.6-dbg \
+        zlib1g \
         mpi-default-bin \
         python3-dev \
         python3-pip \

@@ -12,6 +12,7 @@ RUN mkdir -p /tmp/lammps/build-serial && \
           -D LAMMPS_MACHINE=serial \
           -D BUILD_MPI=off \
           -D BUILD_LAMMPS_SHELL=on \
+          -D LAMMPS_EXCEPTIONS=on \
           -D BUILD_TOOLS=on \
           -D BUILD_SHARED_LIBS=on \
           -D Python_EXECUTABLE=/usr/bin/python3 \
@@ -27,6 +28,7 @@ RUN mkdir -p /tmp/lammps/build-openmpi && \
           -D CMAKE_INSTALL_PREFIX=/usr \
           -D CMAKE_INSTALL_SYSCONFDIR=/etc \
           -D LAMMPS_MACHINE=mpi \
+          -D LAMMPS_EXCEPTIONS=on \
           -D BUILD_TOOLS=on \
           -D BUILD_SHARED_LIBS=on \
           -D PKG_USER-PLUMED=off \

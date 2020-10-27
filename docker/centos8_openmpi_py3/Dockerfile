@@ -1,11 +1,11 @@
-FROM lammps/buildenv:centos7 as builder
+FROM lammps/buildenv:centos8 as builder
 MAINTAINER richard.berger@outlook.com
 
 ADD lammps /tmp/lammps
 
 RUN mkdir -p /tmp/lammps/build-serial && \
     cd /tmp/lammps/build-serial && \
-    cmake3 -C /tmp/lammps/cmake/presets/most.cmake \
+    cmake -C /tmp/lammps/cmake/presets/most.cmake \
           -D CMAKE_BUILD_TYPE=Release \
           -D CMAKE_INSTALL_PREFIX=/usr \
           -D CMAKE_INSTALL_SYSCONFDIR=/etc \
@@ -34,16 +34,16 @@ RUN mkdir -p /tmp/lammps/build-openmpi && \
     make install && \
     tar czvf /tmp/lammps-mpi.tgz -T install_manifest.txt
 
-FROM centos:7
+FROM centos:8
 MAINTAINER richard.berger@outlook.com
 RUN useradd -m lammps
 RUN yum update -y && yum install -y epel-release && yum -y install \
-                   gdb valgrind-openmpi \
+                   gdb valgrind \
                    patch which file git Lmod \
                    libpng libjpeg openmpi python3 \
-                   hdf5 python3-pip \
+                   hdf5 python36 \
                    netcdf-openmpi \
-                   python3-venv fftw voro++ gsl openblas enchant \
+                   fftw voro++ gsl openblas \
                    blas lapack && yum clean -y all
 COPY --from=builder /tmp/lammps-serial.tgz /tmp/
 COPY --from=builder /tmp/lammps-mpi.tgz /tmp/

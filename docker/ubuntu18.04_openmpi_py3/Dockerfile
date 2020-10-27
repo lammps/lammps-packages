@@ -57,7 +57,7 @@ RUN apt-get update -y && \
         python3-venv \
         libkim-api-dev \
         openkim-models \
-        libpython3 \
+        libpython3.6 \
         ssh && \
     rm -rf /var/lib/apt/lists/*
 

@@ -38,6 +38,10 @@ RUN mkdir -p /tmp/lammps/build-openmpi && \
     make install && \
     tar czvf /tmp/lammps-mpi.tgz -T install_manifest.txt
 
+# determine binary depedencies
+#RUN apt update && apt install -y apt-file && apt-file update && \\
+#    ldd /tmp/lammps/build-openmpi/lmp_mpi | awk '/=>/{print $(NF-1)}' | while read n; do apt-file search $n; done | awk '{print $1}' | sed 's/://' | sort | uniq
+
 FROM ubuntu:18.04
 MAINTAINER richard.berger@outlook.com
 ENV DEBIAN_FRONTEND noninteractive

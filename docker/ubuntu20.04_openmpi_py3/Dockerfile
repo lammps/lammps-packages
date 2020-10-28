@@ -38,6 +38,10 @@ RUN mkdir -p /tmp/lammps/build-openmpi && \
     make install && \
     tar czvf /tmp/lammps-mpi.tgz -T install_manifest.txt
 
+# determine binary depedencies
+#RUN apt update && apt install -y apt-file && apt-file update && \\
+#    ldd /tmp/lammps/build-openmpi/lmp_mpi | awk '/=>/{print $(NF-1)}' | while read n; do apt-file search $n; done | awk '{print $1}' | sed 's/://' | sort | uniq
+
 FROM ubuntu:20.04
 MAINTAINER richard.berger@outlook.com
 ENV DEBIAN_FRONTEND noninteractive
@@ -51,9 +55,6 @@ RUN apt-get update -y && \
     apt-get upgrade -y && \
     apt-get install -y --no-install-recommends \
         openmpi-bin \
-        libfftw3-bin \
-        libjpeg8 \
-        libpng-tools \
         python3 \
         liblapack3 \
         python3-venv \
@@ -62,23 +63,25 @@ RUN apt-get update -y && \
         libpython3.6 \
         hdf5-tools \
         less \
-        libblas3 \
-        libfftw3 \
-        libgsl \
-        libhdf5-serial \
-        libhwloc \
-        libjpeg \
-        liblapack \
-        libnetcdf \
-        libomp \
-        libopenblas \
-        libnuma \
-        libpng \
-        libproj \
-        libreadline \
-        libvtk6 \
-        libyaml \
-        libzstd \
+        libc6 \
+        libevent-2.1-7 \
+        libevent-pthreads-2.1-7 \
+        libexpat1 \
+        libfftw3-double3 \
+        libgcc-s1 \
+        libgomp1 \
+        libhwloc15 \
+        libjpeg-turbo8 \
+        libltdl7 \
+        libopenmpi3 \
+        libpng16-16 \
+        libpython3.8 \
+        libstdc++6 \
+        libudev1 \
+        libvoro++1 \
+        libzstd1 \
+        zlib1g \
+        libreadline8 \
         mpi-default-bin \
         python3-dev \
         python3-pip \
@@ -87,7 +90,6 @@ RUN apt-get update -y && \
         rsync \
         ssh \
         vim-nox \
-        voro++ \
         valgrind \
         gdb \
         zstd \

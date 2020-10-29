@@ -68,6 +68,7 @@ RUN dnf update -y && \
                    openmpi \
                    platform-python \
                    platform-python-devel \
+                   python3-virtualenv \
                    readline \
                    valgrind \
                    vim-enhanced \

@@ -66,6 +66,7 @@ RUN dnf update -y && \
                    openblas-devel \
                    openkim-models \
                    openmpi \
+                   platform-python \
                    platform-python-devel \
                    readline \
                    valgrind \

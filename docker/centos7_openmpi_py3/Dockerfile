@@ -63,6 +63,7 @@ RUN yum update -y && yum install -y epel-release && yum -y install \
                    openkim-models \
                    openmpi \
                    patch \
+                   python3 \
                    python3-PyYAML \
                    python3-devel \
                    python3-pip \

@@ -1,11 +1,11 @@
-FROM lammps/buildenv:centos7 as builder
+FROM lammps/buildenv:centos8 as builder
 MAINTAINER richard.berger@outlook.com
 
 ADD lammps /tmp/lammps
 
 RUN mkdir -p /tmp/lammps/build-serial && \
     cd /tmp/lammps/build-serial && \
-    cmake3 -C /tmp/lammps/cmake/presets/most.cmake \
+    cmake -C /tmp/lammps/cmake/presets/most.cmake \
           -D CMAKE_BUILD_TYPE=Release \
           -D CMAKE_INSTALL_PREFIX=/usr \
           -D CMAKE_INSTALL_SYSCONFDIR=/etc \
@@ -37,19 +37,24 @@ RUN mkdir -p /tmp/lammps/build-openmpi && \
     make install && \
     tar czvf /tmp/lammps-mpi.tgz -T install_manifest.txt
 
-FROM centos:7
+FROM centos:8
 MAINTAINER richard.berger@outlook.com
 RUN useradd -m lammps
-RUN yum update -y && yum install -y epel-release && yum -y install \
-                   Lmod \
+RUN dnf update -y && \
+    dnf -y install epel-release dnf-utils && \
+    dnf config-manager --set-enabled PowerTools && \
+    dnf install -y  \
                    blas \
                    fftw \
+                   file \
                    gdb \
                    gsl \
                    hdf5 \
                    kim-api-devel \
                    lapack \
+                   libasan \
                    libjpeg \
+                   libomp \
                    libpng \
                    libyaml \
                    libzstd \
@@ -58,23 +63,18 @@ RUN yum update -y && yum install -y epel-release && yum -y install \
                    netcdf \
                    netcdf-mpich \
                    netcdf-openmpi \
-                   ninja-build \
-                   openblas \
+                   openblas-devel \
                    openkim-models \
                    openmpi \
-                   patch \
-                   python3 \
-                   python3-PyYAML \
-                   python3-devel \
-                   python3-pip \
-                   python3-venv \
+                   platform-python \
+                   platform-python-devel \
                    readline \
-                   valgrind-openmpi \
+                   valgrind \
                    vim-enhanced \
                    voro++ \
                    which \
                    zstd && \
-    yum clean -y all
+    dnf clean -y all
 COPY --from=builder /tmp/lammps-serial.tgz /tmp/
 COPY --from=builder /tmp/lammps-mpi.tgz /tmp/
 RUN tar -xvzf /tmp/lammps-serial.tgz -C / && rm -f /tmp/lammps-serial.tgz

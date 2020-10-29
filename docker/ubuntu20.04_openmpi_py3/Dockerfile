@@ -1,4 +1,4 @@
-FROM lammps/buildenv:ubuntu18.04 as builder
+FROM lammps/buildenv:ubuntu20.04 as builder
 MAINTAINER richard.berger@outlook.com
 
 ADD lammps /tmp/lammps/
@@ -42,7 +42,7 @@ RUN mkdir -p /tmp/lammps/build-openmpi && \
 #RUN apt update && apt install -y apt-file && apt-file update && \\
 #    ldd /tmp/lammps/build-openmpi/lmp_mpi | awk '/=>/{print $(NF-1)}' | while read n; do apt-file search $n; done | awk '{print $1}' | sed 's/://' | sort | uniq
 
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 MAINTAINER richard.berger@outlook.com
 ENV DEBIAN_FRONTEND noninteractive
 ENV LAMMPS_POTENTIALS=/usr/share/lammps/potentials
@@ -54,25 +54,34 @@ RUN add-apt-repository -y ppa:openkim/latest
 RUN apt-get update -y && \
     apt-get upgrade -y && \
     apt-get install -y --no-install-recommends \
+        openmpi-bin \
+        python3 \
+        liblapack3 \
+        python3-venv \
+        libkim-api-dev \
+        openkim-models \
+        libpython3.6 \
         hdf5-tools \
         less \
         libc6 \
+        libevent-2.1-7 \
+        libevent-pthreads-2.1-7 \
         libexpat1 \
         libfftw3-double3 \
-        libgcc1 \
+        libgcc-s1 \
         libgomp1 \
-        libhwloc5 \
+        libhwloc15 \
         libjpeg-turbo8 \
         libltdl7 \
-        libnuma1 \
-        libopenmpi2 \
+        libopenmpi3 \
         libpng16-16 \
-        libpython3.6 \
-        libreadline7 \
+        libpython3.8 \
         libstdc++6 \
+        libudev1 \
         libvoro++1 \
-        python3.6-dbg \
+        libzstd1 \
         zlib1g \
+        libreadline8 \
         mpi-default-bin \
         python3-dev \
         python3-pip \
@@ -81,9 +90,6 @@ RUN apt-get update -y && \
         rsync \
         ssh \
         vim-nox \
-        voro++ \
-        wget \
-        xxd \
         valgrind \
         gdb \
         zstd \

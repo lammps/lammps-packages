@@ -101,6 +101,7 @@ Section "${LAMMPS}" SecLammps
 
   File License.txt
   File README.txt
+  File lammps.ico
 
   SetOutPath "$INSTDIR\bin"
   File ${MINGW}/${LIBGCC}
@@ -127,9 +128,6 @@ Section "${LAMMPS}" SecLammps
   SetOutPath "$INSTDIR\Potentials"
   File potentials/*
 
-  SetOutPath "$INSTDIR\Python"
-  File python/*
-
   SetOutPath "$INSTDIR\Examples"
   File /r /x log.*.4 examples/*
 
@@ -141,7 +139,7 @@ Section "${LAMMPS}" SecLammps
   File /r /x log.*.4 bench/*
 
   SetOutPath "$INSTDIR\Python"
-  File /r /x __pycache__ python/*
+  File /r /x __pycache__ python/lammps
 
   SetOutPath "$INSTDIR"
   ${registerExtension} "$INSTDIR\bin\lammps-shell.exe" ".lmp" "LAMMPS Input File"

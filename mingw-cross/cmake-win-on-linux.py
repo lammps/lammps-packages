@@ -323,7 +323,6 @@ print("Done")
 
 print("Configuring and building installer")
 os.chdir(builddir)
-shutil.move("OpenCL/lib_win%s/libOpenCL.dll" % bitflag,builddir)
 if adminflag:
     nsisfile = os.path.join(homedir,"installer","lammps-admin.nsis")
 else:

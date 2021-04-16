@@ -47,30 +47,27 @@
     <div align="justify">
       These Windows binaries include GPU acceleration via the <u>GPU</u> package.
       This is achieved through compiling the GPU package in OpenCL mode and linking
-      to an <a href="http://www.khronos.org/opencl/" target="_blank">OpenCL v1.2</a>
-      compatible ICD loader. This means the executables do not contain any vendor
-      provided code and should be compatible with GPUs from both
+      to an <a href="http://www.khronos.org/opencl/" target="_blank">OpenCL</a>
+      compatible ICD loader.  The included OpenCL loader library is compatible
+      with OpenCL version 1.2 to 2.1. This means the executables do not contain
+      any vendor provided code and should be compatible with current GPUs from
       <a href="http://developer.amd.com/tools-and-sdks/opencl-zone/"
-      target="_blank">AMD</a>
-      and <a href="http://www.nvidia.com/opencl/"
-      target="_blank">Nvidia</a>.  The GPU package has been compiled for
-      mixed precision computation and is currently somewhat tuned for
-      Nvidia (Kepler generation) GPUs.  Its compatibility with OpenCL
-      drivers is varied. This is in part due to the code for the GPU
-      kernels seeing only minimal maintenance on OpenCL platforms, and
-      in part due to not fully backward compatible behavior of OpenCL
-      drivers.
+      target="_blank">AMD</a>,
+      <a href="https://software.intel.com/content/www/us/en/develop/articles/opencl-drivers.html"
+      target="_blank">Intel</a>, and <a href="http://www.nvidia.com/opencl/" target="_blank">Nvidia</a>.
+      The GPU package has been compiled for mixed precision computation and
+      as of LAMMPS version 10 March 2021 will automatically tune itself for
+      the OpenCL capable hardware in use.
       <br>
     </div>
     <div align="justify">
       In the case of having multiple Vendor provided OpenCL runtimes
       installed, you may run into the situation of the "wrong" runtime
       being set as the default and used by LAMMPS. In this case, you may
-      need to remove unwanted vendors from the windows registry
-      database. Look for the
+      need to remove unwanted vendors from the windows registry database. Look for the
       key: <code>HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\OpenCL\Vendors</code>,
-      and remove vendors such as Intel.  When reporting problems, please
-      always include the exact
+      and remove vendors with non-functional OpenCL support.
+      When reporting problems, please always include the exact
       <u>version of the installer</u> and the output of the
       <strong><code>ocl_get_devices</code></strong> tool.
     </div>

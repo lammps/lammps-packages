@@ -21,6 +21,9 @@ RUN mkdir -p /tmp/lammps/build-serial && \
     make install && \
     tar czvf /tmp/lammps-serial.tgz -T install_manifest.txt
 
+ENV PATH=/usr/lib64/openmpi/bin${PATH:+:}${PATH}
+ENV LD_LIBRARY_PATH=/usr/lib64/openmpi/lib${LD_LIBRARY_PATH:+:}${LD_LIBRARY_PATH}
+
 RUN mkdir -p /tmp/lammps/build-openmpi && \
     cd /tmp/lammps/build-openmpi && \
     cmake3 -C /tmp/lammps/cmake/presets/most.cmake \
@@ -28,6 +31,7 @@ RUN mkdir -p /tmp/lammps/build-openmpi && \
           -D CMAKE_INSTALL_PREFIX=/usr \
           -D CMAKE_INSTALL_SYSCONFDIR=/etc \
           -D LAMMPS_MACHINE=mpi \
+          -D BUILD_MPI=on \
           -D LAMMPS_EXCEPTIONS=on \
           -D BUILD_TOOLS=on \
           -D BUILD_SHARED_LIBS=on \

@@ -45,7 +45,7 @@ MAINTAINER richard.berger@outlook.com
 RUN useradd -m lammps
 RUN dnf update -y && \
     dnf -y install epel-release dnf-utils && \
-    dnf config-manager --set-enabled PowerTools && \
+    dnf config-manager --set-enabled powertools && \
     dnf install -y  \
                    blas \
                    fftw \

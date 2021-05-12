@@ -62,6 +62,7 @@ RUN apt-get update -y && \
         openkim-models \
         libpython3.6 \
         hdf5-tools \
+        ffmpeg \
         less \
         libc6 \
         libevent-2.1-7 \

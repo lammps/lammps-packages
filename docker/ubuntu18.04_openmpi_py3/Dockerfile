@@ -55,6 +55,7 @@ RUN apt-get update -y && \
     apt-get upgrade -y && \
     apt-get install -y --no-install-recommends \
         hdf5-tools \
+        ffmpeg \
         less \
         libc6 \
         libexpat1 \

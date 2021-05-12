@@ -100,6 +100,12 @@ RUN tar -xvzf /tmp/lammps-serial.tgz -C / && rm -f /tmp/lammps-serial.tgz
 RUN tar -xvzf /tmp/lammps-mpi.tgz -C / && rm -f /tmp/lammps-mpi.tgz
 RUN chown -R lammps:lammps /home/lammps/
 
+# python package installation
+RUN mkdir /tmp/lammps
+COPY --from=builder /tmp/lammps/python /tmp/lammps/python
+COPY --from=builder /tmp/lammps/src/version.h /tmp/lammps/src/version.h
+RUN cd /tmp/lammps/python && python3 setup.py install && cd && rm -rf /tmp/lammps
+
 USER lammps
 WORKDIR /home/lammps
 CMD /usr/bin/lmp_mpi

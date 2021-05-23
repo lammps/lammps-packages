@@ -111,10 +111,16 @@ Section "${LAMMPS}" SecLammps
   File README.txt
   File lammps.ico
 
+!if ${BIT} == 64
+!define CRYPTSUFFIX "1_1-x64"
+!else
+!define CRYPTSUFFIX "1_1"
+!endif
+
   SetOutPath "$INSTDIR\bin"
   File ${MINGW}/${LIBGCC}
   File ${MINGW}/libatomic-1.dll
-  File ${MINGW}/libcrypto-1_1-x64.dll
+  File ${MINGW}/libcrypto-${CRYPTSUFFIX}.dll
   File ${MINGW}/libexpat-1.dll
   File ${MINGW}/libffi-6.dll
   File ${MINGW}/libfftw3-3.dll
@@ -124,11 +130,11 @@ Section "${LAMMPS}" SecLammps
   File ${MINGW}/libhistory8.dll
   File ${MINGW}/libjpeg-62.dll
   File ${MINGW}/libpng16-16.dll
-  File ${MINGW}/libpython3.9.dll
+  File ${MINGW}/libpython${PYTHON}.dll
   File ${MINGW}/libquadmath-0.dll
   File ${MINGW}/libreadline8.dll
   File ${MINGW}/libsqlite3-0.dll
-  File ${MINGW}/libssl-1_1-x64.dll
+  File ${MINGW}/libssl-${CRYPTSUFFIX}.dll
   File ${MINGW}/libssp-0.dll
   File ${MINGW}/libstdc++-6.dll
   File ${MINGW}/libtermcap-0.dll
@@ -177,7 +183,7 @@ Section "${LAMMPS}" SecLammps
   # add msi2lmp force fields
   EnVar::AddValue "MSI2LMP_LIBRARY" "$INSTDIR\frc_files"
   # add python module to path
-  EnVar::AddValue "PYTHONPATH" "$INSTDIR\lib\python${PYTHON};$INSTDIR\lib\python${PYTHON}\site-packages"
+  EnVar::AddValue "PYTHONPATH" "$INSTDIR\lib\python${PYTHON};$INSTDIR\lib\python${PYTHON}\lib-dynload;$INSTDIR\lib\python${PYTHON}\site-packages"
 
   WriteUninstaller "$INSTDIR\Uninstall.exe"
 

@@ -5,6 +5,7 @@
 # ${BIT}     = 32 or 64
 # ${LIBGCC}  = name of libgcc dll file to use
 # ${MINGW}   = <path to mingw windows dlls>
+# ${PYTHON}  = Python version
 
 !include "MUI2.nsh"
 !include "FileAssociation.nsh"
@@ -22,7 +23,7 @@ XPStyle on
 !addplugindir "envvar/Plugins/x86-unicode"
 !include "x64.nsh"
 
-RequestExecutionLevel admin
+RequestExecutionLevel user
 
 !macro VerifyUserIsAdmin
 UserInfo::GetAccountType
@@ -44,15 +45,15 @@ WriteINIStr "${FILENAME}.url" "InternetShortcut" "IconIndex" "${ICONINDEX}"
 !define LIBGCC libgcc_s_dw2-1.dll
 !endif
 
-!define LAMMPS "LAMMPS ${BIT}-bit ${VERSION}"
-OutFile "../LAMMPS-${BIT}bit-${VERSION}-admin.exe"
+!define LAMMPS "LAMMPS ${BIT}-bit ${VERSION} with Python${PYTHON}"
+OutFile "../LAMMPS-${BIT}bit-Python${PYTHON}-${VERSION}.exe"
 
 Name "${LAMMPS}"
 !if ${BIT} == 64
-InstallDir "$ProgramFiles64\${LAMMPS}"
+InstallDir "$LOCALAPPDATA\${LAMMPS}"
 !define MPICHDIR "$ProgramFiles64\MPICH2\bin"
 !else
-InstallDir "$ProgramFiles\${LAMMPS}"
+InstallDir "$LOCALAPPDATA\${LAMMPS}"
 !define MPICHDIR "$ProgramFiles\MPICH2\bin"
 !endif
 
@@ -73,12 +74,12 @@ SetCompressor lzma
 
 function .onInit
   setShellVarContext all
-!insertmacro VerifyUserIsAdmin
 functionEnd
 
 Section "${LAMMPS}" SecLammps
   SectionIn RO
   SetRegView ${BIT}
+  SetShellVarContext current
 
   CreateDirectory "$SMPROGRAMS\${LAMMPS}"
   CreateShortCut  "$SMPROGRAMS\${LAMMPS}\Uninstall.lnk"      "$INSTDIR\Uninstall.exe"          "" ""
@@ -103,7 +104,7 @@ Section "${LAMMPS}" SecLammps
   CreateDirectory "$INSTDIR\Benchmarks"
   CreateDirectory "$INSTDIR\Examples"
   CreateDirectory "$INSTDIR\Potentials"
-  CreateDirectory "$INSTDIR\Python"
+  CreateDirectory "$INSTDIR\lib"
   CreateDirectory "$INSTDIR\frc_files"
 
   File License.txt
@@ -112,18 +113,29 @@ Section "${LAMMPS}" SecLammps
 
   SetOutPath "$INSTDIR\bin"
   File ${MINGW}/${LIBGCC}
+  File ${MINGW}/libatomic-1.dll
+  File ${MINGW}/libcrypto-1_1-x64.dll
+  File ${MINGW}/libexpat-1.dll
+  File ${MINGW}/libffi-6.dll
   File ${MINGW}/libfftw3-3.dll
+  File ${MINGW}/libbz2-1.dll
   File ${MINGW}/libgfortran-5.dll
   File ${MINGW}/libgomp-1.dll
   File ${MINGW}/libhistory8.dll
   File ${MINGW}/libjpeg-62.dll
   File ${MINGW}/libpng16-16.dll
+  File ${MINGW}/libpython3.9.dll
   File ${MINGW}/libquadmath-0.dll
   File ${MINGW}/libreadline8.dll
+  File ${MINGW}/libsqlite3-0.dll
+  File ${MINGW}/libssl-1_1-x64.dll
   File ${MINGW}/libssp-0.dll
   File ${MINGW}/libstdc++-6.dll
   File ${MINGW}/libtermcap-0.dll
   File ${MINGW}/libwinpthread-1.dll
+  File ${MINGW}/python${PYTHON}.exe
+  File ${MINGW}/tcl86.dll
+  File ${MINGW}/tk86.dll
   File ${MINGW}/zlib1.dll
 
   File *.exe
@@ -145,14 +157,17 @@ Section "${LAMMPS}" SecLammps
   SetOutPath "$INSTDIR\Benchmarks"
   File /r /x log.*.4 bench/*
 
-  SetOutPath "$INSTDIR\Python"
+  SetOutPath "$INSTDIR\lib"
+  File /r /x __pycache__ ${MINGW}/../lib/python${PYTHON}
+
+  SetOutPath "$INSTDIR\lib\python${PYTHON}\site-packages"
   File /r /x __pycache__ python/lammps
 
   SetOutPath "$INSTDIR"
   ${registerExtension} "$INSTDIR\bin\lammps-shell.exe" ".lmp" "LAMMPS Input File"
 
   # update path variables
-  EnVar::SetHKLM
+  EnVar::SetHKCU
   # add MPICH2 path
   EnVar::AddValue "PATH" "${MPICHDIR}"
   # add LAMMPS executable path
@@ -162,8 +177,7 @@ Section "${LAMMPS}" SecLammps
   # add msi2lmp force fields
   EnVar::AddValue "MSI2LMP_LIBRARY" "$INSTDIR\frc_files"
   # add python module to path
-  EnVar::AddValue "PYTHONPATH" "$INSTDIR\Python"
-  EnVar::SetHKCU
+  EnVar::AddValue "PYTHONPATH" "$INSTDIR\lib\python${PYTHON};$INSTDIR\lib\python${PYTHON}\site-packages"
 
   WriteUninstaller "$INSTDIR\Uninstall.exe"
 
@@ -174,17 +188,17 @@ Section "${LAMMPS}" SecLammps
 SectionEnd
 
 function un.onInit
-  SetShellVarContext all
-!insertmacro VerifyUserIsAdmin
+  SetShellVarContext current
 functionEnd
 
 Section "Uninstall"
   SetRegView ${BIT}
+  SetShellVarContext current
 
   ${unregisterExtension} ".lmp" "LAMMPS Input File"
 
   # update path variables
-  EnVar::SetHKLM
+  EnVar::SetHKCU
   # remove MPICH2 path
   EnVar::DeleteValue "PATH" "${MPICHDIR}"
   # remove LAMMPS executable and dll path
@@ -193,9 +207,9 @@ Section "Uninstall"
   EnVar::Delete "LAMMPS_POTENTIALS"
   # remove msi2lmp force field variable
   EnVar::Delete "MSI2LMP_LIBRARY"
-  # remove python module from path
-  EnVar::DeleteValue "PYTHONPATH" "$INSTDIR\Python"
-  EnVar::SetHKCU
+  # remove python module and runtime from path
+  EnVar::DeleteValue "PYTHONPATH" "$INSTDIR\lib\python${PYTHON}"
+  EnVar::DeleteValue "PYTHONPATH" "$INSTDIR\lib\python${PYTHON}/site-packages"
 
   RMDir /r "$SMPROGRAMS\${LAMMPS}"
 
@@ -207,7 +221,7 @@ Section "Uninstall"
   RMDir /r /REBOOTOK "$INSTDIR\Doc"
   RMDir /r /REBOOTOK "$INSTDIR\Examples"
   RMDir /r /REBOOTOK "$INSTDIR\Potentials"
-  RMDir /r /REBOOTOK "$INSTDIR\Python"
+  RMDir /r /REBOOTOK "$INSTDIR\lib"
   RMDir /r /REBOOTOK "$INSTDIR\frc_files"
   RMDir /REBOOTOK "$INSTDIR"
 SectionEnd

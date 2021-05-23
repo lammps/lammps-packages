@@ -21,6 +21,14 @@ def error(str=None):
     else: print(sys.argv[0],"ERROR:",str)
     sys.exit()
 
+def getbool(arg,keyword):
+    if arg in ['yes','Yes','Y','y','on','1','True','true']:
+        return True
+    elif arg in ['no','No','N','n','off','0','False','false']:
+        return False
+    else:
+        error("Unknown %s option: %s" % (keyword,arg))
+
 def fullpath(path):
     return os.path.abspath(os.path.expanduser(path))
 
@@ -66,6 +74,8 @@ homedir, exename = os.path.split(os.path.abspath(inspect.getsourcefile(lambda:0)
 
 bitflag = '64'
 parflag = 'no'
+pythonflag  = False
+pyversion = '3.9'
 thrflag = 'omp'
 revflag = 'stable'
 verbose = False
@@ -74,7 +84,7 @@ adminflag = True
 msixflag = False
 
 helpmsg = """
-Usage: python %s -b <bits> -j <cpus> -p <mpi> -t <thread> -r <rev> -v <yes|no> -g <folder> -a <yes|no>
+Usage: python %s -b <bits> -j <cpus> -p <mpi> -t <thread> -y <yes|no> -r <rev> -v <yes|no> -g <folder> -a <yes|no>
 
 Flags (all flags are optional, defaults listed below):
   -b : select Windows variant (default value: %s)
@@ -88,6 +98,9 @@ Flags (all flags are optional, defaults listed below):
   -t : select thread support (default value: %s)
     -t omp      : build with threads via OpenMP enabled
     -t no       : build with thread support disabled
+  -y : select python support (default value: %s)
+    -y yes      : build with python included
+    -y no       : build without python
   -r : select LAMMPS source revision to build (default value: %s)
     -r stable   : download and build the latest stable LAMMPS version
     -r unstable : download and build the latest patch release LAMMPS version
@@ -108,7 +121,7 @@ Flags (all flags are optional, defaults listed below):
 
 Example:
   python %s -r unstable -t omp -p mpi
-""" % (exename,bitflag,numcpus,parflag,thrflag,revflag,gitdir,exename)
+""" % (exename,bitflag,numcpus,parflag,thrflag,pythonflag,revflag,gitdir,exename)
 
 # parse arguments
 
@@ -128,27 +141,19 @@ while i < argc:
         parflag = argv[i+1]
     elif argv[i] == '-t':
         thrflag = argv[i+1]
+    elif argv[i] == '-y':
+        pythonflag = getbool(argv[i+1],"python")
     elif argv[i] == '-r':
         revflag = argv[i+1]
     elif argv[i] == '-v':
-        if argv[i+1] in ['yes','Yes','Y','y','on','1','True','true']:
-            verbose = True
-        elif argv[i+1] in ['no','No','N','n','off','0','False','false']:
-            verbose = False
-        else:
-            error("\nUnknown verbose keyword:",argv[i+1])
+        verbose = getbool(argv[i+1],"verbose")
     elif argv[i] == '-a':
-        if argv[i+1] in ['yes','Yes','Y','y','on','1','True','true']:
-            adminflag = True
-            msixflag = False
-        elif argv[i+1] in ['no','No','N','n','off','0','False','false']:
-            adminflag = False
-            msixflag = False
-        elif argv[i+1] in ['msix','MSIX']:
+        if argv[i+1] in ['msix','MSIX']:
             adminflag = False
             msixflag = True
         else:
-            error("\nUnknown admin flag option:",argv[i+1])
+            msixflag = False
+            adminflag = getbool(argv[i+1],"admin")
     elif argv[i] == '-g':
         gitdir = fullpath(argv[i+1])
     else:
@@ -175,7 +180,9 @@ if not rev1.match(revflag) and not rev2.match(revflag) and not rev3.match(revfla
 if adminflag:
     builddir = os.path.join(fullpath('.'),"tmp-%s-%s-%s-%s" % (bitflag,parflag,thrflag,revflag))
 else:
-    if msixflag:
+    if pythonflag:
+        builddir = os.path.join(fullpath('.'),"tmp-%s-%s-%s-%s-python" % (bitflag,parflag,thrflag,revflag))
+    elif msixflag:
         builddir = os.path.join(fullpath('.'),"tmp-%s-%s-%s-%s-msix" % (bitflag,parflag,thrflag,revflag))
     else:
         builddir = os.path.join(fullpath('.'),"tmp-%s-%s-%s-%s-noadmin" % (bitflag,parflag,thrflag,revflag))
@@ -259,6 +266,7 @@ cmd += " -C %s/cmake/presets/mingw-cross.cmake %s/cmake" % (gitdir,gitdir)
 cmd += " -DBUILD_SHARED_LIBS=on -DBUILD_MPI=%s -DBUILD_OPENMP=%s" % (mpiflag,ompflag)
 cmd += " -DWITH_GZIP=on -DWITH_FFMPEG=on -DLAMMPS_EXCEPTIONS=on"
 cmd += " -DINTEL_LRT_MODE=c++11 -DBUILD_LAMMPS_SHELL=on"
+if pythonflag: cmd += " -DPKG_PYTHON=yes"
 
 print("Running: ",cmd)
 txt = system(cmd)
@@ -323,7 +331,9 @@ print("Done")
 
 print("Configuring and building installer")
 os.chdir(builddir)
-if adminflag:
+if pythonflag:
+    nsisfile = os.path.join(homedir,"installer","lammps-python.nsis")
+elif adminflag:
     nsisfile = os.path.join(homedir,"installer","lammps-admin.nsis")
 else:
     if msixflag:
@@ -360,11 +370,11 @@ elif bitflag == '64':
 
 if parflag == 'mpi':
     shutil.move("lmp.exe","lmp_mpi.exe")
-    txt = system("makensis -DMINGW=%s -DVERSION=%s-MPI -DBIT=%s -DLIBGCC=%s -DLMPREV=%s lammps.nsis" % (mingwdir,version,bitflag,libgcc,revflag))
+    txt = system("makensis -DMINGW=%s -DVERSION=%s-MPI -DBIT=%s -DLIBGCC=%s -DLMPREV=%s -DPYTHON=%s lammps.nsis" % (mingwdir,version,bitflag,libgcc,revflag,pyversion))
     if verbose: print(txt)
 else:
     shutil.move("lmp.exe","lmp_serial.exe")
-    txt = system("makensis -DMINGW=%s -DVERSION=%s -DBIT=%s -DLIBGCC=%s -DLMPREV=%s lammps.nsis" % (mingwdir,version,bitflag,libgcc,revflag))
+    txt = system("makensis -DMINGW=%s -DVERSION=%s -DBIT=%s -DLIBGCC=%s -DLMPREV=%s -DPYTHON=%s lammps.nsis" % (mingwdir,version,bitflag,libgcc,revflag,pyversion))
     if verbose: print(txt)
 
 # clean up after successful build

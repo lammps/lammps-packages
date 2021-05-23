@@ -105,6 +105,7 @@ Section "${LAMMPS}" SecLammps
   CreateDirectory "$INSTDIR\Examples"
   CreateDirectory "$INSTDIR\Potentials"
   CreateDirectory "$INSTDIR\lib"
+  CreateDirectory "$INSTDIR\Python"
   CreateDirectory "$INSTDIR\frc_files"
 
   File License.txt
@@ -163,11 +164,13 @@ Section "${LAMMPS}" SecLammps
   SetOutPath "$INSTDIR\Benchmarks"
   File /r /x log.*.4 bench/*
 
-  SetOutPath "$INSTDIR\lib"
-  File /r /x __pycache__ ${MINGW}/../lib/python${PYTHON}
-
-  SetOutPath "$INSTDIR\lib\python${PYTHON}\site-packages"
+  # install LAMMPS module in separate folder so it can be used with a custom Python package
+  SetOutPath "$INSTDIR\Python"
   File /r /x __pycache__ python/lammps
+
+  # install bundled, cross-compiled Python runtime
+  SetOutPath "$INSTDIR\lib"
+  File /r ${MINGW}/../lib/python${PYTHON}
 
   SetOutPath "$INSTDIR"
   ${registerExtension} "$INSTDIR\bin\lammps-shell.exe" ".lmp" "LAMMPS Input File"
@@ -182,8 +185,10 @@ Section "${LAMMPS}" SecLammps
   EnVar::AddValue "LAMMPS_POTENTIALS" "$INSTDIR\Potentials"
   # add msi2lmp force fields
   EnVar::AddValue "MSI2LMP_LIBRARY" "$INSTDIR\frc_files"
-  # add python module to path
-  EnVar::AddValue "PYTHONPATH" "$INSTDIR\lib\python${PYTHON};$INSTDIR\lib\python${PYTHON}\lib-dynload;$INSTDIR\lib\python${PYTHON}\site-packages"
+  # set python system path to installation dir
+  EnVar::AddValue "PYTHONHOME" "$INSTDIR"
+  # add LAMMPS python module to Python search path
+  EnVar::AddValue "PYTHONPATH" "$INSTDIR\Python"
 
   WriteUninstaller "$INSTDIR\Uninstall.exe"
 
@@ -213,9 +218,10 @@ Section "Uninstall"
   EnVar::Delete "LAMMPS_POTENTIALS"
   # remove msi2lmp force field variable
   EnVar::Delete "MSI2LMP_LIBRARY"
-  # remove python module and runtime from path
-  EnVar::DeleteValue "PYTHONPATH" "$INSTDIR\lib\python${PYTHON}"
-  EnVar::DeleteValue "PYTHONPATH" "$INSTDIR\lib\python${PYTHON}/site-packages"
+  # remove python runtime setting
+  EnVar::DeleteValue "PYTHONHOME" "$INSTDIR"
+  # remove LAMMPS python module from search path
+  EnVar::DeleteValue "PYTHONPATH" "$INSTDIR\Python"
 
   RMDir /r "$SMPROGRAMS\${LAMMPS}"
 
@@ -228,6 +234,7 @@ Section "Uninstall"
   RMDir /r /REBOOTOK "$INSTDIR\Examples"
   RMDir /r /REBOOTOK "$INSTDIR\Potentials"
   RMDir /r /REBOOTOK "$INSTDIR\lib"
+  RMDir /r /REBOOTOK "$INSTDIR\Python"
   RMDir /r /REBOOTOK "$INSTDIR\frc_files"
   RMDir /REBOOTOK "$INSTDIR"
 SectionEnd

@@ -185,8 +185,6 @@ Section "${LAMMPS}" SecLammps
   EnVar::AddValue "LAMMPS_POTENTIALS" "$INSTDIR\Potentials"
   # add msi2lmp force fields
   EnVar::AddValue "MSI2LMP_LIBRARY" "$INSTDIR\frc_files"
-  # set python system path to installation dir
-  EnVar::AddValue "PYTHONHOME" "$INSTDIR"
   # add LAMMPS python module to Python search path
   EnVar::AddValue "PYTHONPATH" "$INSTDIR\Python"
 

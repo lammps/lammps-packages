@@ -100,6 +100,12 @@
         <li>mingw64-libjpeg-turbo</li>
         <li>mingw32-libpng</li>
         <li>mingw64-libpng</li>
+        <li>mingw32-python3.noarch</li>
+        <li>mingw64-python3.noarch</li>
+        <li>mingw32-python3-numpy.noarch</li>
+        <li>mingw64-python3-numpy.noarch</li>
+        <li>mingw32-python3-pyyaml.noarch</li>
+        <li>mingw64-python3-pyyaml.noarch</li>
         <li>mingw32-readline</li>
         <li>mingw64-readline</li>
         <li>mingw32-termcap</li>
@@ -165,6 +171,9 @@ Flags (all flags are optional, defaults listed below):
   -t : select thread support (default value: omp)
     -t omp      : build with threads via OpenMP enabled
     -t no       : build with thread support disabled
+  -y : select python support (default value: no)
+    -y yes      : build with python included
+    -y no       : build without python
   -r : select LAMMPS source revision to build (default value: stable)
     -r stable   : download and build the latest stable LAMMPS version
     -r unstable : download and build the latest patch release LAMMPS version
@@ -206,7 +215,7 @@ Example:
       folder and all its contents will be removed.
     </p>
     <hr>
-    <p>Last modified: Sat Oct 17 02:27:12 UTC 2020 by akohlmey</p>
+    <p>Last modified: Sun May 23 12:54:34 UTC 2021 by akohlmey</p>
   </body>
 </html>
 <!-- Local Variables: -->

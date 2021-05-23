@@ -17,7 +17,7 @@
       <a href="http://lammps.sandia.gov/" target="_blank">LAMMPS</a>
       molecular dynamics simulation software package.
       The binaries are built with MinGW64 Linux to Windows
-      cross compilers on Fedora Linux using the standard LAMMPS sources.
+      cross-compilers on Fedora Linux using the standard LAMMPS sources.
 
       The LAMMPS binaries contain <b>all</b> optional packages included in
       the source distribution <b>except</b>:
@@ -25,7 +25,6 @@
         <li><u>KIM</u> (not fully ported to Windows),
         <li><u>KOKKOS</u> (does not fully support cross-compilation with GCC),
         <li><u>MSCG</u> (requires an external library),
-        <li><u>PYTHON</u> (requires to bundle a full Python runtime),
         <li><u>USER-ADIOS</u> (requires an external library),
         <li><u>USER-H5MD</u> (requires an external library),
         <li><u>USER-MDI</u> (external library not compatible with cross-compilation),
@@ -38,6 +37,14 @@
       <u>MPIIO</u> and <u>USER-LB</u> packages, since those require
       <i>MPI-IO</i> functions, which are not available without linking
       to a real MPI library instead of the MPI STUBS for serial execution.
+      <div>
+        <br>
+        The <u>PYTHON</u> package is only included in the installer package with
+        Python in the name.  Those packages include a full Python environment with
+        all standard Python modules and the NumPy module and a pythonX.Y executable.
+        Please note that the 64-bit Windows NumPy module is considered <b>very experimental</b>
+        and thus one should not expect it to work without crashes.
+      </div>
     </p>
 
     <hr width="100%">
@@ -50,7 +57,7 @@
       This is achieved through compiling the GPU package in OpenCL mode and linking
       to an <a href="http://www.khronos.org/opencl/" target="_blank">OpenCL</a>
       compatible ICD loader.  The included OpenCL loader library is compatible
-      with OpenCL version 1.2 to 2.1. This means the executables do not contain
+      with OpenCL version 1.2 to 3.0.  This means the executables do not contain
       any vendor provided code and should be compatible with current GPUs from
       <a href="http://developer.amd.com/tools-and-sdks/opencl-zone/"
       target="_blank">AMD</a>,
@@ -78,13 +85,16 @@
     <div align="justify">
       These Windows binaries are built with a shared library
       (liblammps.dll) and include the LAMMPS Python wrapper module
-      (lammps.py) which is placed in a directory included in
+      which is placed in a directory included in
       the <b>PYTHONPATH</b> environment variable.  That makes it
       possible to import it into a suitable Python interpreter on
       Windows without any additional setup. This has been tested with
       the Python interpreters bundled with <i>Microsoft Visual
       Studio</i>, but should be usable with any Python interpreter that
-      is for the same architecture (32-bit or 64-bit x86).<br>
+      is for the same architecture (32-bit or 64-bit x86).  This module
+      is <u>always</u> included and the packages with a Python environment
+      bundled can be used out of the box and do not need an additional
+      Python interpreter to be installed.<br>
     </div>
     <div style="clear:both;"></div>
     <hr width="100%">
@@ -253,7 +263,7 @@
       multi-threading since MPICH restricts processes to a single
       physical CPU thus it will run less efficient. </p>
     <hr>
-    <p>Last modified: Sun Oct 11 02:59:06 UTC 2020 by akohlmey</p>
+    <p>Last modified: Sun May 23 12:50:40 UTC 2021 by akohlmey</p>
   </body>
 </html>
 <!-- Local Variables: -->

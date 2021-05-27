@@ -9,6 +9,7 @@
 
 !include "MUI2.nsh"
 !include "FileAssociation.nsh"
+!include "FileFunc.nsh"
 
 !define MUI_ICON "lammps.ico"
 !define MUI_UNICON "lammps.ico"
@@ -80,6 +81,18 @@ Section "${LAMMPS}" SecLammps
   SectionIn RO
   SetRegView ${BIT}
   SetShellVarContext current
+
+  # check whether LAMMPS is already installed
+  ReadRegStr $R0 HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\LAMMPS" "UninstallString"
+  IfFileExists $R0 +1 NotInstalled
+  MessageBox MB_YESNO "LAMMPS is already installed. Uninstall existing version?" /SD IDYES IDNO Quit
+    Pop $R1
+    StrCmp $R1 2 Quit +1
+    Exec $R0
+  Quit:
+    Quit
+
+  NotInstalled:
 
   CreateDirectory "$SMPROGRAMS\${LAMMPS}"
   CreateShortCut  "$SMPROGRAMS\${LAMMPS}\Uninstall.lnk"      "$INSTDIR\Uninstall.exe"          "" ""
@@ -166,14 +179,27 @@ Section "${LAMMPS}" SecLammps
 
   # install LAMMPS module in separate folder so it can be used with a custom Python package
   SetOutPath "$INSTDIR\Python"
-  File /r /x __pycache__ python/lammps
+  File /r /x __pycache__ /x *.pyc python/lammps
 
   # install bundled, cross-compiled Python runtime
   SetOutPath "$INSTDIR\lib"
-  File /r ${MINGW}/../lib/python${PYTHON}
+  File /r /x __pycache__ /x *.pyc ${MINGW}/../lib/python${PYTHON}
 
   SetOutPath "$INSTDIR"
   ${registerExtension} "$INSTDIR\bin\lammps-shell.exe" ".lmp" "LAMMPS Input File"
+
+  # Register Application and its uninstaller
+  WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\LAMMPS" \
+                 "DisplayName" "${LAMMPS} -- MD Simulation Software"
+  WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\LAMMPS" \
+                 "UninstallString" "$\"$INSTDIR\uninstall.exe$\""
+  WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\LAMMPS" \
+                 "QuietUninstallString" "$\"$INSTDIR\uninstall.exe$\" /S"
+
+  ${GetSize} "$INSTDIR" "/S=0K" $0 $1 $2
+  IntFmt $0 "0x%08X" $0
+  WriteRegDWORD HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\LAMMPS" \
+                 "EstimatedSize" "$0"
 
   # update path variables
   EnVar::SetHKCU
@@ -187,6 +213,9 @@ Section "${LAMMPS}" SecLammps
   EnVar::AddValue "MSI2LMP_LIBRARY" "$INSTDIR\frc_files"
   # add LAMMPS python module to Python search path
   EnVar::AddValue "PYTHONPATH" "$INSTDIR\Python"
+  # record installation folder in LAMMPSHOME
+  EnVar::Delete LAMMPSHOME
+  EnVar::AddValue LAMMPSHOME "$INSTDIR"
 
   WriteUninstaller "$INSTDIR\Uninstall.exe"
 
@@ -206,6 +235,9 @@ Section "Uninstall"
 
   ${unregisterExtension} ".lmp" "LAMMPS Input File"
 
+  # unregister installation
+  DeleteRegKey HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\LAMMPS"
+
   # update path variables
   EnVar::SetHKCU
   # remove MPICH2 path
@@ -218,6 +250,8 @@ Section "Uninstall"
   EnVar::Delete "MSI2LMP_LIBRARY"
   # remove LAMMPS python module from search path
   EnVar::DeleteValue "PYTHONPATH" "$INSTDIR\Python"
+  # remove definition of installation location
+  EnVar::Delete "LAMMPSHOME"
 
   RMDir /r "$SMPROGRAMS\${LAMMPS}"
 

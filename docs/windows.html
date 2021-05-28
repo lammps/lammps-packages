@@ -39,6 +39,8 @@
       to a real MPI library.
       <div>
         <br>
+        <div style="display: inline; margin-right: 10px; margin-bottom: 5px; border: 5px; float: left;">
+          <img src="python-logo.png" border="0" style="" width="96" height="96"></div>
         The <u>PYTHON</u> package is only included in the installer
         package with Python in the name.  Those packages include a full
         Python runtime environment with all standard Python modules and
@@ -49,9 +51,6 @@
     </p>
 
     <hr width="100%">
-    <div style="display: inline; margin-right: 10px; margin-bottom: 5px; border: 5px; float: left;">
-      <img src="opencl_logo_75_75.png" border="0" style="" width="75" height="75">
-    </div>
     <h3>Important Note on Changes to the Installer packages</h3>
     <div align="justify">
       As of LAMMPS version 27 May 2021, the LAMMPS installer packages will detect
@@ -99,19 +98,24 @@
     <div style="clear:both;"></div>
     <hr width="100%">
     <h3>LAMMPS Python module</h3>
+    <div style="display: inline; margin-right: 10px; margin-bottom: 5px; border: 5px; float: left;">
+      <img src="python-logo.png" border="0" style="" width="96" height="96"></div>
     <div align="justify">
-      These Windows binaries are built with a shared library
-      (liblammps.dll) and include the LAMMPS Python wrapper module
-      which is placed in a directory included in
+      These Windows binaries are built to include a shared library
+      (liblammps.dll) and and also contain the LAMMPS Python wrapper
+      module which is placed in a directory included in
       the <b>PYTHONPATH</b> environment variable.  That makes it
       possible to import it into a suitable Python interpreter on
-      Windows without any additional setup. This has been tested with
-      the Python interpreters bundled with <i>Microsoft Visual
-      Studio</i>, but should be usable with any Python interpreter that
-      is for the same architecture (32-bit or 64-bit x86).  This module
-      is <u>always</u> included and the packages with a Python environment
-      bundled can be used out of the box and do not need an additional
-      Python interpreter to be installed.<br>
+      Windows without any additional setup.  This has been tested with
+      the Python interpreters bundled with <i>Microsoft Visual Studio</i>
+      and those downloaded from <a href="https://python.org" target="_blank">
+      python.org </a> but should be usable with any Python interpreter that
+      is for the same architecture (32-bit or 64-bit x86).</div><br>
+    <div align="justify">
+      This module is <u>always</u> included and the packages with a Python
+      runtime include may import the LAMMPS python module from within their
+      Python functions or classes.  However, the LAMMPS installer packages
+      do not include a Python executable for standalone use.
     </div>
     <div style="clear:both;"></div>
     <hr width="100%">

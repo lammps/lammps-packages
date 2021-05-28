@@ -14,7 +14,7 @@
     <h1>LAMMPS Windows Installer Repository</h1>
     <p align="justify">
       This repository is hosting pre-compiled Windows installers of the
-      <a href="http://lammps.sandia.gov/" target="_blank">LAMMPS</a>
+      <a href="https://lammps.org/" target="_blank">LAMMPS</a>
       molecular dynamics simulation software package.
       The binaries are built with MinGW64 Linux to Windows
       cross-compilers on Fedora Linux using the standard LAMMPS sources.
@@ -27,25 +27,42 @@
         <li><u>MSCG</u> (requires an external library),
         <li><u>USER-ADIOS</u> (requires an external library),
         <li><u>USER-H5MD</u> (requires an external library),
-        <li><u>USER-MDI</u> (external library not compatible with cross-compilation),
+        <li><u>USER-PACE</u> (external library not compatible),
         <li><u>USER-NETCDF</u> (requires an external library),
         <li><u>USER-QMMM</u> (only useful when linking to a QM software),
         <li><u>USER-QUIP</u> (requires an external library),
         <li><u>USER-VTK</u> (requires an external library).
       </ul>
-      The <b>lmp_serial</b> executable additionally does not contain the
+      The <b>serial</b> executable additionally does not contain the
       <u>MPIIO</u> and <u>USER-LB</u> packages, since those require
       <i>MPI-IO</i> functions, which are not available without linking
-      to a real MPI library instead of the MPI STUBS for serial execution.
+      to a real MPI library.
       <div>
         <br>
-        The <u>PYTHON</u> package is only included in the installer package with
-        Python in the name.  Those packages include a full Python environment with
-        all standard Python modules and the NumPy module and a pythonX.Y executable.
-        Please note that the 64-bit Windows NumPy module is considered <b>very experimental</b>
-        and thus one should not expect it to work without crashes.
+        The <u>PYTHON</u> package is only included in the installer
+        package with Python in the name.  Those packages include a full
+        Python runtime environment with all standard Python modules and
+        the NumPy module.  Please note that the 64-bit Windows NumPy
+        module is considered <b>very experimental</b> and thus one
+        should expect crashes that are not bugs in LAMMPS.
       </div>
     </p>
+
+    <hr width="100%">
+    <div style="display: inline; margin-right: 10px; margin-bottom: 5px; border: 5px; float: left;">
+      <img src="opencl_logo_75_75.png" border="0" style="" width="75" height="75">
+    </div>
+    <h3>Important Note on Changes to the Installer packages</h3>
+    <div align="justify">
+      As of LAMMPS version 27 May 2021, the LAMMPS installer packages will detect
+      if LAMMPS (version 27 May 2021 or later) has already been installed and will
+      offer to uninstall, in case it is. This should be independent from whether
+      it was 32-bit or 64-bit version and with or without MPI or Python.  Having
+      multiple versions/variants of LAMMPS installed at the same time is no longer
+      supported. Also, the name of the LAMMPS executable has been simplified to
+      <u>lmp.exe</u> in all packages since there is no longer a need to
+      differentiate between the MPI and non-MPI version.
+    </div>
 
     <hr width="100%">
     <div style="display: inline; margin-right: 10px; margin-bottom: 5px; border: 5px; float: left;">
@@ -55,14 +72,14 @@
     <div align="justify">
       These Windows binaries include GPU acceleration via the <u>GPU</u> package.
       This is achieved through compiling the GPU package in OpenCL mode and linking
-      to an <a href="http://www.khronos.org/opencl/" target="_blank">OpenCL</a>
+      to an <a href="https://www.khronos.org/opencl/" target="_blank">OpenCL</a>
       compatible ICD loader.  The included OpenCL loader library is compatible
       with OpenCL version 1.2 to 3.0.  This means the executables do not contain
       any vendor provided code and should be compatible with current GPUs from
-      <a href="http://developer.amd.com/tools-and-sdks/opencl-zone/"
+      <a href="https://developer.amd.com/tools-and-sdks/opencl-zone/"
       target="_blank">AMD</a>,
       <a href="https://software.intel.com/content/www/us/en/develop/articles/opencl-drivers.html"
-      target="_blank">Intel</a>, and <a href="http://www.nvidia.com/opencl/" target="_blank">Nvidia</a>.
+      target="_blank">Intel</a>, and <a href="https://www.nvidia.com/opencl/" target="_blank">Nvidia</a>.
       The GPU package has been compiled for mixed precision computation and
       as of LAMMPS version 10 March 2021 will automatically tune itself for
       the OpenCL capable hardware in use.
@@ -115,9 +132,9 @@
         There are installer packages for 32-bit and 64-bit
         versions of Windows available.
         <ul>
-          <li><a href="http://rpm.lammps.org/windows/">Latest stable versions</a></li>
-          <li><a href="http://rpm.lammps.org/windows/32bit/">32-bit Windows download area</a> with all available installer versions</li>
-          <li><a href="http://rpm.lammps.org/windows/64bit/">64-bit Windows download area</a> with all available installer versions</li>
+          <li><a href="https://rpm.lammps.org/windows/">Latest stable versions</a></li>
+          <li><a href="https://rpm.lammps.org/windows/32bit/">32-bit Windows download area</a> with all available installer versions</li>
+          <li><a href="https://rpm.lammps.org/windows/64bit/">64-bit Windows download area</a> with all available installer versions</li>
         </ul>
         The respective download directory will contain installer
         packages that are labeled with the date of the LAMMPS version
@@ -131,16 +148,17 @@
         time (however it is not recommended). Both kinds of packages contain:
       </div>
       <ul>
-        <li><u>Either:</u> a regular multi-threaded LAMMPS executable called <strong><code>lmp_serial</code></strong>.
+        <li><u>Either:</u> a regular multi-threaded LAMMPS executable called <strong><code>lmp</code></strong>.
           This should <u>always</u> work.</li>
 
-        <li><u>Or:</u> a multi-threaded LAMMPS executable that also supports
-          parallel execution via MPI message passing. This
-          executable is called  <strong><code>lmp_mpi</code></strong>
-          and requires installation of a suitable MPICH2 package to work.</li>
+        <li><u>Or:</u> a multi-threaded LAMMPS executable that also
+          supports parallel execution via MPI message passing. This
+          executable is called <strong><code>lmp</code></strong> and
+          requires installation of a suitable MPICH2 package to
+          work.</li>
 
         <li>the LAMMPS manual in PDF format</li>
-        <li>the <a href="http://colvars.github.io/" target="_blank">colvars</a>
+        <li>the <a href="https://colvars.github.io/" target="_blank">colvars</a>
           reference manual in PDF format</li>
         <li>several additional PDF format guides for specific packages or styles</li>
         <li>the potential files bundled with the LAMMPS source code</li>
@@ -153,13 +171,13 @@
       <p align="justify">Both executables will run in serial when executed directly.
         Please see below for instructions on how to perform parallel runs.
         To use the MPI based parallelism, you also need to install
-          <a href="http://www.mpich.org/" target="_blank">MPICH2 from Argonne lab</a>.
+          <a href="https://www.mpich.org/" target="_blank">MPICH2 from Argonne lab</a>.
         For 32-bit Windows you have to download and install
-          <a href="http://www.mpich.org/static/tarballs/1.4.1p1/mpich2-1.4.1p1-win-ia32.msi">
+          <a href="https://www.mpich.org/static/tarballs/1.4.1p1/mpich2-1.4.1p1-win-ia32.msi">
             mpich2-1.4.1p1-win-ia32.msi</a>. This is the latest available binary 32-bit
           MPI package compatible with the GNU cross compilers used to compile LAMMPS.
         Correspondingly, for 64-bit Windows you have to download and install
-          <a href="http://www.mpich.org/static/tarballs/1.4.1p1/mpich2-1.4.1p1-win-x86-64.msi">
+          <a href="https://www.mpich.org/static/tarballs/1.4.1p1/mpich2-1.4.1p1-win-x86-64.msi">
             mpich2-1.4.1p1-win-x86-64.msi</a>. This is the latest available binary 64-bit
           MPI package compatible with the GNU cross compilers used to compile LAMMPS.
       </p>
@@ -172,7 +190,7 @@
       was changed with the stable release of LAMMPS in October 2020.
       Installer packages from previous LAMMPS versions and current versions that
       require administrator privilege to be installed can be found
-      <a href="http://rpm.lammps.org/windows/admin/">their own download area</a>.
+      <a href="https://rpm.lammps.org/windows/admin/">their own download area</a>.
       The content is otherwise the same, only the packaging is different.
     </div>
     <hr width="100%">
@@ -199,12 +217,12 @@
       <a imageanchor="1" href="lammps-icms-on-win7.png" style=""><img src="lammps-icms-on-win7.png" border="0" style="" width="400" height="300"></a>
     </div>
     <p align="justify">
-      To run a LAMMPS simulations open a terminal window as outlined above
-      and change to the directory with your input script and then run either
-      <strong><code>lmp_serial</code></strong> or <strong><code>lmp_mpi</code></strong>
-      As described in the LAMMPS manual. For more details and additional command
-      line flags, please check out the
-      <a href="http://lammps.sandia.gov/doc/Section_start.html#start_6" target="_blank">
+      To run a LAMMPS simulations please open a console window as outlined above
+      and change to the directory with your input script and then run
+      <strong><code>lmp</code></strong> as described in the LAMMPS
+      manual. For more details and additional command line flags, please
+      check out the
+      <a href="https://docs.lammps.org/Section_start.html#start_6" target="_blank">
         LAMMPS Manual</a>.
     </p>
     <h3 name="openmp">Multi-threaded Parallel Execution</h3>
@@ -214,7 +232,7 @@
       you need to either set it at the command line prompt via
       <strong><code>set OMP_NUM_THREADS=4</code></strong>, via the
       <strong><code>-pk&nbsp;omp&nbsp;4</code></strong> command line flag, or via the
-      <a href="http://lammps.sandia.gov/doc/package.html" target="_blank">package omp 4</a>
+      <a href="https://docs.lammps.org/package.html" target="_blank">package omp 4</a>
       command in your input script.</p>
 
     <p align="justify">
@@ -222,16 +240,16 @@
       styles in LAMMPS, that are multi-thread enabled. Those are usually identified
       by the <i>/omp</i> suffix. Those can be selected explicitly and selectively,
       or with the
-      <a href="http://lammps.sandia.gov/doc/package.html" target="_blank">suffix</a>
+      <a href="https://docs.lammps.org/package.html" target="_blank">suffix</a>
       command or - most conveniently - via using the <strong><code>-sf&nbsp;omp</code></strong>
       command line flag to the LAMMPS executable.
     </p>
-    Example: <strong><code>lmp_serial -pk omp 4 -sf omp -in in.melt</code></strong>
+    Example: <strong><code>lmp -pk omp 4 -sf omp -in in.melt</code></strong>
 
     <h3 name="mpi">Message Passing (MPI) Parallel Execution</h3>
     <p align="justify">
-      Only the <strong><code>lmp_mpi</code></strong> executable supports parallel execution
-      via MPI (which can be combined with OpenMPI multi-threading). For that you also
+      Only the executable from the LAMMPS-MPI packages supports parallel execution
+      via MPI (which can be combined with OpenMP multi-threading). For that you also
       need to install a specific version of MPICH2 from Argonne lab linked above.
       The installer does not contain it and does not check for it. Please note, that
       you need to download a very specific (and rather old) version of the MPICH
@@ -248,8 +266,8 @@
     </p>
 
     <p align="justify">
-      MPI parallel executables have to be launched with <strong><code>mpiexec -localonly # lmp_mpi ...</code></strong>
-      or <strong><code>mpiexec -np # lmp_mpi ...</code></strong> with "#" being then number
+      MPI parallel executables have to be launched with <strong><code>mpiexec -localonly # lmp ...</code></strong>
+      or <strong><code>mpiexec -np # lmp ...</code></strong> with "#" being then number
       of parallel processes to start. For the latter you may be asked for your password.
     </p>
     <p align="justify">
@@ -263,7 +281,7 @@
       multi-threading since MPICH restricts processes to a single
       physical CPU thus it will run less efficient. </p>
     <hr>
-    <p>Last modified: Sun May 23 12:50:40 UTC 2021 by akohlmey</p>
+    <p>Last modified: Fri May 28 15:53:23 UTC 2021 by akohlmey</p>
   </body>
 </html>
 <!-- Local Variables: -->

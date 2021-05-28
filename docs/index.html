@@ -17,24 +17,35 @@
       The LAMMPS molecular dynamics simulation package is commonly
       installed, customized, and compiled by its users from source code,
       which can be obtained from its
-      <a href="http://lammps.sandia.gov" target="_blank">Sandia home page</a>
+      <a href="https://www.lammps.org" target="_blank">home page</a>
       as tar archives or from its
-      <a href="http://gihub.com/lammps/lammps/" target="_blank">GitHub
+      <a href="https://gihub.com/lammps/lammps/" target="_blank">GitHub
         project page</a> as snapshot zip archive or git repository clone.
     <p align="justify">
       However, few people using Windows are familiar compiling
       applications from source code and have the necessary tools
       installed. Furthermore Windows applications are usually bundled
-      with an installer/uninstaller tool to manage the deployment of
-      the precompiled binaries and associated files.
+      with an installer/uninstaller tool to manage the deployment of the
+      precompiled binaries and associated files or can be installed from
+      the <a href="https://www.microsoft.com/en-us/store/apps/windows" target="_blank">
+        Microsoft Store</a>.
+    </p>
+    <p align="justify">
+      For quick testing and simple calculations, there is is a package with
+      <a href="https://www.microsoft.com/en-us/p/lammps/9pgqct71smdw" target="_blank">
+        a LAMMPS executable and the LAMMPS shell available through the
+      Microsoft Store</a>.  This only consists of a serial executable
+      with OpenMP and OpenCL support, is set up for use with Windows 10
+      and does not contain examples, documentation, or potential files.
     </p>
     <p align="justify">The purpose of this webpage is to provide access
-      to such precompiled packages for Windows that have been built by the
-      LAMMPS developers and contain as complete a set of features as
-      technically meaningful (not all code is ported to Windows) and legally
-      possible with the restrictions on some of the licenses for add-on libraries.
+      to fully featured LAMMPS packages for Windows that have been built
+      by the LAMMPS developers and contain as complete a set of features
+      as technically meaningful (not all code is ported to Windows) and
+      legally possible with the restrictions on some of the licenses for
+      add-on libraries.
     </p>
-    <p align="justify"> The second part of this webpage documents the custom
+    <p align="justify">The second part of this webpage documents the custom
       tools and scripts used in the process of building these packages,
       so that interested people can go about and customize it or contribute
       solutions to known problems or suggest improved, alternate approaches
@@ -57,30 +68,33 @@
     <h2>Downloading, Installing, and Using Pre-compiled LAMMPS Packages</h2>
     <h3><a href="windows.html">Installer packages for 32-bit and 64-bit Windows</a></h3>
     <p align="justify">These packages are executables containing
-      a <a href="http://nsis.sourceforge.net/" target="_blank"> Nullsoft
+      a <a href="https://nsis.sourceforge.net/" target="_blank"> Nullsoft
       scriptable installer</a> for Windows versions from Windows XP
       (SP2) to Windows 10 (theoretically, due to limited time and access
       currently only Windows 10 is tested). The packages are available
       for 32-bit and 64-bit Windows systems, with and without support
       for MPI (a link for a compatible MPI library installer is
-      provided).  These packages also contain several PDF format files
-      with the LAMMPS manual and associated documentation, most of the
-      example inputs, bundled potential files, benchmark input and some
-      tools.
+      provided) and with and without support for the PYTHON package
+      (NOTE: the Python <b>module</b>, i.e. the option to import LAMMPS
+      into Python scripts is <b>always</b> included).  These packages
+      also contain several PDF format files with the LAMMPS manual and
+      associated documentation, most of the example inputs, bundled
+      potential files, benchmark input and some tools.
     </p>
     <hr>
 
     <h2>Building binary LAMMPS packages</h2>
-    <h3><a href="mingw-cross.html">Building Windows Installer Packages with MinGW64 Cross-compilers on Fedora Linux</a></h3>
+    <h3><a href="mingw-cross.html">Building Windows Installer Packages
+    with MinGW64 Cross-compilers on Fedora Linux</a></h3>
     <p align="justify">
       This page describes the tools used for and the process of
       building installer packages for Windows on Linux with the
       <a href="https://mingw-w64.org" target="_blank">MinGW64</a>
-      cross-compiler <a href="http://fedoraproject.org/wiki/MinGW"
+      cross-compiler <a href="https://fedoraproject.org/wiki/MinGW"
                         target="_blank">toolchain as bundled
       with Fedora Linux</a>.</p>
     <hr>
-    <p>Last modified: Sat Oct 17 02:27:48 UTC 2020 by akohlmey</p>
+    <p>Last modified: Fri May 28 15:42:18 UTC 2021 by akohlmey</p>
   </body>
 </html>
 <!-- Local Variables: -->

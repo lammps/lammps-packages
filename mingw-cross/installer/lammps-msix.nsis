@@ -8,8 +8,16 @@
 
 !include "MUI2.nsh"
 !include "FileAssociation.nsh"
+!include "FileFunc.nsh"
+
+!define MUI_ICON "lammps.ico"
+!define MUI_UNICON "lammps.ico"
+!define MUI_HEADERIMAGE
+!define MUI_HEADERIMAGE_BITMAP "lammps-text-logo-wide.bmp"
+!define MUI_HEADERIMAGE_RIGHT
 
 Unicode true
+XPStyle on
 
 !include "LogicLib.nsh"
 !addplugindir "envvar/Plugins/x86-unicode"
@@ -32,10 +40,6 @@ WriteINIStr "${FILENAME}.url" "InternetShortcut" "URL" "${URL}"
 WriteINIStr "${FILENAME}.url" "InternetShortcut" "IconFile" "${ICONFILE}"
 WriteINIStr "${FILENAME}.url" "InternetShortcut" "IconIndex" "${ICONINDEX}"
 !macroend
-
-!ifndef LIBGCC
-!define LIBGCC libgcc_s_dw2-1.dll
-!endif
 
 !define LAMMPS "LAMMPS"
 OutFile "../LAMMPS-${BIT}bit-${VERSION}-msix.exe"
@@ -65,11 +69,42 @@ SetCompressor lzma
 !insertmacro MUI_LANGUAGE "English"
 
 function .onInit
+  # Determine if LAMMPS was already installed and check whether it was in 32-bit
+  # or 64-bit. Then look up path to uninstaller and offer to uninstall or quit
+  SetRegView 32
+  ReadRegDWORD $0 HKCU "Software\LAMMPS" "Bits"
+  SetRegView LastUsed
+  ${If} $0 == "32"
+    SetRegView 32
+  ${ElseIf} $0 == "64"
+    SetRegView 64
+  ${Else}
+    SetRegView ${BIT}
+  ${EndIf}
+  ClearErrors
+  ReadRegStr $R0 HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\LAMMPS" "UninstallString"
+  SetRegView LastUsed
+  ${If} ${Errors}
+    DetailPrint "LAMMPS not (yet) installed"
+  ${Else}
+    MessageBox MB_YESNO "LAMMPS ($0 bit) is already installed. Uninstall existing version?" /SD IDYES IDNO Quit
+      Pop $R1
+      StrCmp $R1 2 Quit +1
+      Exec $R0
+    Quit:
+      Quit
+  ${EndIf}
   setShellVarContext all
 functionEnd
 
 Section "${LAMMPS}" SecLammps
   SectionIn RO
+  # Write LAMMPS installation bitness marker. Always use 32-bit registry view
+  SetRegView 32
+  IntFmt $0 "0x%08X" ${BIT}
+  WriteRegDWORD HKCU "Software\LAMMPS" "Bits" $0
+
+  # Switch to "native" registry view
   SetRegView ${BIT}
   SetShellVarContext current
 
@@ -86,9 +121,9 @@ Section "${LAMMPS}" SecLammps
   CreateShortCut  "$SMPROGRAMS\${LAMMPS}\LICENSE.lnk"        "$INSTDIR\LICENSE.txt"            "" ""
 
 !insertmacro CreateInternetShortcut "$SMPROGRAMS\${LAMMPS}\LAMMPS WWW Site" \
-                  "http://lammps.sandia.gov" "" "0"
+                  "https://www.lammps.org" "" "0"
 !insertmacro CreateInternetShortcut "$SMPROGRAMS\${LAMMPS}\LAMMPS Commands" \
-                  "http://lammps.sandia.gov/doc/Commands_all.html" "" "0"
+                  "https://docs.lammps.org/Commands_all.html" "" "0"
 
   SetOutPath "$INSTDIR"
   CreateDirectory "$INSTDIR\bin"
@@ -104,20 +139,20 @@ Section "${LAMMPS}" SecLammps
   File lammps.ico
 
   SetOutPath "$INSTDIR\bin"
-  File ${MINGW}/${LIBGCC}
-  File ${MINGW}/libstdc++-6.dll
+  File ${MINGW}/libgcc_s*.dll
+  File ${MINGW}/libfftw3-3.dll
   File ${MINGW}/libgfortran-5.dll
   File ${MINGW}/libgomp-1.dll
+  File ${MINGW}/libhistory8.dll
   File ${MINGW}/libjpeg-62.dll
   File ${MINGW}/libpng16-16.dll
-  File ${MINGW}/zlib1.dll
   File ${MINGW}/libquadmath-0.dll
-  File ${MINGW}/libwinpthread-1.dll
-  File ${MINGW}/libhistory8.dll
   File ${MINGW}/libreadline8.dll
-  File ${MINGW}/libtermcap-0.dll
-  File ${MINGW}/libfftw3-3.dll
   File ${MINGW}/libssp-0.dll
+  File ${MINGW}/libstdc++-6.dll
+  File ${MINGW}/libtermcap-0.dll
+  File ${MINGW}/libwinpthread-1.dll
+  File ${MINGW}/zlib1.dll
 
   File *.exe
   File *.dll
@@ -139,10 +174,33 @@ Section "${LAMMPS}" SecLammps
   File /r /x log.*.4 bench/*
 
   SetOutPath "$INSTDIR\Python"
-  File /r /x __pycache__ python/lammps
+  File /r /x __pycache__ /x *.pyc python/lammps
 
   SetOutPath "$INSTDIR"
   ${registerExtension} "$INSTDIR\bin\lammps-shell.exe" ".lmp" "LAMMPS Input File"
+
+  # Register Application and its uninstaller
+  WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\LAMMPS" \
+                 "DisplayName" "${LAMMPS} -- MD Simulation Software"
+  WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\LAMMPS" \
+                 "Publisher" "The LAMMPS Developers"
+  WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\LAMMPS" \
+                 "URLInfoAbout" "lammps.org"
+  WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\LAMMPS" \
+                 "DisplayIcon" "$INSTDIR\lammps.ico"
+  WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\LAMMPS" \
+                 "DisplayVersion" "${VERSION}"
+  WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\LAMMPS" \
+                 "InstallLocation" "$INSTDIR"
+  WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\LAMMPS" \
+                 "UninstallString" "$\"$INSTDIR\uninstall.exe$\""
+  WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\LAMMPS" \
+                 "QuietUninstallString" "$\"$INSTDIR\uninstall.exe$\" /S"
+
+  ${GetSize} "$INSTDIR" "/S=0K" $0 $1 $2
+  IntFmt $0 "0x%08X" $0
+  WriteRegDWORD HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\LAMMPS" \
+                 "EstimatedSize" "$0"
 
   # update path variables
   EnVar::SetHKCU
@@ -154,15 +212,18 @@ Section "${LAMMPS}" SecLammps
   EnVar::AddValue "LAMMPS_POTENTIALS" "$INSTDIR\Potentials"
   # add msi2lmp force fields
   EnVar::AddValue "MSI2LMP_LIBRARY" "$INSTDIR\frc_files"
-  # add python module to path
+  # add LAMMPS python module to Python search path
   EnVar::AddValue "PYTHONPATH" "$INSTDIR\Python"
+  # record installation folder in LAMMPSHOME
+  EnVar::Delete LAMMPSHOME
+  EnVar::AddValue LAMMPSHOME "$INSTDIR"
 
   WriteUninstaller "$INSTDIR\Uninstall.exe"
 
   # Launch LAMMPS shell in the user's personal documents folder (not elegant or clean but seems to work)
   SetOutPath "%HOMEDRIVE%%HOMEPATH%\Documents"
   CreateShortCut  "$SMPROGRAMS\${LAMMPS}\LAMMPS-Shell.lnk"          "$WINDIR\system32\cmd.exe"       \
-                  '/c "$INSTDIR\Bin\lammps-shell.exe"' ""  "" SW_SHOWNORMAL "" "The LAMMPS Shell"
+                  '/c "$INSTDIR\Bin\lammps-shell.exe"' "$INSTDIR\lammps.ico"  "" SW_SHOWNORMAL "" "The LAMMPS Shell"
 SectionEnd
 
 function un.onInit
@@ -170,27 +231,36 @@ function un.onInit
 functionEnd
 
 Section "Uninstall"
+  # remove LAMMPS bitness/installation indicator always in 32-bit registry view
+  SetRegView 32
+  DeleteRegKey HKCU "Software\LAMMPS"
+
+  # unregister extension, and uninstall info
   SetRegView ${BIT}
   SetShellVarContext current
-
   ${unregisterExtension} ".lmp" "LAMMPS Input File"
+  # unregister installation
+  DeleteRegKey HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\LAMMPS"
 
   # update path variables
   EnVar::SetHKCU
-  # add MPICH2 path
+  # remove MPICH2 path
   EnVar::DeleteValue "PATH" "${MPICHDIR}"
-  # add LAMMPS executable path
+  # remove LAMMPS executable and dll path
   EnVar::DeleteValue "PATH" "$INSTDIR\bin"
-  # add Potentials folder to LAMMPS_POTENTIALS
+  # remove Potentials environment from LAMMPS_POTENTIALS
   EnVar::Delete "LAMMPS_POTENTIALS"
-  # add msi2lmp force fields
+  # remove msi2lmp force field variable
   EnVar::Delete "MSI2LMP_LIBRARY"
-  # add python module to path
+  # remove LAMMPS python module from search path
   EnVar::DeleteValue "PYTHONPATH" "$INSTDIR\Python"
+  # remove definition of installation location
+  EnVar::Delete "LAMMPSHOME"
 
   RMDir /r "$SMPROGRAMS\${LAMMPS}"
 
   Delete /REBOOTOK   "$INSTDIR\*.txt"
+  Delete /REBOOTOK   "$INSTDIR\*.ico"
   Delete /REBOOTOK   "$INSTDIR\Uninstall.exe"
   RMDir /r /REBOOTOK "$INSTDIR\bin"
   RMDir /r /REBOOTOK "$INSTDIR\Benchmarks"

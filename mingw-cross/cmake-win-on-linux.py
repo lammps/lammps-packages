@@ -75,7 +75,6 @@ homedir, exename = os.path.split(os.path.abspath(inspect.getsourcefile(lambda:0)
 bitflag = '64'
 parflag = 'no'
 pythonflag  = False
-pyversion = '3.9'
 thrflag = 'omp'
 revflag = 'stable'
 verbose = False
@@ -364,18 +363,14 @@ elif revflag == 'master':
 
 if bitflag == '32':
     mingwdir = '/usr/i686-w64-mingw32/sys-root/mingw/bin/'
-    libgcc = 'libgcc_s_dw2-1.dll'
 elif bitflag == '64':
     mingwdir = '/usr/x86_64-w64-mingw32/sys-root/mingw/bin/'
-    libgcc = 'libgcc_s_seh-1.dll'
 
 if parflag == 'mpi':
-    shutil.move("lmp.exe","lmp_mpi.exe")
-    txt = system("makensis -DMINGW=%s -DVERSION=%s-MPI -DBIT=%s -DLIBGCC=%s -DLMPREV=%s -DPYTHON=%s lammps.nsis" % (mingwdir,version,bitflag,libgcc,revflag,pyversion))
+    txt = system("makensis -DMINGW=%s -DVERSION=%s-MPI -DBIT=%s -DLMPREV=%s lammps.nsis" % (mingwdir,version,bitflag,revflag))
     if verbose: print(txt)
 else:
-    shutil.move("lmp.exe","lmp_serial.exe")
-    txt = system("makensis -DMINGW=%s -DVERSION=%s -DBIT=%s -DLIBGCC=%s -DLMPREV=%s -DPYTHON=%s lammps.nsis" % (mingwdir,version,bitflag,libgcc,revflag,pyversion))
+    txt = system("makensis -DMINGW=%s -DVERSION=%s -DBIT=%s -DLMPREV=%s lammps.nsis" % (mingwdir,version,bitflag,revflag))
     if verbose: print(txt)
 
 # clean up after successful build

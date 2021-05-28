@@ -5,7 +5,6 @@
 # ${BIT}     = 32 or 64
 # ${LIBGCC}  = name of libgcc dll file to use
 # ${MINGW}   = <path to mingw windows dlls>
-# ${PYTHON}  = Python version
 
 !include "MUI2.nsh"
 !include "FileAssociation.nsh"
@@ -42,12 +41,8 @@ WriteINIStr "${FILENAME}.url" "InternetShortcut" "IconFile" "${ICONFILE}"
 WriteINIStr "${FILENAME}.url" "InternetShortcut" "IconIndex" "${ICONINDEX}"
 !macroend
 
-!ifndef LIBGCC
-!define LIBGCC libgcc_s_dw2-1.dll
-!endif
-
-!define LAMMPS "LAMMPS ${BIT}-bit ${VERSION} with Python${PYTHON}"
-OutFile "../LAMMPS-${BIT}bit-Python${PYTHON}-${VERSION}.exe"
+!define LAMMPS "LAMMPS ${BIT}-bit ${VERSION} with Python"
+OutFile "../LAMMPS-${BIT}bit-Python-${VERSION}.exe"
 
 Name "${LAMMPS}"
 !if ${BIT} == 64
@@ -74,25 +69,44 @@ SetCompressor lzma
 !insertmacro MUI_LANGUAGE "English"
 
 function .onInit
+  # Determine if LAMMPS was already installed and check whether it was in 32-bit
+  # or 64-bit. Then look up path to uninstaller and offer to uninstall or quit
+  SetRegView 32
+  ReadRegDWORD $0 HKCU "Software\LAMMPS" "Bits"
+  SetRegView LastUsed
+  ${If} $0 == "32"
+    SetRegView 32
+  ${ElseIf} $0 == "64"
+    SetRegView 64
+  ${Else}
+    SetRegView ${BIT}
+  ${EndIf}
+  ClearErrors
+  ReadRegStr $R0 HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\LAMMPS" "UninstallString"
+  SetRegView LastUsed
+  ${If} ${Errors}
+    DetailPrint "LAMMPS not (yet) installed"
+  ${Else}
+    MessageBox MB_YESNO "LAMMPS ($0 bit) is already installed. Uninstall existing version?" /SD IDYES IDNO Quit
+      Pop $R1
+      StrCmp $R1 2 Quit +1
+      Exec $R0
+    Quit:
+      Quit
+  ${EndIf}
   setShellVarContext all
 functionEnd
 
 Section "${LAMMPS}" SecLammps
   SectionIn RO
+  # Write LAMMPS installation bitness marker. Always use 32-bit registry view
+  SetRegView 32
+  IntFmt $0 "0x%08X" ${BIT}
+  WriteRegDWORD HKCU "Software\LAMMPS" "Bits" $0
+
+  # Switch to "native" registry view
   SetRegView ${BIT}
   SetShellVarContext current
-
-  # check whether LAMMPS is already installed
-  ReadRegStr $R0 HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\LAMMPS" "UninstallString"
-  IfFileExists $R0 +1 NotInstalled
-  MessageBox MB_YESNO "LAMMPS is already installed. Uninstall existing version?" /SD IDYES IDNO Quit
-    Pop $R1
-    StrCmp $R1 2 Quit +1
-    Exec $R0
-  Quit:
-    Quit
-
-  NotInstalled:
 
   CreateDirectory "$SMPROGRAMS\${LAMMPS}"
   CreateShortCut  "$SMPROGRAMS\${LAMMPS}\Uninstall.lnk"      "$INSTDIR\Uninstall.exe"          "" ""
@@ -125,16 +139,10 @@ Section "${LAMMPS}" SecLammps
   File README.txt
   File lammps.ico
 
-!if ${BIT} == 64
-!define CRYPTSUFFIX "1_1-x64"
-!else
-!define CRYPTSUFFIX "1_1"
-!endif
-
   SetOutPath "$INSTDIR\bin"
-  File ${MINGW}/${LIBGCC}
+  File ${MINGW}/libgcc_s*.dll
   File ${MINGW}/libatomic-1.dll
-  File ${MINGW}/libcrypto-${CRYPTSUFFIX}.dll
+  File ${MINGW}/libcrypto-1*.dll
   File ${MINGW}/libexpat-1.dll
   File ${MINGW}/libffi-6.dll
   File ${MINGW}/libfftw3-3.dll
@@ -144,16 +152,15 @@ Section "${LAMMPS}" SecLammps
   File ${MINGW}/libhistory8.dll
   File ${MINGW}/libjpeg-62.dll
   File ${MINGW}/libpng16-16.dll
-  File ${MINGW}/libpython${PYTHON}.dll
+  File ${MINGW}/libpython*.dll
   File ${MINGW}/libquadmath-0.dll
   File ${MINGW}/libreadline8.dll
   File ${MINGW}/libsqlite3-0.dll
-  File ${MINGW}/libssl-${CRYPTSUFFIX}.dll
+  File ${MINGW}/libssl-1*.dll
   File ${MINGW}/libssp-0.dll
   File ${MINGW}/libstdc++-6.dll
   File ${MINGW}/libtermcap-0.dll
   File ${MINGW}/libwinpthread-1.dll
-  File ${MINGW}/python${PYTHON}.exe
   File ${MINGW}/tcl86.dll
   File ${MINGW}/tk86.dll
   File ${MINGW}/zlib1.dll
@@ -183,7 +190,7 @@ Section "${LAMMPS}" SecLammps
 
   # install bundled, cross-compiled Python runtime
   SetOutPath "$INSTDIR\lib"
-  File /r /x __pycache__ /x *.pyc ${MINGW}/../lib/python${PYTHON}
+  File /r /x __pycache__ /x *.pyc ${MINGW}/../lib/python*
 
   SetOutPath "$INSTDIR"
   ${registerExtension} "$INSTDIR\bin\lammps-shell.exe" ".lmp" "LAMMPS Input File"
@@ -191,6 +198,16 @@ Section "${LAMMPS}" SecLammps
   # Register Application and its uninstaller
   WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\LAMMPS" \
                  "DisplayName" "${LAMMPS} -- MD Simulation Software"
+  WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\LAMMPS" \
+                 "Publisher" "The LAMMPS Developers"
+  WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\LAMMPS" \
+                 "URLInfoAbout" "lammps.org"
+  WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\LAMMPS" \
+                 "DisplayIcon" "$INSTDIR\lammps.ico"
+  WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\LAMMPS" \
+                 "DisplayVersion" "${VERSION}"
+  WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\LAMMPS" \
+                 "InstallLocation" "$INSTDIR"
   WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\LAMMPS" \
                  "UninstallString" "$\"$INSTDIR\uninstall.exe$\""
   WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\LAMMPS" \
@@ -230,11 +247,14 @@ function un.onInit
 functionEnd
 
 Section "Uninstall"
+  # remove LAMMPS bitness/installation indicator always in 32-bit registry view
+  SetRegView 32
+  DeleteRegKey HKCU "Software\LAMMPS"
+
+  # unregister extension, and uninstall info
   SetRegView ${BIT}
   SetShellVarContext current
-
   ${unregisterExtension} ".lmp" "LAMMPS Input File"
-
   # unregister installation
   DeleteRegKey HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\LAMMPS"
 

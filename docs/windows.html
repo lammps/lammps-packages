@@ -22,19 +22,23 @@
       The LAMMPS binaries contain <b>all</b> optional packages included in
       the source distribution <b>except</b>:
       <ul>
+        <li><a href="https://docs.lammps.org/Packages_details.html#pkg-adios" target="_blank">ADIOS</a> (requires an external library),
+        <li><a href="https://docs.lammps.org/Packages_details.html#pkg-h5md" target="_blank">H5MD</a> (requires an external library),
         <li><a href="https://docs.lammps.org/Packages_details.html#pkg-kim" target="_blank"> KIM</a> (not fully ported to Windows),
         <li><a href="https://docs.lammps.org/Packages_details.html#pkg-kokkos" target="_blank">KOKKOS</a> (does not fully support cross-compilation with GCC),
+        <li><a href="https://docs.lammps.org/Packages_details.html#pkg-message" target="_blank">MESSAGE</a> (obsolete),
+        <li><a href="https://docs.lammps.org/Packages_details.html#pkg-ml-pace" target="_blank">ML-PACE</a> (external library not compatible),
+        <li><a href="https://docs.lammps.org/Packages_details.html#pkg-ml-quip" target="_blank">ML-QUIP</a> (requires an external library),
         <li><a href="https://docs.lammps.org/Packages_details.html#pkg-mscg" target="_blank">MSCG</a> (requires an external library),
-        <li><a href="https://docs.lammps.org/Packages_details.html#pkg-user-adios" target="_blank">USER-ADIOS</a> (requires an external library),
-        <li><a href="https://docs.lammps.org/Packages_details.html#pkg-user-h5md" target="_blank">USER-H5MD</a> (requires an external library),
-        <li><a href="https://docs.lammps.org/Packages_details.html#pkg-user-pace" target="_blank">USER-PACE</a> (external library not compatible),
-        <li><a href="https://docs.lammps.org/Packages_details.html#pkg-user-netcdf" target="_blank">USER-NETCDF</a> (requires an external library),
-        <li><a href="https://docs.lammps.org/Packages_details.html#pkg-user-qmmm" target="_blank">USER-QMMM</a> (only useful when linking to a QM software),
-        <li><a href="https://docs.lammps.org/Packages_details.html#pkg-user-quip" target="_blank">USER-QUIP</a> (requires an external library),
-        <li><a href="https://docs.lammps.org/Packages_details.html#pkg-user-vtk" target="_blank">USER-VTK</a> (requires an external library).
+        <li><a href="https://docs.lammps.org/Packages_details.html#pkg-netcdf" target="_blank">NETCDF</a> (requires an external library),
+        <li><a href="https://docs.lammps.org/Packages_details.html#pkg-plugin" target="_blank">PLUGIN</a> (does not support Windows),
+        <li><a href="https://docs.lammps.org/Packages_details.html#pkg-plumed" target="_blank">PLUMED</a> (not fully ported to Windows),
+        <li><a href="https://docs.lammps.org/Packages_details.html#pkg-qmmm" target="_blank">QMMM</a> (only useful when linking to a QM software),
+        <li><a href="https://docs.lammps.org/Packages_details.html#pkg-scafacos" target="_blank">SCAFACOS</a> (requires an external library).
+        <li><a href="https://docs.lammps.org/Packages_details.html#pkg-vtk" target="_blank">VTK</a> (requires an external library).
       </ul>
       The <b>serial</b> executable additionally does not contain the
-      <a href="https://docs.lammps.org/Packages_details.html#pkg-mpiio" target="_blank">MPIIO</a> and <a href="https://docs.lammps.org/Packages_details.html#pkg-user-lb" target="_blank">USER-LB</a> packages, since those require
+      <a href="https://docs.lammps.org/Packages_details.html#pkg-mpiio" target="_blank">MPIIO</a> and <a href="https://docs.lammps.org/Packages_details.html#pkg-latboltz" target="_blank">LATBOLTZ</a> packages, since those require
       <i>MPI-IO</i> functions, which are not available without linking
       to a real MPI library.
       <div>
@@ -285,7 +289,7 @@
       multi-threading since MPICH restricts processes to a single
       physical CPU thus it will run less efficient. </p>
     <hr>
-    <p>Last modified: Fri May 28 18:53:40 UTC 2021 by akohlmey</p>
+    <p>Last modified: Thu Jul 29 02:01:37 UTC 2021 by akohlmey</p>
   </body>
 </html>
 <!-- Local Variables: -->

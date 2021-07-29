@@ -45,10 +45,15 @@
         <br>
         <div style="display: inline; margin-right: 10px; margin-bottom: 5px; border: 5px; float: left;">
           <img src="python-logo.png" border="0" style="" width="96" height="96"></div>
-        The <a href="https://docs.lammps.org/Packages_details.html#pkg-python" target="_blank">PYTHON</a> package is only included in the installer
-        package with Python in the name.  Those packages include a full
+        The <a href=https://docs.lammps.org/Python_module.html" target="_blank">LAMMPS Python module</a> (to call LAMMPS from Python)
+        is included in <b>all</b> packages in a way, that it should work with a suitable Python installation of your own,
+        since a LAMMPS shared library (i.e. a DLL file on Windows) is included.
+        The <a href="https://docs.lammps.org/Packages_details.html#pkg-python" target="_blank">PYTHON</a> package
+        (to call Python from LAMMPS) however, is only included in the installer
+        package with Python in the name.  Those packages also include a full
         Python runtime environment with all standard Python modules and
-        the NumPy module.  Please note that the 64-bit Windows NumPy
+        the NumPy module since those have to be consistent with the Python library
+        used to compile LAMMPS.  Please note that the 64-bit Windows NumPy
         module is considered <b>very experimental</b> and thus one
         should expect crashes that are not bugs in LAMMPS.
       </div>

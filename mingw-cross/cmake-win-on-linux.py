@@ -105,6 +105,7 @@ Flags (all flags are optional, defaults listed below):
     -r unstable : download and build the latest patch release LAMMPS version
     -r master   : download and build the latest development snapshot
     -r patch_<date> : download and build a specific patch release
+    -r maintenance_<date> : download and build a specific maintenance branch
     -r <sha256> : download and build a specific snapshot version
   -v : select output verbosity
     -v yes      : print progress messages and output of make commands
@@ -172,7 +173,8 @@ if thrflag != 'no' and thrflag != 'omp':
 rev1 = re.compile("^(stable|unstable|master)$")
 rev2 = re.compile(r"^(patch|stable)_\d+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\d{4}$")
 rev3 = re.compile(r"^[a-f0-9]{40}$")
-if not rev1.match(revflag) and not rev2.match(revflag) and not rev3.match(revflag):
+rev4 = re.compile(r"^maintenance-\d+-\d+-\d+")
+if not rev1.match(revflag) and not rev2.match(revflag) and not rev3.match(revflag) and not rev4.match(revflag):
     error("Unsupported revision flag %s" % revflag)
 
 # create working directory
@@ -232,7 +234,7 @@ txt = system("git fetch origin")
 if verbose: print(txt)
 txt = system("git checkout %s" % revflag)
 if verbose: print(txt)
-if revflag == "master" or revflag == "stable" or revflag == "unstable":
+if revflag == "master" or revflag == "stable" or revflag == "unstable" or rev4.match(revflag):
     txt = system("git pull")
     if verbose: print(txt)
 

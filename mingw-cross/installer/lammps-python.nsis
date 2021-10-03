@@ -144,7 +144,7 @@ Section "${LAMMPS}" SecLammps
   File ${MINGW}/libatomic-1.dll
   File ${MINGW}/libcrypto-1*.dll
   File ${MINGW}/libexpat-1.dll
-  File ${MINGW}/libffi-6.dll
+  File ${MINGW}/libffi-*.dll
   File ${MINGW}/libfftw3-3.dll
   File ${MINGW}/libbz2-1.dll
   File ${MINGW}/libgfortran-5.dll

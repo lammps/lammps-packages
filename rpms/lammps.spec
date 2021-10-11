@@ -35,9 +35,7 @@ Source0:        https://github.com/lammps/lammps/archive/%{uversion}.tar.gz#/%{n
 Source1:        https://github.com/google/googletest/archive/release-1.10.0.tar.gz
 Source2:        https://pyyaml.org/download/libyaml/yaml-0.2.5.tar.gz
 Source3:        https://download.lammps.org/thirdparty/opencl-loader-2021.09.18.tar.gz
-Patch0:         https://github.com/lammps/lammps/commit/01fb33cb5dfbfb028840c4597499332e36f8695f.patch
-Patch1:         https://github.com/lammps/lammps/commit/211df8b7b04fa1bce8e2ba4b151d73801b6af632.patch
-Patch2:         https://github.com/lammps/lammps/pull/2986.patch
+Patch0:         https://github.com/lammps/lammps/pull/2986.patch
 BuildRequires:  fftw-devel
 BuildRequires:  gcc-c++
 BuildRequires:  gcc-fortran

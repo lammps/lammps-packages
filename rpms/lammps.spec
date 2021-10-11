@@ -194,8 +194,6 @@ This package contains data files for LAMMPS.
 %setup -q -n %{name}-%{uversion}
 %endif
 %patch0 -p1
-%patch1 -p1
-%patch2 -p1
 
 %build
 %global _vpath_srcdir cmake

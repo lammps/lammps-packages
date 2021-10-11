@@ -28,7 +28,7 @@ Summary:        Molecular Dynamics Simulator
 License:        GPLv2
 Url:            https://lammps.sandia.gov
 %if %{git}
-Source0:        https://github.com/lammps/lammps/archive/%{commit}/lammps-%{commit}.tar.gz#/%{name}-%{uversion}.tar.gz
+Source0:        https://github.com/lammps/lammps/archive/%{commit}/lammps-%{commit}.tar.gz#/%{name}-%{commit}.tar.gz
 %else
 Source0:        https://github.com/lammps/lammps/archive/%{uversion}.tar.gz#/%{name}-%{uversion}.tar.gz
 %endif
@@ -190,7 +190,11 @@ BuildArch:      noarch
 This package contains data files for LAMMPS.
 
 %prep
+%if %{git}
+%setup -q -n %{name}-%{commit}
+%else
 %setup -q -n %{name}-%{uversion}
+%endif
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1

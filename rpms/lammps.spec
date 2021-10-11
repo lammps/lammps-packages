@@ -1,3 +1,7 @@
+%global git 1
+%global commit ab51c1bd3d2ca8c54d4829d01e5804e4d587b514
+%global shortcommit %(c=%{commit}; echo ${c:0:7})
+
 %if 0%{?fedora} >= 33 || 0%{?rhel} >= 9
 %global blaslib flexiblas
 %global cmake_blas_flags -DBLA_VENDOR=FlexiBLAS
@@ -8,7 +12,11 @@
 %endif
 
 Name:           lammps
+%if %{git}
+Version:        20210929^20210929%{shortcommit}
+%else
 Version:        20210929
+%endif
 %global         uversion %(v=%{version}; \
                   months=( "" Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec ); \
                   d=${v:6:2}; \
@@ -19,7 +27,11 @@ Release:        1%{?dist}
 Summary:        Molecular Dynamics Simulator
 License:        GPLv2
 Url:            https://lammps.sandia.gov
+%if %{git}
+Source0:        https://github.com/lammps/lammps/archive/%{commit}/lammps-%{commit}.tar.gz#/%{name}-%{uversion}.tar.gz
+%else
 Source0:        https://github.com/lammps/lammps/archive/%{uversion}.tar.gz#/%{name}-%{uversion}.tar.gz
+%endif
 Source1:        https://github.com/google/googletest/archive/release-1.10.0.tar.gz
 Source2:        https://pyyaml.org/download/libyaml/yaml-0.2.5.tar.gz
 Source3:        https://download.lammps.org/thirdparty/opencl-loader-2021.09.18.tar.gz

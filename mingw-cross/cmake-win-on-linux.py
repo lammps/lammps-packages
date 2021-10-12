@@ -102,8 +102,8 @@ Flags (all flags are optional, defaults listed below):
     -y no       : build without python
   -r : select LAMMPS source revision to build (default value: %s)
     -r stable   : download and build the latest stable LAMMPS version
-    -r unstable : download and build the latest patch release LAMMPS version
-    -r master   : download and build the latest development snapshot
+    -r release  : download and build the latest patch release LAMMPS version
+    -r develop  : download and build the latest development snapshot
     -r patch_<date> : download and build a specific patch release
     -r maintenance_<date> : download and build a specific maintenance branch
     -r <sha256> : download and build a specific snapshot version
@@ -120,7 +120,7 @@ Flags (all flags are optional, defaults listed below):
     -a msix     : same as "no" but adjust for creating an MSIX package
 
 Example:
-  python %s -r unstable -t omp -p mpi
+  python %s -r release -t omp -p mpi
 """ % (exename,bitflag,numcpus,parflag,thrflag,pythonflag,revflag,gitdir,exename)
 
 # parse arguments
@@ -170,7 +170,7 @@ if thrflag != 'no' and thrflag != 'omp':
     error("Unsupported threading flag %s" % thrflag)
 
 # test for valid revision name format: branch names, release tags, or commit hashes
-rev1 = re.compile("^(stable|unstable|master)$")
+rev1 = re.compile("^(stable|release|develop)$")
 rev2 = re.compile(r"^(patch|stable)_\d+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\d{4}$")
 rev3 = re.compile(r"^[a-f0-9]{40}$")
 rev4 = re.compile(r"^maintenance-\d+-\d+-\d+")
@@ -234,7 +234,7 @@ txt = system("git fetch origin")
 if verbose: print(txt)
 txt = system("git checkout %s" % revflag)
 if verbose: print(txt)
-if revflag == "master" or revflag == "stable" or revflag == "unstable" or rev4.match(revflag):
+if revflag == "develop" or revflag == "stable" or revflag == "release" or rev4.match(revflag):
     txt = system("git pull")
     if verbose: print(txt)
 
@@ -350,17 +350,17 @@ shutil.copy(os.path.join(homedir,"installer","lammps-text-logo-wide.bmp"),os.pat
 shutil.copytree(os.path.join(homedir,"installer","envvar"),os.path.join(builddir,"envvar"),symlinks=False)
 
 # define version flag of the installer:
-# - use current timestamp, when pulling from master (for daily builds)
-# - parse version from src/version.h when pulling from stable, unstable, or specific tag
+# - use current timestamp, when pulling from develop (for daily builds)
+# - parse version from src/version.h when pulling from stable, release, or specific tag
 # - otherwise use revflag, i.e. the commit hash
 version = revflag
-if revflag == 'stable' or revflag == 'unstable' or rev2.match(revflag):
+if revflag == 'stable' or revflag == 'release' or rev2.match(revflag):
   with open(os.path.join(gitdir,"src","version.h"),'r') as v_file:
     verexp = re.compile(r'^.*"(\w+) (\w+) (\w+)".*$')
     vertxt = v_file.readline()
     verseq = verexp.match(vertxt).groups()
     version = "".join(verseq)
-elif revflag == 'master':
+elif revflag == 'develop':
     version = time.strftime('%Y-%m-%d')
 
 if bitflag == '32':

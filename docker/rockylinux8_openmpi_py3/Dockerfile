@@ -1,4 +1,4 @@
-FROM lammps/buildenv:rocky8 as builder
+FROM lammps/buildenv:rockylinux8 as builder
 MAINTAINER richard.berger@outlook.com
 
 ADD lammps /tmp/lammps

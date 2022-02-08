@@ -1,4 +1,4 @@
-FROM lammps/buildenv:centos8 as builder
+FROM lammps/buildenv:rocky8 as builder
 MAINTAINER richard.berger@outlook.com
 
 ADD lammps /tmp/lammps
@@ -40,7 +40,7 @@ RUN mkdir -p /tmp/lammps/build-openmpi && \
     make install && \
     tar czvf /tmp/lammps-mpi.tgz -T install_manifest.txt
 
-FROM centos:8
+FROM rockylinux/rockylinux:8
 MAINTAINER richard.berger@outlook.com
 RUN useradd -m lammps
 RUN dnf update -y && \

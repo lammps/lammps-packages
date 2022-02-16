@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 # Script to build windows installer packages for LAMMPS
-# (c) 2017,2018,2019,2020 Axel Kohlmeyer <akohlmey@gmail.com>
+# (c) 2017,2018,2019,2020,2021,2022 Axel Kohlmeyer <akohlmey@gmail.com>
 
 from __future__ import print_function
 import sys,os,shutil,glob,re,subprocess,tarfile,gzip,time,inspect
@@ -263,7 +263,9 @@ print("Configuring build with CMake")
 cmd = "mingw%s-cmake -G Ninja -D CMAKE_BUILD_TYPE=Release" % bitflag
 cmd += " -D ADD_PKG_CONFIG_PATH=%s/mingw%s-pkgconfig" % (homedir,bitflag)
 cmd += " -C %s/mingw%s-pkgconfig/addpkg.cmake" % (homedir,bitflag)
-cmd += " -C %s/cmake/presets/mingw-cross.cmake %s/cmake" % (gitdir,gitdir)
+cmd += " -C %s/cmake/presets/mingw-cross.cmake -S %s/cmake" % (gitdir,gitdir)
+if bitflag == '64':
+  cmd += " -C %s/cmake/presets/kokkos-openmp.cmake" % gitdir
 cmd += " -DBUILD_SHARED_LIBS=on -DBUILD_MPI=%s -DBUILD_OPENMP=%s" % (mpiflag,ompflag)
 cmd += " -DWITH_GZIP=on -DWITH_FFMPEG=on -DLAMMPS_EXCEPTIONS=on"
 cmd += " -DINTEL_LRT_MODE=c++11 -DBUILD_LAMMPS_SHELL=on"

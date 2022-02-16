@@ -25,7 +25,6 @@
         <li><a href="https://docs.lammps.org/Packages_details.html#pkg-adios" target="_blank">ADIOS</a> (requires an external library),
         <li><a href="https://docs.lammps.org/Packages_details.html#pkg-h5md" target="_blank">H5MD</a> (requires an external library),
         <li><a href="https://docs.lammps.org/Packages_details.html#pkg-kim" target="_blank"> KIM</a> (not fully ported to Windows),
-        <li><a href="https://docs.lammps.org/Packages_details.html#pkg-kokkos" target="_blank">KOKKOS</a> (does not fully support cross-compilation with GCC),
         <li><a href="https://docs.lammps.org/Packages_details.html#pkg-message" target="_blank">MESSAGE</a> (obsolete),
         <li><a href="https://docs.lammps.org/Packages_details.html#pkg-ml-pace" target="_blank">ML-PACE</a> (external library not compatible),
         <li><a href="https://docs.lammps.org/Packages_details.html#pkg-ml-quip" target="_blank">ML-QUIP</a> (requires an external library),
@@ -43,9 +42,12 @@
       to a real MPI library.
       <div>
         <br>
+        Starting with the 17 February 2022 version of LAMMPS the KOKKOS package with the serial and OpenMP backends is included. GPU support for Kokkos is currently not possible.
+      <div>
+        <br>
         <div style="display: inline; margin-right: 10px; margin-bottom: 5px; border: 5px; float: left;">
-          <img src="python-logo.png" border="0" style="" width="96" height="96"></div>
-        The <a href=https://docs.lammps.org/Python_module.html" target="_blank">LAMMPS Python module</a> (to call LAMMPS from Python)
+          <img src="python-logo.png" border="0" style="" width="96" height="96">
+          The <a href="https://docs.lammps.org/Python_module.html" target="_blank">LAMMPS Python module</a> (to call LAMMPS from Python)
         is included in <b>all</b> packages in a way, that it should work with a suitable Python installation of your own,
         since a LAMMPS shared library (i.e. a DLL file on Windows) is included.
         The <a href="https://docs.lammps.org/Packages_details.html#pkg-python" target="_blank">PYTHON</a> package
@@ -60,7 +62,7 @@
     </p>
 
     <hr width="100%">
-    <h3>Important Note on Changes to the Installer packages</h3>
+    <h3>Important Notes on Changes to the Installer packages</h3>
     <div align="justify">
       As of LAMMPS version 27 May 2021, the LAMMPS installer packages will detect
       if LAMMPS (version 27 May 2021 or later) has already been installed and will
@@ -70,6 +72,11 @@
       supported. Also, the name of the LAMMPS executable has been simplified to
       <u>lmp.exe</u> in all packages since there is no longer a need to
       differentiate between the MPI and non-MPI version.
+    </div>
+    <div align="justify">
+      As of LAMMPS version 17 February 2022, only 64-bit versions of the LAMMPS
+      installer packages will be built and provided. If you must have a 32-bit
+      version, you need to use an older version of LAMMPS.
     </div>
 
     <hr width="100%">
@@ -84,10 +91,12 @@
       compatible ICD loader.  The included OpenCL loader library is compatible
       with OpenCL version 1.2 to 3.0.  This means the executables do not contain
       any vendor provided code and should be compatible with current GPUs from
-      <a href="https://developer.amd.com/tools-and-sdks/opencl-zone/"
-      target="_blank">AMD</a>,
-      <a href="https://software.intel.com/content/www/us/en/develop/articles/opencl-drivers.html"
-      target="_blank">Intel</a>, and <a href="https://www.nvidia.com/opencl/" target="_blank">Nvidia</a>.
+      <a href="https://developer.amd.com/tools-and-sdks/opencl-zone/" target="_blank">AMD</a>,
+      <a href="https://software.intel.com/content/www/us/en/develop/articles/opencl-drivers.html" target="_blank">Intel</a>,
+      and <a href="https://www.nvidia.com/opencl/" target="_blank">Nvidia</a>.
+      You need to have an HD or UHD GPU in an 8th generation or later core
+      architecture Intel CPU for Intel GPU OpenCL support.  Intel Xe type
+      GPUs are not supported since they support single precision only.
       The GPU package has been compiled for mixed precision computation and
       as of LAMMPS version 10 March 2021 will automatically tune itself for
       the OpenCL capable hardware in use.
@@ -142,8 +151,10 @@
     </div>
     <div style="background-color: #e8e8f0;">
       <div align="justify">
-        There are installer packages for 32-bit and 64-bit
-        versions of Windows available.
+        There are installer packages for 32-bit and 64-bit versions of Windows available.
+        As of LAMMPS version 17 February 2022, only 64-bit versions of the LAMMPS installer
+        packages will be built and provided. If you must have a 32-bit version, you need to
+        use an older version of LAMMPS.
         <ul>
           <li><a href="https://rpm.lammps.org/windows/">Latest stable versions</a></li>
           <li><a href="https://rpm.lammps.org/windows/32bit/">32-bit Windows download area</a> with all available installer versions</li>
@@ -294,7 +305,7 @@
       multi-threading since MPICH restricts processes to a single
       physical CPU thus it will run less efficient. </p>
     <hr>
-    <p>Last modified: Thu Jul 29 02:01:37 UTC 2021 by akohlmey</p>
+    <p>Last modified: Wed Feb 16 21:39:09 UTC 2022 by akohlmey</p>
   </body>
 </html>
 <!-- Local Variables: -->

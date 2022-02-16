@@ -18,34 +18,37 @@
       <a href="https://mingw-w64.org" target="_blank">MinGW64</a>
       cross-compiler <a href="https://fedoraproject.org/wiki/MinGW"
                         target="_blank">toolchain as bundled
-        with Fedora Linux</a>. There are two reasons for this:
-      <il>
-        <li>LAMMPS is developed primarily on Linux, so building the
-          Windows executables with a cross-compiler allows using
-          familiar tools and the process can be scripted and automated
-          in the same way.
-        <li>LAMMPS is not ported to the "native" Visual C++ compilers
-          but does support the MinGW64 toolchain, which is available
-          as a native and a cross-compiler.
-      </il>
+        with Fedora Linux</a>. The reason for this is that LAMMPS is developed
+      primarily on Linux, so building the Windows executables with a
+      cross-compiler allows using familiar tools and the process can be
+      scripted and automated in the same way.
     </p>
     <p align="justify">
-      An alternative for running LAMMPS on Windows machines is to
-      install the Windows Subsystem for Linux on Windows 10 and then
-      install or compile and run Linux executables in the embedded
-      Ubuntu Linux subsystem with Bash on Windows.
+      As of winter 2021/2022 it is also possible to build large parts of
+      LAMMPS natively on Windows using the Microsoft Visual Studio C++
+      compilers when using the CMake build procedure, both from the
+      command line and from within the Visual Studio IDE (which natively
+      supports building with CMake). The selection of packages, that can
+      be enabled and compiled natively is smaller because some of them
+      expect a unix-like build environment or because they have not been
+      fully ported to Windows but compile with the more "forgiving"
+      runtime environment and GCC compilers used by the cross-compiler
+      system.
+    </p>
+    <p align="justify">
+      An alternative for running LAMMPS on Windows machines with native
+      executables is to install the Windows Subsystem for Linux on
+      Windows 10 and then install or compile and run Linux executables
+      in the embedded Ubuntu Linux subsystem with Bash on Windows.
     </p>
     <h2>Prerequisites</h2>
     <p align="justify">
-      The cross-compilation is currently performed and tested on Fedora Linux 32
+      The cross-compilation is currently performed and tested on Fedora Linux 35
       with the (many) prerequisite rpm packages installed that are listed below.
-      A simpler way to obtain a compatible build environment is to download and use the
-      <a href="https://cloud.sylabs.io/library/lammps/default/lammps_development">
-        Fedora32-MinGW singularity image for LAMMPS development</a> with
-      <pre>
-        singularity pull --arch amd64 fedora32_mingw.sif library://lammps/default/lammps_development:fedora32_mingw
-        singularity shell fedora32_mingw.sif
-      </pre>
+      A simple way to obtain a compatible build environment is to build a singularity
+      image with the description file provided in
+      <a href="https://github.com/lammps/lammps/tree/develop/tools/singularity" target="_blank">
+        tools/singularity folder</a> of the LAMMPS source code.
     </p>
 
     Here is the list of packages which should be installed (and their dependencies):
@@ -90,6 +93,8 @@
         <li>mingw64-gcc-c++</li>
         <li>mingw32-libgomp</li>
         <li>mingw64-libgomp</li>
+        <li>mingw32-libffi</li>
+        <li>mingw64-libffi</li>
         <li>mingw32-winpthreads</li>
         <li>mingw64-winpthreads</li>
         <li>mingw32-eigen3</li>
@@ -112,6 +117,8 @@
         <li>mingw64-termcap</li>
         <li>mingw32-zlib</li>
         <li>mingw64-zlib</li>
+        <li>mingw32-zstd</li>
+        <li>mingw64-zstd</li>
         <li>enchant</li>
         <li>python3-virtualenv</li>
         <li>doxygen</li>
@@ -140,7 +147,7 @@
     </div>
 
     <h2>The cmake-win-on-linux.py script</h2>
-    
+
     <p align="justify">As a next step, a clone or snapshot file of the
       <tt>lammps-packages</tt> git repository from
       <a href="https://github.com/lammps/lammps-packages">https://github.com/lammps/lammps-packages</a> is needed.
@@ -215,7 +222,7 @@ Example:
       folder and all its contents will be removed.
     </p>
     <hr>
-    <p>Last modified: Sun May 23 12:54:34 UTC 2021 by akohlmey</p>
+    <p>Last modified: Wed Feb 16 21:26:59 UTC 2022 by akohlmey</p>
   </body>
 </html>
 <!-- Local Variables: -->

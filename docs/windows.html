@@ -41,11 +41,13 @@
       to a real MPI library.
       <div>
         <br>
-        Starting with the 17 February 2022 version of LAMMPS the KOKKOS package with the serial and OpenMP backends is included. GPU support for Kokkos is currently not possible.
+        Starting with the 24 March 2022 version of LAMMPS the PLUGIN package is included.
       </div>
       <div>
         <br>
-        Starting with the 24 March 2022 version of LAMMPS the PLUGIN package is included.
+        Starting with the 17 February 2022 version of LAMMPS the KOKKOS package with the serial
+        and OpenMP backends enabled is included. GPU support for Kokkos is currently not possible
+        for these packages due to compiling the binaries with a cross-compiler.
       </div>
       <hr width="100%">
       <div>
@@ -84,11 +86,11 @@
     </p>
 
     <hr width="100%">
+    <h3>Some Notes on GPU Support</h3>
+    <div align="justify">
     <div style="display: inline; margin-right: 10px; margin-bottom: 5px; border: 5px; float: left;">
       <img src="opencl_logo_75_75.png" border="0" style="" width="75" height="75">
     </div>
-    <h3>Some Notes on GPU Support</h3>
-    <div align="justify">
       These Windows binaries include GPU acceleration via the <u>GPU</u> package.
       This is achieved through compiling the GPU package in OpenCL mode and linking
       to an <a href="https://www.khronos.org/opencl/" target="_blank">OpenCL</a>

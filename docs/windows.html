@@ -30,7 +30,6 @@
         <li><a href="https://docs.lammps.org/Packages_details.html#pkg-ml-quip" target="_blank">ML-QUIP</a> (requires an external library),
         <li><a href="https://docs.lammps.org/Packages_details.html#pkg-mscg" target="_blank">MSCG</a> (requires an external library),
         <li><a href="https://docs.lammps.org/Packages_details.html#pkg-netcdf" target="_blank">NETCDF</a> (requires an external library),
-        <li><a href="https://docs.lammps.org/Packages_details.html#pkg-plugin" target="_blank">PLUGIN</a> (does not support Windows),
         <li><a href="https://docs.lammps.org/Packages_details.html#pkg-plumed" target="_blank">PLUMED</a> (not fully ported to Windows),
         <li><a href="https://docs.lammps.org/Packages_details.html#pkg-qmmm" target="_blank">QMMM</a> (only useful when linking to a QM software),
         <li><a href="https://docs.lammps.org/Packages_details.html#pkg-scafacos" target="_blank">SCAFACOS</a> (requires an external library).
@@ -43,11 +42,16 @@
       <div>
         <br>
         Starting with the 17 February 2022 version of LAMMPS the KOKKOS package with the serial and OpenMP backends is included. GPU support for Kokkos is currently not possible.
+      </div>
       <div>
         <br>
+        Starting with the 24 March 2022 version of LAMMPS the PLUGIN package is included.
+      </div>
+      <hr width="100%">
+      <div>
         <div style="display: inline; margin-right: 10px; margin-bottom: 5px; border: 5px; float: left;">
-          <img src="python-logo.png" border="0" style="" width="96" height="96">
-          The <a href="https://docs.lammps.org/Python_module.html" target="_blank">LAMMPS Python module</a> (to call LAMMPS from Python)
+          <img src="python-logo.png" border="0" style="" width="96" height="96"></div>
+        The <a href="https://docs.lammps.org/Python_module.html" target="_blank">LAMMPS Python module</a> (to call LAMMPS from Python)
         is included in <b>all</b> packages in a way, that it should work with a suitable Python installation of your own,
         since a LAMMPS shared library (i.e. a DLL file on Windows) is included.
         The <a href="https://docs.lammps.org/Packages_details.html#pkg-python" target="_blank">PYTHON</a> package

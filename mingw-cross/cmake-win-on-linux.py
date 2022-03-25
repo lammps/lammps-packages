@@ -270,6 +270,7 @@ cmd += " -DBUILD_SHARED_LIBS=on -DBUILD_MPI=%s -DBUILD_OPENMP=%s" % (mpiflag,omp
 cmd += " -DWITH_GZIP=on -DWITH_FFMPEG=on -DLAMMPS_EXCEPTIONS=on"
 cmd += " -DINTEL_LRT_MODE=c++11 -DBUILD_LAMMPS_SHELL=on"
 cmd += " -DCMAKE_CXX_COMPILER_LAUNCHER=ccache"
+cmd += " -DPKG_PLUGIN=yes"
 if pythonflag: cmd += " -DPKG_PYTHON=yes"
 
 print("Running: ",cmd)

@@ -201,6 +201,11 @@
               createatoms, ocl_get_devices, lammps-shell</code></strong></li>
       </ul>
 
+      <div style="display: inline; margin-left: 10px; border: 5px; border-style: groove; float: right;">
+        <a href="dot_net_enable.png">
+           <img src="dot_net_enable.png" border="0" style="" width="208" height="185">
+        </a>
+      </div>
       <p align="justify">Both executables will run in serial when executed directly.
         Please see below for instructions on how to perform parallel runs.
         To use the MPI based parallelism, you also need to install
@@ -214,6 +219,11 @@
             mpich2-1.4.1p1-win-x86-64.msi</a>. This is the latest available binary 64-bit
           MPI package compatible with the GNU cross compilers used to compile LAMMPS.
       </p>
+      <div style="background-color: #e8e8f0;">
+        <p>For Windows 10 and 11 it may be required to first enable support for .NET 3.5 and older
+           in the Windows settings dialog for optional Windows features of the Control Panel.
+        </p>
+      </div>
     </div>
     <hr width="100%">
     <h2>Installing LAMMPS globally on Windows with administrator privilege</h2>

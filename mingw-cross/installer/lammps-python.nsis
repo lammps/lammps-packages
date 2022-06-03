@@ -134,6 +134,7 @@ Section "${LAMMPS}" SecLammps
   CreateDirectory "$INSTDIR\lib"
   CreateDirectory "$INSTDIR\Python"
   CreateDirectory "$INSTDIR\frc_files"
+  CreateDirectory "$INSTDIR\plugins"
 
   File License.txt
   File README.txt
@@ -193,6 +194,9 @@ Section "${LAMMPS}" SecLammps
   SetOutPath "$INSTDIR\lib"
   File /r /x __pycache__ /x *.pyc ${MINGW}/../lib/python*
 
+  SetOutPath "$INSTDIR\plugins"
+  File plugins/helloplugin.so
+
   SetOutPath "$INSTDIR"
   ${registerExtension} "$INSTDIR\bin\lammps-shell.exe" ".lmp" "LAMMPS Input File"
 
@@ -231,6 +235,8 @@ Section "${LAMMPS}" SecLammps
   EnVar::AddValue "MSI2LMP_LIBRARY" "$INSTDIR\frc_files"
   # add LAMMPS python module to Python search path
   EnVar::AddValue "PYTHONPATH" "$INSTDIR\Python"
+  # add LAMMPS plugin folder to plugin search path
+  EnVar::AddValue "LAMMPS_PLUGIN_PATH" "$INSTDIR\plugins"
   # record installation folder in LAMMPSHOME
   EnVar::Delete LAMMPSHOME
   EnVar::AddValue LAMMPSHOME "$INSTDIR"
@@ -271,6 +277,8 @@ Section "Uninstall"
   EnVar::Delete "MSI2LMP_LIBRARY"
   # remove LAMMPS python module from search path
   EnVar::DeleteValue "PYTHONPATH" "$INSTDIR\Python"
+  # remove LAMMPS bundled plugins from search path
+  EnVar::DeleteValue "LAMMPS_PLUGIN_PATH" "$INSTDIR\plugins"
   # remove definition of installation location
   EnVar::Delete "LAMMPSHOME"
 
@@ -287,6 +295,7 @@ Section "Uninstall"
   RMDir /r /REBOOTOK "$INSTDIR\lib"
   RMDir /r /REBOOTOK "$INSTDIR\Python"
   RMDir /r /REBOOTOK "$INSTDIR\frc_files"
+  RMDir /r /REBOOTOK "$INSTDIR\plugins"
   RMDir /REBOOTOK "$INSTDIR"
 SectionEnd
 

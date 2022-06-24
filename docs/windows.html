@@ -27,7 +27,7 @@
         <li><a href="https://docs.lammps.org/Packages_details.html#pkg-kim" target="_blank"> KIM</a> (not fully ported to Windows),
         <li><a href="https://docs.lammps.org/Packages_details.html#pkg-message" target="_blank">MESSAGE</a> (obsolete),
         <li><a href="https://docs.lammps.org/Packages_details.html#pkg-ml-pace" target="_blank">ML-PACE</a> (external library not compatible),
-        <li><a href="https://docs.lammps.org/Packages_details.html#pkg-ml-quip" target="_blank">ML-QUIP</a> (requires an external library),
+        <li><a href="https://docs.lammps.org/Packages_details.html#pkg-ml-quip" target="_blank">ML-QUIP</a> (available as plugin),
         <li><a href="https://docs.lammps.org/Packages_details.html#pkg-mscg" target="_blank">MSCG</a> (requires an external library),
         <li><a href="https://docs.lammps.org/Packages_details.html#pkg-netcdf" target="_blank">NETCDF</a> (requires an external library),
         <li><a href="https://docs.lammps.org/Packages_details.html#pkg-plumed" target="_blank">PLUMED</a> (not fully ported to Windows),
@@ -35,34 +35,51 @@
         <li><a href="https://docs.lammps.org/Packages_details.html#pkg-scafacos" target="_blank">SCAFACOS</a> (requires an external library).
         <li><a href="https://docs.lammps.org/Packages_details.html#pkg-vtk" target="_blank">VTK</a> (requires an external library).
       </ul>
-      The <b>serial</b> executable additionally does not contain the
+      <div>The <b>serial</b> executable additionally does not contain the
       <a href="https://docs.lammps.org/Packages_details.html#pkg-mpiio" target="_blank">MPIIO</a> and <a href="https://docs.lammps.org/Packages_details.html#pkg-latboltz" target="_blank">LATBOLTZ</a> packages, since those require
       <i>MPI-IO</i> functions, which are not available without linking
-      to a real MPI library.
-      <div>
-        <br>
-        Starting with the 24 March 2022 version of LAMMPS the PLUGIN package is included.
-      </div>
+      to a real MPI library.</div>
       <div>
         <br>
         Starting with the 17 February 2022 version of LAMMPS the KOKKOS package with the serial
         and OpenMP backends enabled is included. GPU support for Kokkos is currently not possible
         for these packages due to compiling the binaries with a cross-compiler.
       </div>
+      <div style="display: inline; margin-left: 10px; margin-bottom: 5px; border: 5px; float: right;">
+          <img src="plugin-loaded.png" border="0" style="" width="514" height="180"></div>
+      <div>
+        <br>
+        Starting with the 24 March 2022 version of LAMMPS the PLUGIN package is included.
+      </div>
+
+      <h3>Plugin packages for additional LAMMPS packages</h3>
+      <div align="justify">
+        As of LAMMPS version 23 June 2022, we have started to provide add-on installer
+        packages that contain LAMMPS packages as plugins.  Thus are separate because they
+        are either not part of the LAMMPS distribution or have licensing terms to prohibits
+        linking them into the LAMMPS executable and library directly.  The corresponding
+        LAMMPS installer packages have the PLUGIN package included and are set up to automatically
+        load such plugins immediately at runtime.
+      </div>
+
       <hr width="100%">
       <div>
         <div style="display: inline; margin-right: 10px; margin-bottom: 5px; border: 5px; float: left;">
           <img src="python-logo.png" border="0" style="" width="96" height="96"></div>
-        The <a href="https://docs.lammps.org/Python_module.html" target="_blank">LAMMPS Python module</a> (to call LAMMPS from Python)
-        is included in <b>all</b> packages in a way, that it should work with a suitable Python installation of your own,
-        since a LAMMPS shared library (i.e. a DLL file on Windows) is included.
-        The <a href="https://docs.lammps.org/Packages_details.html#pkg-python" target="_blank">PYTHON</a> package
-        (to call Python from LAMMPS) however, is only included in the installer
-        package with Python in the name.  Those packages also include a full
-        Python runtime environment with all standard Python modules and
-        the NumPy module since those have to be consistent with the Python library
-        used to compile LAMMPS.  Please note that the 64-bit Windows NumPy
-        module is considered <b>very experimental</b> and thus one
+        The <a href="https://docs.lammps.org/Python_module.html" target="_blank">
+          LAMMPS Python module</a> (to call LAMMPS from
+        Python) is included in <b>all</b> packages in a way, that it
+        should work with a suitable Python installation of your own,
+        since a LAMMPS shared library (i.e. a DLL file on Windows) is
+        included.
+        The <a href="https://docs.lammps.org/Packages_details.html#pkg-python"
+        target="_blank">PYTHON</a> package (to call Python from LAMMPS)
+        however, is only included in the installer package with Python
+        in the name.  Those packages also include a full Python runtime
+        environment with all standard Python modules and the NumPy
+        module since those have to be consistent with the Python library
+        used to compile LAMMPS.  Please note that the 64-bit Windows
+        NumPy module is considered <b>very experimental</b> and thus one
         should expect crashes that are not bugs in LAMMPS.
       </div>
     </p>
@@ -82,7 +99,10 @@
     <p align="justify">
       As of LAMMPS version 17 February 2022, only 64-bit versions of the LAMMPS
       installer packages will be built and provided. If you must have a 32-bit
-      version, you need to use an older version of LAMMPS.
+      version, you need to use an older version of LAMMPS or compile LAMMPS from
+      source. Compiling LAMMPS on Windows with Visual Studio 2022
+      (<a href="https://visualstudio.microsoft.com/vs/community/">available
+      cost-free as Community Edition</a>) is supported.
     </p>
 
     <hr width="100%">
@@ -173,12 +193,12 @@
         packages that are labeled with the date of the LAMMPS version
         and packages labeled as <i>latest</i>.  It is usually
         recommended to download and install the latest package.
+        Installer packages for plugins are also provided and follow
+        a similar naming scheme.
         The other packages are provided in case there is a problem with it.
         Download the installer executable suitable for your machine,
         execute it, and follow the instructions in the dialogs.
-        Each version will install into a different directory, so it
-        is possible to have multiple versions installed at the same
-        time (however it is not recommended). Both kinds of packages contain:
+        Both kinds of packages contain:
       </div>
       <ul>
         <li><u>Either:</u> a regular multi-threaded LAMMPS executable called <strong><code>lmp</code></strong>.
@@ -206,7 +226,7 @@
            <img src="dot_net_enable.png" border="0" style="" width="208" height="185">
         </a>
       </div>
-      <p align="justify">Both executables will run in serial when executed directly.
+      <p align="justify">The executables will run in serial when executed directly.
         Please see below for instructions on how to perform parallel runs.
         To use the MPI based parallelism, you also need to install
           <a href="https://www.mpich.org/" target="_blank">MPICH2 from Argonne lab</a>.
@@ -324,7 +344,7 @@
       multi-threading since MPICH restricts processes to a single
       physical CPU thus it will run less efficient. </p>
     <hr>
-    <p>Last modified: Wed Feb 16 21:39:09 UTC 2022 by akohlmey</p>
+    <p>Last modified: Fri Jun 24 17:56:44 UTC 2022 by akohlmey</p>
   </body>
 </html>
 <!-- Local Variables: -->

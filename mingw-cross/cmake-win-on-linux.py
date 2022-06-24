@@ -296,7 +296,7 @@ txt = system("cmake --build plugins")
 if verbose: print(txt)
 print("Done")
 
-if not adminflag and not pythonflag:
+if not adminflag and not pythonflag and not msixflag:
   print("Configuring pace plugin build with CMake")
   cmd = "mingw%s-cmake -G Ninja -D CMAKE_BUILD_TYPE=Release" % bitflag
   cmd += " -S %s/examples/PACKAGES/pace/plugin -B paceplugin" % gitdir

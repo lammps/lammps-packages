@@ -334,7 +334,7 @@ txt = system('for f in $(find bench examples -name in.\* -print); do  mv -v $f $
 if verbose: print(txt)
 print("Done")
 
-print("Configuring plugin build with CMake")
+print("Configuring demo plugin build with CMake")
 cmd = "mingw%s-cmake -G Ninja -D CMAKE_BUILD_TYPE=Release" % bitflag
 cmd += " -S %s/examples/plugins -B plugins" % gitdir
 cmd += " -DBUILD_SHARED_LIBS=on -DBUILD_MPI=%s -DBUILD_OPENMP=%s" % (mpiflag,ompflag)
@@ -345,7 +345,45 @@ txt = system(cmd)
 if verbose: print(txt)
 
 print("Compiling")
-system("cmake --build plugins")
+txt = system("cmake --build plugins")
+if verbose: print(txt)
+print("Done")
+
+print("Configuring pace plugin build with CMake")
+cmd = "mingw%s-cmake -G Ninja -D CMAKE_BUILD_TYPE=Release" % bitflag
+cmd += " -S %s/examples/PACKAGES/pace/plugin -B paceplugin" % gitdir
+cmd += " -DBUILD_SHARED_LIBS=on -DBUILD_MPI=%s -DBUILD_OPENMP=%s" % (mpiflag,ompflag)
+cmd += " -DCMAKE_CXX_COMPILER_LAUNCHER=ccache"
+
+print("Running: ",cmd)
+txt = system(cmd)
+if verbose: print(txt)
+
+print("Compiling and building installer")
+txt = system("cmake --build paceplugin --target package")
+if verbose: print(txt)
+for exe in glob.glob('paceplugin/LAMMPS*plugin*.exe'):
+  shutil.move(exe,'..')
+print("Done")
+
+print("Cloning USER-VCSCG package")
+txt = system("git clone -b update-and-add-plugin-support --depth 0 https://gitlab.com/lammps1/vcscg-lammps.git")
+if verbose: print(txt)
+print("Configuring vcscg plugin build with CMake")
+cmd = "mingw%s-cmake -G Ninja -D CMAKE_BUILD_TYPE=Release" % bitflag
+cmd += " -S vcscg-lammps -B vcscgplugin"
+cmd += " -DBUILD_SHARED_LIBS=on -DBUILD_MPI=%s -DBUILD_OPENMP=%s" % (mpiflag,ompflag)
+cmd += " -DCMAKE_CXX_COMPILER_LAUNCHER=ccache"
+
+print("Running: ",cmd)
+txt = system(cmd)
+if verbose: print(txt)
+
+print("Compiling and building installer")
+txt = system("cmake --build vcscgplugin --target package")
+if verbose: print(txt)
+for exe in glob.glob('vcscgplugin/LAMMPS*plugin*.exe'):
+  shutil.move(exe,'..')
 print("Done")
 
 print("Configuring and building installer")

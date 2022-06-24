@@ -281,6 +281,61 @@ print("Compiling")
 system("ninja")
 print("Done")
 
+print("Configuring demo plugin build with CMake")
+cmd = "mingw%s-cmake -G Ninja -D CMAKE_BUILD_TYPE=Release" % bitflag
+cmd += " -S %s/examples/plugins -B plugins" % gitdir
+cmd += " -DBUILD_SHARED_LIBS=on -DBUILD_MPI=%s -DBUILD_OMP=%s" % (mpiflag,ompflag)
+cmd += " -DCMAKE_CXX_COMPILER_LAUNCHER=ccache"
+
+print("Running: ",cmd)
+txt = system(cmd)
+if verbose: print(txt)
+
+print("Compiling")
+txt = system("cmake --build plugins")
+if verbose: print(txt)
+print("Done")
+
+if not adminflag and not pythonflag:
+  print("Configuring pace plugin build with CMake")
+  cmd = "mingw%s-cmake -G Ninja -D CMAKE_BUILD_TYPE=Release" % bitflag
+  cmd += " -S %s/examples/PACKAGES/pace/plugin -B paceplugin" % gitdir
+  cmd += " -DBUILD_SHARED_LIBS=on -DBUILD_MPI=%s -DBUILD_OMP=%s" % (mpiflag,ompflag)
+  cmd += " -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DLAMMPS_SOURCE_DIR=%s/src" % gitdir
+
+  print("Running: ",cmd)
+  txt = system(cmd)
+  if verbose: print(txt)
+  print("Done")
+
+  print("Compiling and building installer")
+  txt = system("cmake --build paceplugin --target package")
+  if verbose: print(txt)
+  for exe in glob.glob('paceplugin/LAMMPS*plugin*.exe'):
+    shutil.move(exe,os.path.join('..',os.path.basename(exe)))
+  print("Done")
+
+  print("Cloning USER-VCSGC package")
+  txt = system("git clone -b update-and-add-plugin-support --depth 1 git@gitlab.com:lammps1/vcsgc-lammps.git")
+  if verbose: print(txt)
+  print("Configuring vcsgc plugin build with CMake")
+  cmd = "mingw%s-cmake -G Ninja -D CMAKE_BUILD_TYPE=Release" % bitflag
+  cmd += " -S vcsgc-lammps/plugin -B vcsgcplugin"
+  cmd += " -DBUILD_SHARED_LIBS=on -DBUILD_MPI=%s -DBUILD_OMP=%s" % (mpiflag,ompflag)
+  cmd += " -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DLAMMPS_SOURCE_DIR=%s/src" % gitdir
+
+  print("Running: ",cmd)
+  txt = system(cmd)
+  if verbose: print(txt)
+  print("Done")
+
+  print("Compiling and building installer")
+  txt = system("cmake --build vcsgcplugin --target package")
+  if verbose: print(txt)
+  for exe in glob.glob('vcsgcplugin/LAMMPS*plugin*.exe'):
+    shutil.move(exe,os.path.join('..',os.path.basename(exe)))
+  print("Done")
+
 print("Building PDF manual")
 os.chdir(os.path.join(gitdir,"doc"))
 txt = system("make pdf")
@@ -332,60 +387,6 @@ if verbose: print(txt)
 # mass rename in.<name> to in.<name>.lmp
 txt = system('for f in $(find bench examples -name in.\* -print); do  mv -v $f $f.lmp; done')
 if verbose: print(txt)
-print("Done")
-
-print("Configuring demo plugin build with CMake")
-cmd = "mingw%s-cmake -G Ninja -D CMAKE_BUILD_TYPE=Release" % bitflag
-cmd += " -S %s/examples/plugins -B plugins" % gitdir
-cmd += " -DBUILD_SHARED_LIBS=on -DBUILD_MPI=%s -DBUILD_OMP=%s" % (mpiflag,ompflag)
-cmd += " -DCMAKE_CXX_COMPILER_LAUNCHER=ccache"
-
-print("Running: ",cmd)
-txt = system(cmd)
-if verbose: print(txt)
-
-print("Compiling")
-txt = system("cmake --build plugins")
-if verbose: print(txt)
-print("Done")
-
-print("Configuring pace plugin build with CMake")
-cmd = "mingw%s-cmake -G Ninja -D CMAKE_BUILD_TYPE=Release" % bitflag
-cmd += " -S %s/examples/PACKAGES/pace/plugin -B paceplugin" % gitdir
-cmd += " -DBUILD_SHARED_LIBS=on -DBUILD_MPI=%s -DBUILD_OMP=%s" % (mpiflag,ompflag)
-cmd += " -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DLAMMPS_SOURCE_DIR=%s/src" % gitdir
-
-print("Running: ",cmd)
-txt = system(cmd)
-if verbose: print(txt)
-print("Done")
-
-print("Compiling and building installer")
-txt = system("cmake --build paceplugin --target package")
-if verbose: print(txt)
-for exe in glob.glob('paceplugin/LAMMPS*plugin*.exe'):
-  shutil.move(exe,os.path.join('..',os.path.basename(exe)))
-print("Done")
-
-print("Cloning USER-VCSGC package")
-txt = system("git clone -b update-and-add-plugin-support --depth 1 git@gitlab.com:lammps1/vcsgc-lammps.git")
-if verbose: print(txt)
-print("Configuring vcsgc plugin build with CMake")
-cmd = "mingw%s-cmake -G Ninja -D CMAKE_BUILD_TYPE=Release" % bitflag
-cmd += " -S vcsgc-lammps/plugin -B vcsgcplugin"
-cmd += " -DBUILD_SHARED_LIBS=on -DBUILD_MPI=%s -DBUILD_OMP=%s" % (mpiflag,ompflag)
-cmd += " -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DLAMMPS_SOURCE_DIR=%s/src" % gitdir
-
-print("Running: ",cmd)
-txt = system(cmd)
-if verbose: print(txt)
-print("Done")
-
-print("Compiling and building installer")
-txt = system("cmake --build vcsgcplugin --target package")
-if verbose: print(txt)
-for exe in glob.glob('vcsgcplugin/LAMMPS*plugin*.exe'):
-  shutil.move(exe,os.path.join('..',os.path.basename(exe)))
 print("Done")
 
 print("Configuring and building installer")

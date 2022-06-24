@@ -353,7 +353,7 @@ print("Configuring pace plugin build with CMake")
 cmd = "mingw%s-cmake -G Ninja -D CMAKE_BUILD_TYPE=Release" % bitflag
 cmd += " -S %s/examples/PACKAGES/pace/plugin -B paceplugin" % gitdir
 cmd += " -DBUILD_SHARED_LIBS=on -DBUILD_MPI=%s -DBUILD_OPENMP=%s" % (mpiflag,ompflag)
-cmd += " -DCMAKE_CXX_COMPILER_LAUNCHER=ccache"
+cmd += " -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DLAMMPS_SOURCE_DIR=%s/src" % gitdir
 
 print("Running: ",cmd)
 txt = system(cmd)
@@ -373,7 +373,7 @@ print("Configuring vcscg plugin build with CMake")
 cmd = "mingw%s-cmake -G Ninja -D CMAKE_BUILD_TYPE=Release" % bitflag
 cmd += " -S vcscg-lammps -B vcscgplugin"
 cmd += " -DBUILD_SHARED_LIBS=on -DBUILD_MPI=%s -DBUILD_OPENMP=%s" % (mpiflag,ompflag)
-cmd += " -DCMAKE_CXX_COMPILER_LAUNCHER=ccache"
+cmd += " -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DLAMMPS_SOURCE_DIR=%s/src" % gitdir
 
 print("Running: ",cmd)
 txt = system(cmd)

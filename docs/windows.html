@@ -25,7 +25,6 @@
         <li><a href="https://docs.lammps.org/Packages_details.html#pkg-adios" target="_blank">ADIOS</a> (requires an external library),
         <li><a href="https://docs.lammps.org/Packages_details.html#pkg-h5md" target="_blank">H5MD</a> (requires an external library),
         <li><a href="https://docs.lammps.org/Packages_details.html#pkg-kim" target="_blank"> KIM</a> (not fully ported to Windows),
-        <li><a href="https://docs.lammps.org/Packages_details.html#pkg-message" target="_blank">MESSAGE</a> (obsolete),
         <li><a href="https://docs.lammps.org/Packages_details.html#pkg-ml-pace" target="_blank">ML-PACE</a> (available as plugin),
         <li><a href="https://docs.lammps.org/Packages_details.html#pkg-ml-quip" target="_blank">ML-QUIP</a> (not fully ported to Windows),
         <li><a href="https://docs.lammps.org/Packages_details.html#pkg-mscg" target="_blank">MSCG</a> (requires an external library),
@@ -45,23 +44,30 @@
         and OpenMP backends enabled is included. GPU support for Kokkos is currently not possible
         for these packages due to compiling the binaries with a cross-compiler.
       </div>
-      <div style="display: inline; margin-left: 10px; margin-bottom: 5px; border: 5px; float: right;">
-          <img src="plugin-loaded.png" border="0" style="" width="514" height="180"></div>
       <div>
         <br>
         Starting with the 24 March 2022 version of LAMMPS the PLUGIN package is included.
       </div>
-
+      <hr width="100%">
+      <div style="display: inline; margin-left: 10px; margin-bottom: 5px; margin-top: 10px; border: 5px; float: right;">
+          <img src="plugin-loaded.png" border="0" style="" width="514" height="180"></div>
       <h3>Plugin packages for additional LAMMPS packages</h3>
       <div align="justify">
         As of LAMMPS version 23 June 2022, we have started to provide add-on installer
-        packages that contain LAMMPS packages as plugins.  Thus are separate because they
-        are either not part of the LAMMPS distribution or have licensing terms to prohibits
-        linking them into the LAMMPS executable and library directly.  The corresponding
-        LAMMPS installer packages have the PLUGIN package included and are set up to automatically
-        load such plugins immediately at runtime.
+        packages that contain LAMMPS packages as plugins.  Those are separate packages because either
+        their source code is not part of the LAMMPS distribution or uses and external library with
+        licensing terms that prohibits linking the package into the LAMMPS executable and library directly.
+        There are two variants of the plugin packages: one with support for MPI and one without.
+        The corresponding LAMMPS installer packages have the PLUGIN package included and are set up to automatically
+        load such plugins immediately at runtime as shown in the picture to the right.
       </div>
-
+      <div align="justify">
+        The following packages are currently available as plugin installer packages:
+      <ul>
+        <li>ML-PACE
+        <li>USER-VCSGC
+      </ul>
+      </div>
       <hr width="100%">
       <div>
         <div style="display: inline; margin-right: 10px; margin-bottom: 5px; border: 5px; float: left;">
@@ -168,6 +174,15 @@
       These Windows packages also include the
       <a href="https://docs.lammps.org/Tools.html#lammps-shell">LAMMPS Shell</a/>,
       a customized LAMMPS executable enhanced for interactive use.
+    </div>
+    <div style="clear:both;"></div>
+    <hr width="100%">
+    <h3>Winget package manager support</h3>
+    <div align="justify">
+      Starting with version 23 June 2022 the non-MPI versions of the installer packages
+      are also available for Windows 10 and Windows 11 using the
+      <a href="https://github.com/microsoft/winget-cli" target="_blank">Winget Windows Package Manager</a>
+      for convenient installation, uninstallation, and updates from the command line.
     </div>
     <div style="clear:both;"></div>
     <hr width="100%">
@@ -344,7 +359,7 @@
       multi-threading since MPICH restricts processes to a single
       physical CPU thus it will run less efficient. </p>
     <hr>
-    <p>Last modified: Fri Jun 24 17:56:44 UTC 2022 by akohlmey</p>
+    <p>Last modified: Sat Jun 25 16:47:58 UTC 2022 by akohlmey</p>
   </body>
 </html>
 <!-- Local Variables: -->

@@ -245,9 +245,13 @@
         </a>
       </div>
       <p align="justify">The executables will run in serial when executed directly.
-        Please see below for instructions on how to perform parallel runs.
-        To use the MPI based parallelism, you also need to install
-          <a href="https://www.mpich.org/" target="_blank">MPICH2 from Argonne lab</a>.
+        Please see below for instructions on how to perform parallel runs.</p>
+      <h3>MPI Support for LAMMPS on Windows</h3>
+      <p align="justify">
+        To use the MPI based parallelism in the provided installer packages, you also need to install
+        a specific version of <a href="https://www.mpich.org/" target="_blank">MPICH2 from Argonne lab</a>.
+        This is a very old version of MPICH for Windows but it is required for these binaries.
+        <div>
         For 32-bit Windows you have to download and install
           <a href="https://www.mpich.org/static/tarballs/1.4.1p1/mpich2-1.4.1p1-win-ia32.msi">
             mpich2-1.4.1p1-win-ia32.msi</a>. This is the latest available binary 32-bit
@@ -256,13 +260,23 @@
           <a href="https://www.mpich.org/static/tarballs/1.4.1p1/mpich2-1.4.1p1-win-x86-64.msi">
             mpich2-1.4.1p1-win-x86-64.msi</a>. This is the latest available binary 64-bit
           MPI package compatible with the GNU cross compilers used to compile LAMMPS.
+          </div>
       </p>
       <div style="background-color: #e8e8f0;">
         <p>For Windows 10 and 11 it may be required to first enable support for .NET 3.5 and older
            in the Windows settings dialog for optional Windows features of the Control Panel.
         </p>
       </div>
-    </div>
+     </div>
+    <p>
+      There are more recent versions of MPICH ported to Windows by Microsoft, but they are not
+      compatible with the packages here. Also it is not possible to use those packages with the
+      GNU cross-compilers.  Instead to use these newer MPI packages you would have to compile
+      LAMMPS from source on Windows yourself using the Microsoft Visual Studio 2022 software.
+      We do not provide precompiled packages created natively on Windows because fewer packages
+      support it and the process of building such packages on Windows has not been sufficiently
+      automated and tested.
+    </p>
     <hr width="100%">
     <h2>Installing LAMMPS globally on Windows with administrator privilege</h2>
     <div align="justify">
@@ -362,7 +376,7 @@
       multi-threading since MPICH restricts processes to a single
       physical CPU thus it will run less efficient. </p>
     <hr>
-    <p>Last modified: Thu Aug  4 00:53:12 UTC 2022 by akohlmey</p>
+    <p>Last modified: Sun Sep 18 14:24:45 UTC 2022 by akohlmey</p>
   </body>
 </html>
 <!-- Local Variables: -->

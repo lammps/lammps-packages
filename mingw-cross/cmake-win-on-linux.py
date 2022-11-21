@@ -93,6 +93,7 @@ Flags (all flags are optional, defaults listed below):
     -j <num>    : set to any reasonable number or 1 for serial make
   -p : select message passing parallel build (default value: %s)
     -p mpi      : build an MPI parallel version with MPICH2 v1.4.1p1
+    -p ms       : build an MPI parallel version with MS-MPI SDK 10.1
     -p no       : build a serial version using MPI STUBS library
   -t : select thread support (default value: %s)
     -t omp      : build with threads via OpenMP enabled
@@ -164,13 +165,13 @@ while i < argc:
 # checks
 if bitflag != '32' and bitflag != '64':
     error("Unsupported bitness flag %s" % bitflag)
-if parflag != 'no' and parflag != 'mpi':
+if parflag != 'no' and parflag != 'mpi' and parflag != 'ms':
     error("Unsupported parallel flag %s" % parflag)
 if thrflag != 'no' and thrflag != 'omp':
     error("Unsupported threading flag %s" % thrflag)
 
 # test for valid revision name format: branch names, release tags, or commit hashes
-rev1 = re.compile("^(stable|release|develop)$")
+rev1 = re.compile("^(stable|release|develop|support-msmpi)$")
 rev2 = re.compile(r"^(patch|stable)_\d+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\d{4}$")
 rev3 = re.compile(r"^[a-f0-9]{40}$")
 rev4 = re.compile(r"^maintenance-\d+-\d+-\d+")
@@ -234,7 +235,7 @@ txt = system("git fetch origin")
 if verbose: print(txt)
 txt = system("git checkout %s" % revflag)
 if verbose: print(txt)
-if revflag == "develop" or revflag == "stable" or revflag == "release" or rev4.match(revflag):
+if revflag == "develop" or revflag == "stable" or revflag == "release" or "support-msmpi" or rev4.match(revflag):
     txt = system("git pull")
     if verbose: print(txt)
 
@@ -249,7 +250,7 @@ getexe("%s/ffmpeg-win%s.exe.gz" % (url,bitflag),"ffmpeg.exe")
 print("gzip")
 getexe("%s/gzip.exe.gz" % url,"gzip.exe")
 
-if parflag == "mpi":
+if parflag == "mpi" or parflag == "ms":
     mpiflag = "on"
 else:
     mpiflag = "off"
@@ -267,6 +268,8 @@ cmd += " -C %s/cmake/presets/mingw-cross.cmake -S %s/cmake" % (gitdir,gitdir)
 if bitflag == '64':
   cmd += " -C %s/cmake/presets/kokkos-openmp.cmake" % gitdir
 cmd += " -DBUILD_SHARED_LIBS=on -DBUILD_MPI=%s -DBUILD_OMP=%s" % (mpiflag,ompflag)
+if parflag == 'ms':
+  cmd += " -DUSE_MSMPI=on"
 cmd += " -DWITH_GZIP=on -DWITH_FFMPEG=on -DLAMMPS_EXCEPTIONS=on"
 cmd += " -DINTEL_LRT_MODE=c++11 -DBUILD_LAMMPS_SHELL=on"
 cmd += " -DCMAKE_CXX_COMPILER_LAUNCHER=ccache"
@@ -285,6 +288,7 @@ print("Configuring demo plugin build with CMake")
 cmd = "mingw%s-cmake -G Ninja -D CMAKE_BUILD_TYPE=Release" % bitflag
 cmd += " -S %s/examples/plugins -B plugins" % gitdir
 cmd += " -DBUILD_SHARED_LIBS=on -DBUILD_MPI=%s -DBUILD_OMP=%s" % (mpiflag,ompflag)
+if parflag == 'ms': cmd += " -DUSE_MSMPI=on"
 cmd += " -DCMAKE_CXX_COMPILER_LAUNCHER=ccache"
 
 print("Running: ",cmd)
@@ -302,6 +306,7 @@ if not adminflag and not pythonflag and not msixflag:
   cmd += " -S %s/examples/PACKAGES/pace/plugin -B paceplugin" % gitdir
   cmd += " -DBUILD_SHARED_LIBS=on -DBUILD_MPI=%s -DBUILD_OMP=%s" % (mpiflag,ompflag)
   cmd += " -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DLAMMPS_SOURCE_DIR=%s/src" % gitdir
+  if parflag == 'ms': cmd += " -DUSE_MSMPI=on"
 
   print("Running: ",cmd)
   txt = system(cmd)
@@ -323,6 +328,7 @@ if not adminflag and not pythonflag and not msixflag:
   cmd += " -S lammps-plugins -B build_plugins"
   cmd += " -DBUILD_SHARED_LIBS=on -DBUILD_MPI=%s -DBUILD_OMP=%s" % (mpiflag,ompflag)
   cmd += " -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DLAMMPS_SOURCE_DIR=%s/src" % gitdir
+  if parflag == 'ms': cmd += " -DUSE_MSMPI=on"
 
   print("Running: ",cmd)
   txt = system(cmd)
@@ -395,6 +401,8 @@ if pythonflag:
     nsisfile = os.path.join(homedir,"installer","lammps-python.nsis")
 elif adminflag:
     nsisfile = os.path.join(homedir,"installer","lammps-admin.nsis")
+elif parflag == 'ms':
+    nsisfile = os.path.join(homedir,"installer","lammps-msmpi.nsis")
 else:
     if msixflag:
         nsisfile = os.path.join(homedir,"installer","lammps-msix.nsis")
@@ -412,7 +420,7 @@ shutil.copytree(os.path.join(homedir,"installer","envvar"),os.path.join(builddir
 # - parse version from src/version.h when pulling from stable, release, or specific tag
 # - otherwise use revflag, i.e. the commit hash
 version = revflag
-if revflag == 'stable' or revflag == 'release' or rev2.match(revflag):
+if revflag == 'stable' or revflag == 'release' or revflag == 'support-msmpi' or rev2.match(revflag):
   with open(os.path.join(gitdir,"src","version.h"),'r') as v_file:
     verexp = re.compile(r'^.*"(\w+) (\w+) (\w+)".*$')
     vertxt = v_file.readline()
@@ -428,6 +436,9 @@ elif bitflag == '64':
 
 if parflag == 'mpi':
     txt = system("makensis -DMINGW=%s -DVERSION=%s-MPI -DBIT=%s -DLMPREV=%s lammps.nsis" % (mingwdir,version,bitflag,revflag))
+    if verbose: print(txt)
+elif parflag == 'ms':
+    txt = system("makensis -DMINGW=%s -DVERSION=%s-MSMPI -DBIT=%s -DLMPREV=%s lammps.nsis" % (mingwdir,version,bitflag,revflag))
     if verbose: print(txt)
 else:
     txt = system("makensis -DMINGW=%s -DVERSION=%s -DBIT=%s -DLMPREV=%s lammps.nsis" % (mingwdir,version,bitflag,revflag))

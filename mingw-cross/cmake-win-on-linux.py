@@ -377,10 +377,14 @@ for d in ['accelerate','kim','mscg','PACKAGES/quip','PACKAGES/vtk']:
 for d in ['FERMI','KEPLER']:
     shutil.rmtree(os.path.join("bench",d),True)
 shutil.rmtree("tools/msi2lmp/test",True)
-os.remove("potentials/C_10_10.mesocnt")
-os.remove("potentials/TABTP_10_10.mesont")
-os.remove("examples/PACKAGES/mesont/C_10_10.mesocnt")
-os.remove("examples/PACKAGES/mesont/TABTP_10_10.mesont")
+if os.path.exists("potentials/C_10_10.mesocnt"):
+    os.remove("potentials/C_10_10.mesocnt")
+if os.path.exists("potentials/TABTP_10_10.mesont"):
+    os.remove("potentials/TABTP_10_10.mesont")
+if os.path.exists("examples/PACKAGES/mesont/C_10_10.mesocnt"):
+    os.remove("examples/PACKAGES/mesont/C_10_10.mesocnt")
+if os.path.exists("examples/PACKAGES/mesont/TABTP_10_10.mesont"):
+    os.remove("examples/PACKAGES/mesont/TABTP_10_10.mesont")
 
 # convert text files to CR-LF conventions
 txt = system("unix2dos LICENSE.txt README.txt tools/msi2lmp/README")

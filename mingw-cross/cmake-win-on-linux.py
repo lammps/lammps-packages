@@ -261,7 +261,7 @@ else:
     ompflag = "off"
 
 print("Configuring build with CMake")
-cmd = "mingw%s-cmake -G Ninja -D CMAKE_BUILD_TYPE=Release" % bitflag
+cmd = "mingw%s-cmake -D CMAKE_BUILD_TYPE=Release" % bitflag
 cmd += " -D ADD_PKG_CONFIG_PATH=%s/mingw%s-pkgconfig" % (homedir,bitflag)
 cmd += " -C %s/mingw%s-pkgconfig/addpkg.cmake" % (homedir,bitflag)
 cmd += " -C %s/cmake/presets/mingw-cross.cmake -S %s/cmake" % (gitdir,gitdir)
@@ -281,11 +281,11 @@ txt = system(cmd)
 if verbose: print(txt)
 
 print("Compiling")
-system("ninja")
+system("cmake --build . --parallel 8")
 print("Done")
 
 print("Configuring demo plugin build with CMake")
-cmd = "mingw%s-cmake -G Ninja -D CMAKE_BUILD_TYPE=Release" % bitflag
+cmd = "mingw%s-cmake -D CMAKE_BUILD_TYPE=Release" % bitflag
 cmd += " -S %s/examples/plugins -B plugins" % gitdir
 cmd += " -DBUILD_SHARED_LIBS=on -DBUILD_MPI=%s -DBUILD_OMP=%s" % (mpiflag,ompflag)
 if parflag == 'ms': cmd += " -DUSE_MSMPI=on"
@@ -302,7 +302,7 @@ print("Done")
 
 if not adminflag and not pythonflag and not msixflag:
   print("Configuring pace plugin build with CMake")
-  cmd = "mingw%s-cmake -G Ninja -D CMAKE_BUILD_TYPE=Release" % bitflag
+  cmd = "mingw%s-cmake -D CMAKE_BUILD_TYPE=Release" % bitflag
   cmd += " -S %s/examples/PACKAGES/pace/plugin -B paceplugin" % gitdir
   cmd += " -DBUILD_SHARED_LIBS=on -DBUILD_MPI=%s -DBUILD_OMP=%s" % (mpiflag,ompflag)
   cmd += " -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DLAMMPS_SOURCE_DIR=%s/src" % gitdir
@@ -324,7 +324,7 @@ if not adminflag and not pythonflag and not msixflag:
   txt = system("git clone -b %s --depth 1 git@github.com:lammps/lammps-plugins.git" % revflag)
   if verbose: print(txt)
   print("Configuring LAMMPS plugin collection build with CMake")
-  cmd = "mingw%s-cmake -G Ninja -D CMAKE_BUILD_TYPE=Release" % bitflag
+  cmd = "mingw%s-cmake -D CMAKE_BUILD_TYPE=Release" % bitflag
   cmd += " -S lammps-plugins -B build_plugins"
   cmd += " -DBUILD_SHARED_LIBS=on -DBUILD_MPI=%s -DBUILD_OMP=%s" % (mpiflag,ompflag)
   cmd += " -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DLAMMPS_SOURCE_DIR=%s/src" % gitdir

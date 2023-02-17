@@ -105,6 +105,7 @@ Flags (all flags are optional, defaults listed below):
     -r stable   : download and build the latest stable LAMMPS version
     -r release  : download and build the latest patch release LAMMPS version
     -r develop  : download and build the latest development snapshot
+    -r maintenance  : download and build the latest maintenance snapshot
     -r patch_<date> : download and build a specific patch release
     -r maintenance_<date> : download and build a specific maintenance branch
     -r <sha256> : download and build a specific snapshot version
@@ -171,11 +172,10 @@ if thrflag != 'no' and thrflag != 'omp':
     error("Unsupported threading flag %s" % thrflag)
 
 # test for valid revision name format: branch names, release tags, or commit hashes
-rev1 = re.compile("^(stable|release|develop|support-msmpi)$")
+rev1 = re.compile("^(stable|release|develop|maintenance)$")
 rev2 = re.compile(r"^(patch|stable)_\d+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\d{4}$")
 rev3 = re.compile(r"^[a-f0-9]{40}$")
-rev4 = re.compile(r"^maintenance-\d+-\d+-\d+")
-if not rev1.match(revflag) and not rev2.match(revflag) and not rev3.match(revflag) and not rev4.match(revflag):
+if not rev1.match(revflag) and not rev2.match(revflag) and not rev3.match(revflag):
     error("Unsupported revision flag %s" % revflag)
 
 # create working directory
@@ -235,7 +235,7 @@ txt = system("git fetch origin")
 if verbose: print(txt)
 txt = system("git checkout %s" % revflag)
 if verbose: print(txt)
-if revflag == "develop" or revflag == "stable" or revflag == "release" or "support-msmpi" or rev4.match(revflag):
+if revflag == "develop" or revflag == "stable" or revflag == "release" or revflag == "maintenance":
     txt = system("git pull")
     if verbose: print(txt)
 
@@ -424,13 +424,13 @@ shutil.copytree(os.path.join(homedir,"installer","envvar"),os.path.join(builddir
 # - parse version from src/version.h when pulling from stable, release, or specific tag
 # - otherwise use revflag, i.e. the commit hash
 version = revflag
-if revflag == 'stable' or revflag == 'release' or revflag == 'support-msmpi' or rev2.match(revflag):
+if revflag == 'stable' or revflag == 'release' or rev2.match(revflag):
   with open(os.path.join(gitdir,"src","version.h"),'r') as v_file:
     verexp = re.compile(r'^.*"(\w+) (\w+) (\w+)".*$')
     vertxt = v_file.readline()
     verseq = verexp.match(vertxt).groups()
     version = "".join(verseq)
-elif revflag == 'develop':
+elif revflag == 'develop' or revflag == 'maintenance':
     version = time.strftime('%Y-%m-%d')
 
 if bitflag == '32':

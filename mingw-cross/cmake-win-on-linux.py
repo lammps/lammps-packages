@@ -273,7 +273,7 @@ if parflag == 'ms':
 cmd += " -DWITH_GZIP=on -DWITH_FFMPEG=on -DLAMMPS_EXCEPTIONS=on"
 cmd += " -DINTEL_LRT_MODE=c++11 -DBUILD_LAMMPS_SHELL=on"
 cmd += " -DCMAKE_CXX_COMPILER_LAUNCHER=ccache"
-cmd += " -DPKG_PLUGIN=yes"
+cmd += " -DPKG_PLUGIN=yes -DPKG_PLUMED=yes"
 if pythonflag: cmd += " -DPKG_PYTHON=yes"
 
 print("Running: ",cmd)

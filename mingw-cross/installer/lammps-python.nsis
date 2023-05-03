@@ -144,7 +144,7 @@ Section "${LAMMPS}" SecLammps
   SetOutPath "$INSTDIR\bin"
   File ${MINGW}/libgcc_s*.dll
   File ${MINGW}/libatomic-1.dll
-  File ${MINGW}/libcrypto-1*.dll
+  File ${MINGW}/libcrypto-*.dll
   File ${MINGW}/libexpat-1.dll
   File ${MINGW}/libffi-*.dll
   File ${MINGW}/libfftw3-3.dll
@@ -158,7 +158,7 @@ Section "${LAMMPS}" SecLammps
   File ${MINGW}/libquadmath-0.dll
   File ${MINGW}/libreadline8.dll
   File ${MINGW}/libsqlite3-0.dll
-  File ${MINGW}/libssl-1*.dll
+  File ${MINGW}/libssl-*.dll
   File ${MINGW}/libssp-0.dll
   File ${MINGW}/libstdc++-6.dll
   File ${MINGW}/libtermcap-0.dll

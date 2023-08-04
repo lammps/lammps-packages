@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
   <head>
-    <title>LAMMPS Precompiled Packages for Windows</title>
+    <title>LAMMPS Pre-compiled Packages for Windows</title>
     <link rel="shortcut icon" href="lammps.ico" />
     <link rel="canonical" href="https://packages.lammps.org/" />
     <meta name="viewport" content="width=device-width" />
@@ -14,52 +14,53 @@
       <img src="lammpswinlogo.png" border="0" style="" width="300" height="182">
     </div>
 
-    <h1>Building and Installing LAMMPS Precompiled Packages for Windows</h1>
+    <h1>Building and Installing LAMMPS Pre-compiled Packages for Windows</h1>
     <p align="justify">
       The LAMMPS molecular dynamics simulation package is commonly
-      installed, customized, and compiled by its users from source code,
-      which can be downloaded from its
+      installed, customized, and compiled by its users from source code.
+      The sources can be downloaded either from its
       <a href="https://www.lammps.org" target="_blank">home page</a>
       as tar archives or from its
       <a href="https://github.com/lammps/lammps/" target="_blank">GitHub
         project page</a> as snapshot zip archive or git repository clone.
     <p align="justify">
-      However, few people using Windows are familiar compiling
-      applications from source code and have the necessary tools
-      installed. Furthermore Windows applications are usually bundled
-      with an installer/uninstaller tool to manage the deployment of the
+      However, few people using Windows are familiar with compiling
+      applications from source code, and the not have the necessary tools
+      installed.  Furthermore, Windows applications are usually bundled
+      using an installer/uninstaller tool to manage the deployment of the
       precompiled binaries and associated files.
     </p>
-    <p align="justify">The purpose of this webpage is to provide access
+    <p align="justify">The purpose of this web page is to provide access
       to full featured LAMMPS packages for Windows that have been built
       by the LAMMPS developers and contain as complete a set of features
-      as technically meaningful (not all code is ported to Windows) and
-      legally possible with the restrictions on some of the licenses for
-      add-on libraries.
+      as technically meaningful (not all code is yet ported to Windows)
+      and legally possible with the restrictions on some of the licenses
+      for add-on libraries.
     </p>
-    <p align="justify">The second part of this webpage documents the custom
-      tools and scripts used in the process of building these packages,
-      so that interested people can go about and customize it or contribute
-      solutions to known problems or suggest improved, alternate approaches
-      for the procedures used.
+    <p align="justify">The second part of this web page documents the
+      custom tools and scripts used in the process of building these
+      packages, so that interested people can go about and customize it
+      or contribute solutions to known problems or suggest improved,
+      alternate approaches for the procedures used.
     </p>
     <hr width="100%">
 
     <h2>Downloading, Installing, and Using Pre-compiled LAMMPS Packages</h2>
-    <h3><a href="windows.html">Installer packages for 32-bit and 64-bit Windows</a></h3>
+    <h3><a href="windows.html">Installer packages for 64-bit Windows</a></h3>
     <p align="justify">These packages are executables containing
       a <a href="https://nsis.sourceforge.io/" target="_blank"> Nullsoft
-      scriptable installer</a> for Windows versions from Windows XP
-      (SP2) to Windows 10 (theoretically, due to limited time and access
-      currently only Windows 10 is tested). The packages are available
-      for 32-bit and 64-bit Windows systems, with and without support
-      for MPI (a link for a compatible MPI library installer is
-      provided) and with and without support for the PYTHON package
-      (NOTE: the Python <b>module</b>, i.e. the option to import LAMMPS
-      into Python scripts is <b>always</b> included).  These packages
-      also contain several PDF format files with the LAMMPS manual and
-      associated documentation, most of the example inputs, bundled
-      potential files, benchmark input and some tools.
+      scriptable installer</a> for Windows versions from Windows 7 to
+      Windows 11 (theoretically, due to limited time and hardware
+      access, currently only Windows 10 and Windows 11 with all updates
+      included are tested). The packages are available for 64-bit
+      Windows systems, with and without support for MS-MPI, with or
+      without the LAMMPS GUI, and with or without support for the PYTHON
+      package, i.e. the option to <b>call</b> Python from LAMMMPS,
+      (NOTE: the Python <b>module</b>, i.e. the option to <b>import</b>
+      LAMMPS into Python scripts is <b>always</b> included).  These
+      packages also contain several PDF format files with the LAMMPS
+      manual and associated documentation, most of the example inputs,
+      bundled potential files, benchmark inputs, and some tools.
     </p>
     <hr>
 
@@ -71,10 +72,10 @@
       building installer packages for Windows on Linux with the
       <a href="https://mingw-w64.org" target="_blank">MinGW64</a>
       cross-compiler <a href="https://fedoraproject.org/wiki/MinGW"
-                        target="_blank">toolchain as bundled
+                        target="_blank">tool chain as bundled
       with Fedora Linux</a>.</p>
     <hr>
-    <p>Last modified: Thu Jun 22 16:18:58 UTC 2023 by akohlmey</p>
+    <p>Last modified: Fri Aug  4 05:12:41 UTC 2023 by akohlmey</p>
   </body>
 </html>
 <!-- Local Variables: -->

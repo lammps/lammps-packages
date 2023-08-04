@@ -26,64 +26,72 @@
       <ul>
         <li><a href="https://docs.lammps.org/Packages_details.html#pkg-adios" target="_blank">ADIOS</a> (requires an external library),
         <li><a href="https://docs.lammps.org/Packages_details.html#pkg-h5md" target="_blank">H5MD</a> (requires an external library),
-        <li><a href="https://docs.lammps.org/Packages_details.html#pkg-kim" target="_blank"> KIM</a> (not fully ported to Windows),
+        <li><a href="https://docs.lammps.org/Packages_details.html#pkg-kim" target="_blank"> KIM</a> (not yest fully ported to Windows),
         <li><a href="https://docs.lammps.org/Packages_details.html#pkg-ml-pace" target="_blank">ML-PACE</a> (available as plugin),
         <li><a href="https://docs.lammps.org/Packages_details.html#pkg-ml-quip" target="_blank">ML-QUIP</a> (not fully ported to Windows),
-        <li><a href="https://docs.lammps.org/Packages_details.html#pkg-mscg" target="_blank">MSCG</a> (requires an external library),
+        <li><a href="https://docs.lammps.org/Packages_details.html#pkg-mscg" target="_blank">MSCG</a> (obsolete, requires an external library),
         <li><a href="https://docs.lammps.org/Packages_details.html#pkg-netcdf" target="_blank">NETCDF</a> (requires an external library),
-        <li><a href="https://docs.lammps.org/Packages_details.html#pkg-plumed" target="_blank">PLUMED</a> (not fully ported to Windows),
         <li><a href="https://docs.lammps.org/Packages_details.html#pkg-qmmm" target="_blank">QMMM</a> (only useful when linking to a QM software),
         <li><a href="https://docs.lammps.org/Packages_details.html#pkg-scafacos" target="_blank">SCAFACOS</a> (requires an external library).
         <li><a href="https://docs.lammps.org/Packages_details.html#pkg-vtk" target="_blank">VTK</a> (requires an external library).
       </ul>
-      <div>The <b>serial</b> executable additionally does not contain the
-      <a href="https://docs.lammps.org/Packages_details.html#pkg-mpiio" target="_blank">MPIIO</a> and <a href="https://docs.lammps.org/Packages_details.html#pkg-latboltz" target="_blank">LATBOLTZ</a> packages, since those require
-      <i>MPI-IO</i> functions, which are not available without linking
-      to a real MPI library.</div>
+      <div>The <b>serial</b> executable additionally does <b>not</b> contain the
+        <a href="https://docs.lammps.org/Packages_details.html#pkg-mpiio" target="_blank">MPIIO</a>
+        and <a href="https://docs.lammps.org/Packages_details.html#pkg-latboltz" target="_blank">LATBOLTZ</a>
+        packages, since those require <i>MPI-IO</i> functions, which are not available without linking
+        to a real MPI library.</div>
       <div>
         <br>
-        Starting with the 17 February 2022 version of LAMMPS the KOKKOS package with the serial
-        and OpenMP backends enabled is included. GPU support for Kokkos is currently not possible
-        for these packages due to compiling the binaries with a cross-compiler.
+        Starting with the 17 February 2022 version of LAMMPS the KOKKOS
+        package with the serial and OpenMP backends enabled is
+        included. GPU support for Kokkos is currently not possible for
+        these packages due to compiling the binaries with a
+        cross-compiler.
       </div>
       <div>
         <br>
-        Starting with the 24 March 2022 version of LAMMPS the PLUGIN package is included.
+        Starting with the 24 March 2022 version of LAMMPS the PLUGIN
+        package is included.
       </div>
       <hr width="100%">
       <div style="display: inline; margin-left: 10px; margin-bottom: 5px; margin-top: 10px; border: 5px; float: right;">
-          <img src="plugin-loaded.png" border="0" style="" width="514" height="180"></div>
+        <img src="plugin-loaded.png" border="0" style="" width="514" height="180"></div>
       <h3>Plugin packages for additional LAMMPS packages</h3>
       <div align="justify">
-        As of LAMMPS version 23 June 2022, we have started to provide add-on installer
-        packages that contain LAMMPS packages as plugins.  Those are separate packages because either
-        their source code is not part of the LAMMPS distribution or uses and external library with
-        licensing terms that prohibits linking the package into the LAMMPS executable and library directly.
-        There are two variants of the plugin packages: one with support for MPI and one without.
-        The corresponding LAMMPS installer packages have the PLUGIN package included and are set up to automatically
-        load such plugins immediately at runtime as shown in the picture to the right.
+        As of LAMMPS version 23 June 2022, we have started to provide
+        add-on installer packages that contain LAMMPS packages as
+        plugins.  Those are separate packages because either their
+        source code is not part of the LAMMPS distribution or uses and
+        external library with licensing terms that prohibits linking the
+        package into the LAMMPS executable and library directly.  There
+        are two variants of the plugin packages: one with support for
+        MPI and one without.  The corresponding LAMMPS installer
+        packages have the PLUGIN package included and are set up to
+        automatically load such plugins immediately at runtime as shown
+        in the picture to the right.
       </div>
       <div align="justify">
         The following packages are currently available as plugin installer packages:
-      <ul>
-        <li><a href="https://docs.lammps.org/Packages_details.html#pkg-ml-pace" target="_blank">ML-PACE</a>
-        <li><a href="https://github.com/psaidi/AEAM" target="_blank">USER-AEAM</a>
-        <li><a href="https://sites.psu.edu/sinnott/software/" target="_blank">USER-REBOMOS</a>
-        <li><a href="https://vcsgc-lammps.materialsmodeling.org/" target="_blank">USER-VCSGC</a>
-      </ul>
+        <ul>
+          <li><a href="https://docs.lammps.org/Packages_details.html#pkg-ml-pace" target="_blank">ML-PACE</a>
+          <li><a href="https://github.com/psaidi/AEAM" target="_blank">USER-AEAM</a>
+          <li><a href="https://matsci.org/t/discrepency-beween-old-version-and-new-version/50014/5" target="_blank">USER-BFIELD</a>
+          <li><a href="https://sites.psu.edu/sinnott/software/" target="_blank">USER-REBOMOS</a>
+        </ul>
       </div>
       <hr width="100%">
       <div>
         <div style="display: inline; margin-right: 10px; margin-bottom: 5px; border: 5px; float: left;">
           <img src="python-logo.png" border="0" style="" width="96" height="96"></div>
-        The <a href="https://docs.lammps.org/Python_module.html" target="_blank">
-          LAMMPS Python module</a> (to call LAMMPS from
+
+        The <a href="https://docs.lammps.org/Python_module.html"
+               target="_blank"> LAMMPS Python module</a> (to call LAMMPS from
         Python) is included in <b>all</b> packages in a way, that it
         should work with a suitable Python installation of your own,
         since a LAMMPS shared library (i.e. a DLL file on Windows) is
         included.
         The <a href="https://docs.lammps.org/Packages_details.html#pkg-python"
-        target="_blank">PYTHON</a> package (to call Python from LAMMPS)
+               target="_blank">PYTHON</a> package (to call Python from LAMMPS)
         however, is only included in the installer package with Python
         in the name.  Those packages also include a full Python runtime
         environment with all standard Python modules and the NumPy
@@ -96,31 +104,37 @@
 
     <hr width="100%">
     <h3>Important Notes on Changes to the Installer packages</h3>
+    <p align="justify">
+      Starting with the 2 August 2023 stable release, we have reduced
+      the number of compiled variants.  All packages install at user
+      level. Only Microsoft MPI (MS-MPI) the only supported MPI
+      library.
+    </p>
+    <p align="justify">
+      As of LAMMPS version 17 February 2022, only 64-bit versions of the LAMMPS
+      installer packages will be built and provided. If you must have a 32-bit
+      version, you need to use an older version of LAMMPS or compile LAMMPS from
+      source.  Compiling LAMMPS on Windows with Visual Studio 2022
+      (<a href="https://visualstudio.microsoft.com/vs/community/">available
+        cost-free as Community Edition</a>) is now fully supported.
+    </p>
     <div align="justify">
       As of LAMMPS version 27 May 2021, the LAMMPS installer packages will detect
       if LAMMPS (version 27 May 2021 or later) has already been installed and will
-      offer to uninstall, in case it is. This should be independent from whether
+      offer to uninstall, in case it is.  This should be independent from whether
       it was 32-bit or 64-bit version and with or without MPI or Python.  Having
       multiple versions/variants of LAMMPS installed at the same time is no longer
       supported. Also, the name of the LAMMPS executable has been simplified to
       <u>lmp.exe</u> in all packages since there is no longer a need to
       differentiate between the MPI and non-MPI version.
     </div>
-    <p align="justify">
-      As of LAMMPS version 17 February 2022, only 64-bit versions of the LAMMPS
-      installer packages will be built and provided. If you must have a 32-bit
-      version, you need to use an older version of LAMMPS or compile LAMMPS from
-      source. Compiling LAMMPS on Windows with Visual Studio 2022
-      (<a href="https://visualstudio.microsoft.com/vs/community/">available
-      cost-free as Community Edition</a>) is supported.
-    </p>
 
     <hr width="100%">
     <h3>Some Notes on GPU Support</h3>
     <div align="justify">
-    <div style="display: inline; margin-right: 10px; margin-bottom: 5px; border: 5px; float: left;">
-      <img src="opencl_logo_75_75.png" border="0" style="" width="75" height="75">
-    </div>
+      <div style="display: inline; margin-right: 10px; margin-bottom: 5px; border: 5px; float: left;">
+        <img src="opencl_logo_75_75.png" border="0" style="" width="75" height="75">
+      </div>
       These Windows binaries include GPU acceleration via the <u>GPU</u> package.
       This is achieved through compiling the GPU package in OpenCL mode and linking
       to an <a href="https://www.khronos.org/opencl/" target="_blank">OpenCL</a>
@@ -163,7 +177,7 @@
       Windows without any additional setup.  This has been tested with
       the Python interpreters bundled with <i>Microsoft Visual Studio</i>
       and those downloaded from <a href="https://python.org" target="_blank">
-      python.org </a> but should be usable with any Python interpreter that
+        python.org </a> but should be usable with any Python interpreter that
       is for the same architecture (32-bit or 64-bit x86).</div><br>
     <div align="justify">
       This module is <u>always</u> included and the packages with a Python
@@ -173,20 +187,26 @@
     </div>
     <div style="clear:both;"></div>
     <hr width="100%">
+    <h3>LAMMPS GUI</h3>
+    <div style="display: inline; margin-left: 10px; margin-bottom: 5px; border: 5px; float: right;">
+      <a href="lammps-gui-macos.jpg"><img src="lammps-gui-macos.jpg" border="0" style="" width="362" height="237"></a>
+    </div>
+    <div align="justify">
+      Installer packages with GUI in the file name, include additionally the
+      <a href="https://docs.lammps.org/Tools.html#lammps-gui">LAMMPS GUI</a>.</div><br>
+    <div align="justify">
+      This is essentially a notepad like text editor for input files (with
+      syntax highlighting for LAMMPS input) that is linked to the LAMMPS library
+      so it can run LAMMPS inputs directly without a console window. The screen
+      output from the simulation is captured and shown in a separate log window.
+      After a run, it is also possible to create a snapshot image representing
+      the current state of the simulation.
+    </div>
     <h3>LAMMPS Shell</h3>
     <div align="justify">
       These Windows packages also include the
-      <a href="https://docs.lammps.org/Tools.html#lammps-shell">LAMMPS Shell</a/>,
+      <a href="https://docs.lammps.org/Tools.html#lammps-shell">LAMMPS Shell</a>,
       a customized LAMMPS executable enhanced for interactive use.
-    </div>
-    <div style="clear:both;"></div>
-    <hr width="100%">
-    <h3>Winget package manager support</h3>
-    <div align="justify">
-      Starting with version 23 June 2022 the non-MPI versions of the installer packages
-      are also available for Windows 10 and Windows 11 using the
-      <a href="https://github.com/microsoft/winget-cli" target="_blank">Winget Windows Package Manager</a>
-      for convenient installation, uninstallation, and updates from the command line.
     </div>
     <div style="clear:both;"></div>
     <hr width="100%">
@@ -195,100 +215,75 @@
       <img src="win-installer-screenshot.png" border="0" style="" width="246" height="191">
     </div>
     <div style="background-color: #e8e8f0;">
-      <div align="justify">
-        There are installer packages for 32-bit and 64-bit versions of Windows available.
-      </div>
-      <p align="justify">
-        As of LAMMPS version 17 February 2022, only 64-bit versions of the LAMMPS installer
-        packages will be built and provided. If you must have a 32-bit version, you need to
-        use an older version of LAMMPS.
+      <p align="justify">As of LAMMPS version 2 August 2023, the directory structure has been simplified
+        and the number of package variants reduced.
       </p>
-        <ul>
-          <li><a href="https://rpm.lammps.org/windows/">Latest stable versions</a></li>
-          <li><a href="https://rpm.lammps.org/windows/32bit/">32-bit Windows download area</a> with all available installer versions</li>
-          <li><a href="https://rpm.lammps.org/windows/64bit/">64-bit Windows download area</a> with all available installer versions</li>
-        </ul>
-        The respective download directory will contain installer
-        packages that are labeled with the date of the LAMMPS version
-        and packages labeled as <i>latest</i>.  It is usually
-        recommended to download and install the latest package.
-        Installer packages for plugins are also provided and follow
-        a similar naming scheme.
-        The other packages are provided in case there is a problem with it.
-        Download the installer executable suitable for your machine,
-        execute it, and follow the instructions in the dialogs.
-        Both kinds of packages contain:
-      </div>
       <ul>
-        <li><u>Either:</u> a regular multi-threaded LAMMPS executable called <strong><code>lmp</code></strong>.
-          This should <u>always</u> work.</li>
-
-        <li><u>Or:</u> a multi-threaded LAMMPS executable that also
-          supports parallel execution via MPI message passing. This
-          executable is called <strong><code>lmp</code></strong> and
-          requires installation of a suitable MPICH2 package to
-          work.</li>
-
-        <li>the LAMMPS manual in PDF format</li>
-        <li>the <a href="https://colvars.github.io/" target="_blank">colvars</a>
-          reference manual in PDF format</li>
-        <li>several additional PDF format guides for specific packages or styles</li>
-        <li>the potential files bundled with the LAMMPS source code</li>
-        <li>most of the example inputs, reference outputs and related files</li>
-        <li>the benchmark inputs and reference outputs</li>
-        <li>the tools <strong><code>binary2txt, chain, msi2lmp, abf_integrate,
-              createatoms, ocl_get_devices, lammps-shell, stl_bin2txt</code></strong></li>
+        <li><a href="https://rpm.lammps.org/windows/">Latest versions</a></li>
+        <li><a href="https://rpm.lammps.org/windows/legacy/">Legacy versions</a></li>
       </ul>
-
-      <div style="display: inline; margin-left: 10px; border: 5px; border-style: groove; float: right;">
-        <a href="dot_net_enable.png">
-           <img src="dot_net_enable.png" border="0" style="" width="208" height="185">
-        </a>
-      </div>
-      <p align="justify">The executables will run in serial when executed directly.
-        Please see below for instructions on how to perform parallel runs.</p>
-      <h3>MPI Support for LAMMPS on Windows</h3>
-      <p align="justify">
-        To use the MPI based parallelism in the provided installer packages, you also need to install
-        a specific version of <a href="https://www.mpich.org/" target="_blank">MPICH2 from Argonne lab</a>.
-        This is a very old version of MPICH for Windows but it is required for these binaries.
-        <div>
-        For 32-bit Windows you have to download and install
-          <a href="https://www.mpich.org/static/downloads/1.4.1p1/mpich2-1.4.1p1-win-ia32.msi">
-            mpich2-1.4.1p1-win-ia32.msi</a>. This is the latest available binary 32-bit
-          MPI package compatible with the GNU cross compilers used to compile LAMMPS.
-        Correspondingly, for 64-bit Windows you have to download and install
-          <a href="https://www.mpich.org/static/downloads/1.4.1p1/mpich2-1.4.1p1-win-x86-64.msi">
-            mpich2-1.4.1p1-win-x86-64.msi</a>. This is the latest available binary 64-bit
-          MPI package compatible with the GNU cross compilers used to compile LAMMPS.
-          </div>
-      </p>
-      <div style="background-color: #e8e8f0;">
-        <p>For Windows 10 and 11 it may be required to first enable support for .NET 3.5 and older
-           in the Windows settings dialog for optional Windows features of the Control Panel.
-        </p>
-      </div>
-     </div>
-    <p>
-      There are more recent versions of MPICH ported to Windows by Microsoft, but they are not
-      compatible with the packages here. Also it is not possible to use those packages with the
-      GNU cross-compilers.  Instead to use these newer MPI packages you would have to compile
-      LAMMPS from source on Windows yourself using the Microsoft Visual Studio 2022 software.
-      We do not provide precompiled packages created natively on Windows because fewer packages
-      support it and the process of building such packages on Windows has not been sufficiently
-      automated and tested.
-    </p>
-    <hr width="100%">
-    <h2>Installing LAMMPS globally on Windows with administrator privilege</h2>
-    <div align="justify">
-      The installer packages listed above will install LAMMPS into a user's
-      personal storage area and thus it cannot be used by all users. This behavior
-      was changed with the stable release of LAMMPS in October 2020.
-      Installer packages from previous LAMMPS versions and current versions that
-      require administrator privilege to be installed can be found
-      <a href="https://rpm.lammps.org/windows/admin/">their own download area</a>.
-      The content is otherwise the same, only the packaging is different.
+      The respective download directory will contain installer
+      packages that are labeled with the date of the LAMMPS version
+      and packages labeled as <i>latest</i> or <i>stable</i>.  It is usually
+      recommended to download and install a <i>latest</i> package to have the
+      latest features and functionality.
+      Installer packages for <a href="https://github.com/lammps/lammps-plugins" target="_blank">
+        add-on plugins</a> are also provided and follow a similar naming scheme.
+      Download the installer executable suitable for your machine,
+      execute it, and follow the instructions in the dialogs.
+      Both kinds of packages contain:
     </div>
+    <ul>
+      <li><u>Either:</u> a regular multi-threaded LAMMPS executable
+        called <strong><code>lmp</code></strong>.  This
+        should <u>always</u> work.</li>
+
+      <li><u>Or:</u> a multi-threaded LAMMPS executable that <b>also</b>
+        supports parallel execution via MPI message passing. This
+        executable is called <strong><code>lmp</code></strong> and
+        requires installation of a suitable MS-MPI package to
+        work.</li>
+
+      <li>the <a href="https://docs.lammps.org/Tools.html#lammps-shell">LAMMPS Shell</a></li>
+      <li>the <a href="https://docs.lammps.org/Tools.html#lammps-gui">LAMMPS GUI</a>, if indicated by the filename</li>
+      <li>the LAMMPS manual in PDF format</li>
+      <li>the <a href="https://colvars.github.io/" target="_blank">colvars</a>
+        reference manual in PDF format</li>
+      <li>several additional PDF format guides for specific packages or styles</li>
+      <li>the potential files bundled with the LAMMPS source code</li>
+      <li>most of the example inputs, reference outputs and related files</li>
+      <li>the benchmark inputs and reference outputs</li>
+      <li>the tools <strong><code>binary2txt, chain, msi2lmp, plumed, abf_integrate,
+            createatoms, ocl_get_devices, phana, stl_bin2txt</code></strong></li>
+    </ul>
+
+    <div style="display: inline; margin-left: 10px; border: 5px; border-style: groove; float: right;">
+      <a href="dot_net_enable.png">
+        <img src="dot_net_enable.png" border="0" style="" width="208" height="185">
+      </a>
+    </div>
+    <p align="justify">The executables will run in serial when executed directly.
+      Please see below for instructions on how to perform parallel runs.</p>
+
+    <div style="clear:both;"></div>
+    <hr width="100%">
+
+    <h3>MPI Support for LAMMPS on Windows</h3>
+    <p align="justify">
+      To use the MPI based parallelism in the provided installer packages, you also need to install
+      Microsoft MPI (MS-MPI) that can be downloaded from
+      <a href="https://www.microsoft.com/en-us/download/details.aspx?id=100593" target="_blank">the Microsoft home page</a>.
+      You only need to download and execute the <t>msmpisetup.exe</t> installer. This contains
+      the runtime support. The additional download offered, <t>msmpisdk.msi</t> contains the
+      files required to <b>compile</b> LAMMPS with MPI and Visual C++ from source code.
+      If you would prefer to compile LAMMPS from source, you can follow the
+      <a href="https://docs.lammps.org/Build_windows.html#msvc" target="_blank">instructions
+      in the LAMMPS manual</a> for compiling LAMMPS with Visual Studio.
+    </p>
+    <p align="justify">
+      Older versions of LAMMPS binaries were compiled using a very old MPICH version from Argonne.
+      As of the 2 August 20233 version, this is no longer supported.
+    </p>
     <hr width="100%">
 
     <h2>Running LAMMPS on Windows</h2>
@@ -307,6 +302,12 @@
       is preset to the folder with the bundled manybody potential files,
       so they do not need to be copied into the respective working directory.
     </p>
+
+    <p align="justify")
+       As of LAMMPS version 2 August 2023, we also offer a LAMMPS GUI, which
+       is just a notepad like text editor with the LAMMPS library included.
+       Thus it can run the edited file directly without using a console.
+       This is primarily intended as a convenience to beginners.</p>
 
     <h3>Serial Execution</h3>
     <div style="display: inline; margin-left: 10px; border: 5px; border-style: groove; float: right;">
@@ -346,25 +347,14 @@
     <p align="justify">
       Only the executable from the LAMMPS-MPI packages supports parallel execution
       via MPI (which can be combined with OpenMP multi-threading). For that you also
-      need to install a specific version of MPICH2 from Argonne lab linked above.
-      The installer does not contain it and does not check for it. Please note, that
-      you need to download a very specific (and rather old) version of the MPICH
-      package, as this is what LAMMPS was compiled with and the latest available
-      Windows binary version compatible with the GNU compilers used to compile LAMMPS.
+      need to install MS-MPI from Microssoft linked above.
     </p>
 
     <p align="justify">
-      After the installation of the MPICH software, it needs to be integrated into the system.
-      For this you need to start a <i>Command Prompt</i> in <i>Administrator Mode</i> (right
-      click on the icon and select it). Change into the MPICH2 installation directory, then
-      into the subdirectory <code>bin</code> and execute
-      <strong><code>smpd.exe -install</code></strong>.
-    </p>
-
-    <p align="justify">
-      MPI parallel executables have to be launched with <strong><code>mpiexec -localonly # lmp ...</code></strong>
-      or <strong><code>mpiexec -np # lmp ...</code></strong> with "#" being then number
-      of parallel processes to start. For the latter you may be asked for your password.
+      MPI parallel executables have to be launched
+      with <strong><code>mpiexec -localonly # lmp ...</code></strong>
+      or <strong><code>mpiexec -np # lmp ...</code></strong> with "#"
+      being then number of parallel processes to start.
     </p>
     <p align="justify">
 
@@ -374,10 +364,10 @@
       after a certain amount of output has accumulated. This is done for
       efficiency reasons.  Multi-threaded parallel or serial runs are
       not affected.  Also when running under mpiexec, you should not use
-      multi-threading since MPICH restricts processes to a single
+      multi-threading, since MPICH restricts processes to a single
       physical CPU thus it will run less efficient. </p>
     <hr>
-    <p>Last modified: Sun Sep 18 14:24:45 UTC 2022 by akohlmey</p>
+    <p>Last modified: Fri Aug  4 06:02:41 UTC 2023 by akohlmey</p>
   </body>
 </html>
 <!-- Local Variables: -->

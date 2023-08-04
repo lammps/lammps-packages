@@ -206,6 +206,7 @@ Section "${LAMMPS}" SecLammps
   File ${MINGW}/libstdc++-6.dll
   File ${MINGW}/libtermcap-0.dll
   File ${MINGW}/libwinpthread-1.dll
+  File ${MINGW}/libbz2-1.dll
   File ${MINGW}/libzstd.dll
   File ${MINGW}/zlib1.dll
   File ${MINGW}/Qt5Core.dll
@@ -213,6 +214,7 @@ Section "${LAMMPS}" SecLammps
   File ${MINGW}/Qt5Widgets.dll
   File ${MINGW}/iconv.dll
   File ${MINGW}/libharfbuzz-0.dll
+  File ${MINGW}/libpcre2-8-0.dll
   File ${MINGW}/libpcre2-16-0.dll
   File ${MINGW}/libfreetype-6.dll
   File ${MINGW}/libglib-2.0-0.dll

@@ -8,5 +8,5 @@ fi
 for m in no ms; do \
     python3 cmake-win-on-linux.py -v yes -r "$1" -p ${m} -t omp -b 64 -a no
     python3 cmake-win-on-linux.py -v yes -r "$1" -p ${m} -t omp -b 64 -a no -y yes
-    python3 cmake-win-on-linux.py -v yes -r "$1" -p ${m} -t omp -b 64 -a no -u yes
 done
+python3 cmake-win-on-linux.py -v yes -r "$1" -p no -t omp -b 64 -a no -u yes

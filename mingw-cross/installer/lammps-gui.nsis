@@ -80,8 +80,8 @@ FunctionEnd
 
 !define StrContains '!insertmacro "_StrContainsConstructor"'
 
-!define LAMMPS "LAMMPS ${BIT}-bit ${VERSION}"
-OutFile "../LAMMPS-${BIT}bit-${VERSION}.exe"
+!define LAMMPS "LAMMPS ${BIT}-bit ${VERSION} with GUI"
+OutFile "../LAMMPS-${BIT}bit-GUI-${VERSION}.exe"
 
 Name "${LAMMPS}"
 InstallDir "$LOCALAPPDATA\${LAMMPS}"
@@ -182,6 +182,11 @@ Section "${LAMMPS}" SecLammps
   CreateDirectory "$INSTDIR\frc_files"
   CreateDirectory "$INSTDIR\patches"
   CreateDirectory "$INSTDIR\plugins"
+  CreateDirectory "$INSTDIR\qt5plugins"
+  CreateDirectory "$INSTDIR\qt5plugins\imageformats"
+  CreateDirectory "$INSTDIR\qt5plugins\platforms"
+  CreateDirectory "$INSTDIR\qt5plugins\styles"
+  CreateDirectory "$INSTDIR\qt5plugins"
 
   File License.txt
   File README.txt
@@ -203,9 +208,23 @@ Section "${LAMMPS}" SecLammps
   File ${MINGW}/libwinpthread-1.dll
   File ${MINGW}/libzstd.dll
   File ${MINGW}/zlib1.dll
-
+  File ${MINGW}/Qt5Core.dll
+  File ${MINGW}/Qt5Gui.dll
+  File ${MINGW}/Qt5Widgets.dll
+  
   File *.exe
   File *.dll
+  File qt.conf
+
+  # install Qt5 plugins
+  SetOutPath "$INSTDIR\qt5plugins\platforms"
+  File ${MINGW}/../lib/qt5/plugins/platforms/qwindows.dll
+  SetOutPath "$INSTDIR\qt5plugins\imageformats"
+  File ${MINGW}/../lib/qt5/plugins/imageformats/qgif.dll
+  File ${MINGW}/../lib/qt5/plugins/imageformats/qico.dll
+  File ${MINGW}/../lib/qt5/plugins/imageformats/qjpeg.dll
+  SetOutPath "$INSTDIR\qt5plugins\styles"
+  File ${MINGW}/../lib/qt5/plugins/styles/qwindowsvistastyle.dll
 
   SetOutPath "$INSTDIR\Doc"
   File *.pdf
@@ -233,7 +252,7 @@ Section "${LAMMPS}" SecLammps
   File plugins/helloplugin.so
 
   SetOutPath "$INSTDIR"
-  ${registerExtension} "$INSTDIR\bin\lammps-shell.exe" ".lmp" "LAMMPS Input File"
+  ${registerExtension} "$INSTDIR\bin\lammps-gui.exe" ".lmp" "LAMMPS Input File"
 
   # Register Application and its uninstaller
   WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\LAMMPS" \
@@ -282,6 +301,8 @@ Section "${LAMMPS}" SecLammps
   SetOutPath "%HOMEDRIVE%%HOMEPATH%\Documents"
   CreateShortCut  "$SMPROGRAMS\${LAMMPS}\LAMMPS-Shell.lnk"          "$WINDIR\system32\cmd.exe"       \
                   '/c "$INSTDIR\Bin\lammps-shell.exe"' "$INSTDIR\lammps.ico"  "" SW_SHOWNORMAL "" "The LAMMPS Shell"
+  CreateShortCut  "$SMPROGRAMS\${LAMMPS}\LAMMPS-GUI.lnk"            "$INSTDIR\Bin\lammps-gui.exe"       \
+                  '' "$INSTDIR\lammps.ico"  "" SW_SHOWNORMAL "" "The LAMMPS GUI"
 SectionEnd
 
 function un.onInit
@@ -331,6 +352,7 @@ Section "Uninstall"
   RMDir /r /REBOOTOK "$INSTDIR\frc_files"
   RMDir /r /REBOOTOK "$INSTDIR\patches"
   RMDir /r /REBOOTOK "$INSTDIR\plugins"
+  RMDir /r /REBOOTOK "$INSTDIR\qt5plugins"
   RMDir /REBOOTOK "$INSTDIR"
 SectionEnd
 

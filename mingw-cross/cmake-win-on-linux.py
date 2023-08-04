@@ -75,6 +75,7 @@ homedir, exename = os.path.split(os.path.abspath(inspect.getsourcefile(lambda:0)
 bitflag = '64'
 parflag = 'no'
 pythonflag  = False
+guiflag = False
 thrflag = 'omp'
 revflag = 'stable'
 verbose = False
@@ -101,6 +102,9 @@ Flags (all flags are optional, defaults listed below):
   -y : select python support (default value: %s)
     -y yes      : build with python included
     -y no       : build without python
+  -u : select whether to include the LAMMPS GUI (default value: %s)
+    -u yes      : build includes LAMMPS GUI
+    -u no       : build does not include LAMMPS GUI
   -r : select LAMMPS source revision to build (default value: %s)
     -r stable   : download and build the latest stable LAMMPS version
     -r release  : download and build the latest patch release LAMMPS version
@@ -123,7 +127,7 @@ Flags (all flags are optional, defaults listed below):
 
 Example:
   python %s -r release -t omp -p mpi
-""" % (exename,bitflag,numcpus,parflag,thrflag,pythonflag,revflag,gitdir,exename)
+""" % (exename,bitflag,numcpus,parflag,thrflag,pythonflag,guiflag,revflag,gitdir,exename)
 
 # parse arguments
 
@@ -145,6 +149,8 @@ while i < argc:
         thrflag = argv[i+1]
     elif argv[i] == '-y':
         pythonflag = getbool(argv[i+1],"python")
+    elif argv[i] == '-u':
+        guiflag = getbool(argv[i+1],"gui")
     elif argv[i] == '-r':
         revflag = argv[i+1]
     elif argv[i] == '-v':
@@ -170,6 +176,8 @@ if parflag != 'no' and parflag != 'mpi' and parflag != 'ms':
     error("Unsupported parallel flag %s" % parflag)
 if thrflag != 'no' and thrflag != 'omp':
     error("Unsupported threading flag %s" % thrflag)
+if pythonflag and guiflag:
+    error("May only include either Python or LAMMPS GUI")
 
 # test for valid revision name format: branch names, release tags, or commit hashes
 rev1 = re.compile("^(stable|release|develop|maintenance)$")
@@ -184,6 +192,8 @@ if adminflag:
 else:
     if pythonflag:
         builddir = os.path.join(fullpath('.'),"tmp-%s-%s-%s-%s-python" % (bitflag,parflag,thrflag,revflag))
+    elif guiflag:
+        builddir = os.path.join(fullpath('.'),"tmp-%s-%s-%s-%s-gui" % (bitflag,parflag,thrflag,revflag))
     elif msixflag:
         builddir = os.path.join(fullpath('.'),"tmp-%s-%s-%s-%s-msix" % (bitflag,parflag,thrflag,revflag))
     else:
@@ -270,6 +280,8 @@ if bitflag == '64':
 cmd += " -DBUILD_SHARED_LIBS=on -DBUILD_MPI=%s -DBUILD_OMP=%s" % (mpiflag,ompflag)
 if parflag == 'ms':
   cmd += " -DUSE_MSMPI=on"
+if guiflag == 'yes':
+  cmd += " -DBUILD_LAMMPS_GUI=on"
 cmd += " -DWITH_GZIP=on -DWITH_FFMPEG=on -DLAMMPS_EXCEPTIONS=on"
 cmd += " -DINTEL_LRT_MODE=c++11 -DBUILD_LAMMPS_SHELL=on"
 cmd += " -DCMAKE_CXX_COMPILER_LAUNCHER=ccache"
@@ -279,6 +291,12 @@ if pythonflag: cmd += " -DPKG_PYTHON=yes"
 print("Running: ",cmd)
 txt = system(cmd)
 if verbose: print(txt)
+
+# create qt.conf file
+if guiflag:
+  with open("qt.conf", "w") as qtconf:
+    qtconf.write("[Paths]\nPlugins = ../qt5plugins\n")
+    qtconf.close()
 
 print("Compiling")
 system("cmake --build . --parallel 8")
@@ -300,7 +318,7 @@ txt = system("cmake --build plugins")
 if verbose: print(txt)
 print("Done")
 
-if not adminflag and not pythonflag and not msixflag:
+if not adminflag and not pythonflag and not msixflag and not guiflag:
   print("Configuring pace plugin build with CMake")
   cmd = "mingw%s-cmake -D CMAKE_BUILD_TYPE=Release" % bitflag
   cmd += " -S %s/examples/PACKAGES/pace/plugin -B paceplugin" % gitdir
@@ -403,6 +421,8 @@ print("Configuring and building installer")
 os.chdir(builddir)
 if pythonflag:
     nsisfile = os.path.join(homedir,"installer","lammps-python.nsis")
+elif guiflag:
+    nsisfile = os.path.join(homedir,"installer","lammps-gui.nsis")
 elif adminflag:
     nsisfile = os.path.join(homedir,"installer","lammps-admin.nsis")
 elif parflag == 'ms':

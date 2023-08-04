@@ -211,7 +211,10 @@ Section "${LAMMPS}" SecLammps
   File ${MINGW}/Qt5Core.dll
   File ${MINGW}/Qt5Gui.dll
   File ${MINGW}/Qt5Widgets.dll
-  
+  File ${MINGW}/iconv.dll
+  File ${MINGW}/libharfbuzz-0.dll
+  File ${MINGW}/libpcre2-16-0.dll
+
   File *.exe
   File *.dll
   File qt.conf

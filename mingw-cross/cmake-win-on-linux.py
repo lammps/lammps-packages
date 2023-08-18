@@ -281,7 +281,7 @@ cmd += " -DBUILD_SHARED_LIBS=on -DBUILD_MPI=%s -DBUILD_OMP=%s" % (mpiflag,ompfla
 if parflag == 'ms':
   cmd += " -DUSE_MSMPI=on"
 if guiflag:
-  cmd += " -DBUILD_LAMMPS_GUI=on -DQt5_DIR=/usr/x86_64-w64-mingw32/sys-root/mingw/lib/cmake/Qt5"
+  cmd += " -DBUILD_LAMMPS_GUI=on -DDOWNLOAD_POTENTIALS=off -DQt5_DIR=/usr/x86_64-w64-mingw32/sys-root/mingw/lib/cmake/Qt5"
 cmd += " -DWITH_GZIP=on -DWITH_FFMPEG=on -DLAMMPS_EXCEPTIONS=on"
 cmd += " -DINTEL_LRT_MODE=c++11 -DBUILD_LAMMPS_SHELL=on"
 cmd += " -DCMAKE_CXX_COMPILER_LAUNCHER=ccache"
@@ -370,11 +370,11 @@ print("Done")
 # switch back to build folder and copy/process files for inclusion in installer
 print("Collect and convert files for the Installer package")
 os.chdir(builddir)
-shutil.copytree(os.path.join(gitdir,"examples"),os.path.join(builddir,"examples"),symlinks=False)
-shutil.copytree(os.path.join(gitdir,"bench"),os.path.join(builddir,"bench"),symlinks=False)
-shutil.copytree(os.path.join(gitdir,"tools"),os.path.join(builddir,"tools"),symlinks=False)
-shutil.copytree(os.path.join(gitdir,"python","lammps"),os.path.join(builddir,"python","lammps"),symlinks=False)
-shutil.copytree(os.path.join(gitdir,"potentials"),os.path.join(builddir,"potentials"),symlinks=False)
+shutil.copytree(os.path.join(gitdir,"examples"),os.path.join(builddir,"examples"),symlinks=False, ignore_dangling_symlinks=True)
+shutil.copytree(os.path.join(gitdir,"bench"),os.path.join(builddir,"bench"),symlinks=False, ignore_dangling_symlinks=False)
+shutil.copytree(os.path.join(gitdir,"tools"),os.path.join(builddir,"tools"),symlinks=False, ignore_dangling_symlinks=False)
+shutil.copytree(os.path.join(gitdir,"python","lammps"),os.path.join(builddir,"python","lammps"),symlinks=False,ignore_dangling_symlinks=False)
+shutil.copytree(os.path.join(gitdir,"potentials"),os.path.join(builddir,"potentials"),symlinks=False,ignore_dangling_symlinks=False)
 shutil.copy(os.path.join(gitdir,"README"),os.path.join(builddir,"README.txt"))
 shutil.copy(os.path.join(gitdir,"LICENSE"),os.path.join(builddir,"LICENSE.txt"))
 shutil.copy(os.path.join(gitdir,"doc","src","PDF","colvars-refman-lammps.pdf"),os.path.join(builddir,"Colvars-Manual.pdf"))

@@ -237,7 +237,7 @@ Section "${LAMMPS}" SecLammps
   WriteUninstaller "$INSTDIR\Uninstall.exe"
 
   # Launch LAMMPS shell in the user's personal documents folder (not elegant or clean but seems to work)
-  SetOutPath "%HOMEDRIVE%%HOMEPATH%\Documents"
+  SetOutPath "$DOCUMENTS"
   CreateShortCut  "$SMPROGRAMS\${LAMMPS}\LAMMPS-Shell.lnk"          "$WINDIR\system32\cmd.exe"       \
                   '/c "$INSTDIR\Bin\lammps-shell.exe"' "$INSTDIR\lammps.ico"  "" SW_SHOWNORMAL "" "The LAMMPS Shell"
 SectionEnd

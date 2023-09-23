@@ -55,7 +55,7 @@
       <hr width="100%">
       <div style="display: inline; margin-left: 10px; margin-bottom: 5px; margin-top: 10px; border: 5px; float: right;">
         <img src="plugin-loaded.png" border="0" style="" width="514" height="180"></div>
-      <h3>Plugin packages for additional LAMMPS packages</h3>
+      <h3>Plugin Packages for Additional LAMMPS Packages</h3>
       <div align="justify">
         As of LAMMPS version 23 June 2022, we have started to provide
         add-on installer packages that contain LAMMPS packages as
@@ -102,19 +102,38 @@
     </p>
 
     <hr width="100%">
-    <h3>Important Notes on Changes to the Installer packages</h3>
+    <h3>Important Note on Microsoft Defender and Other Virus Scanners Reporting Trojans or Viruses</h3>
+    <p align="justify">
+      Sometimes virus scanners will report that the LAMMPS installer packages
+      <a href="https://nsis.sourceforge.io/NSIS_False_Positives" target="_blank">contain a Trojan or Virus</a>.
+      If you downloaded the installer from this website and get a match for the SHA-256 checksums, then
+      the report is most likely a false positive.  This can happen with installer packages like the ones
+      provided here, since they are applications with interpreted byte code that triggers the false positive.
+      The installer packages are created with a cross-compiler on a protected Linux machine using authenticated
+      development tools, so it is close to impossible to produce infected packages.
+    </p>
+    <p align="justify">If you come across such a case, please
+      <a href="https://nsis.sourceforge.io/NSIS_False_Positives#Where_to_report_false_positives" target="_blank">report
+        the false positive to the antivirus vendor</a>.  You can usually then tell the virus scanner software to
+      ignore the virus report and execute or restore the installer package anyway and install LAMMPS.  However,
+      we only recommend to do this, if you downloaded the package from the <code>lammps.org</code> domain and have
+      verified the checksum to make certain you have an unmodified file.  We cannot prevent malicious people from
+      building LAMMPS installer packages that *do* contain malware, however unlikely it may seem.
+    </p>
+
+    <hr width="100%">
+    <h3>Important Notes on Changes to the Installer Packages</h3>
     <p align="justify">
       Starting with the 2 August 2023 stable release, we have reduced
       the number of compiled variants.  All packages install at user
-      level. Only Microsoft MPI (MS-MPI) the only supported MPI
-      library.
+      level. Microsoft MPI (MS-MPI) is the only supported MPI library.
     </p>
     <p align="justify">
       As of LAMMPS version 17 February 2022, only 64-bit versions of the LAMMPS
       installer packages will be built and provided. If you must have a 32-bit
       version, you need to use an older version of LAMMPS or compile LAMMPS from
       source.  Compiling LAMMPS on Windows with Visual Studio 2022
-      (<a href="https://visualstudio.microsoft.com/vs/community/">available
+      (<a href="https://visualstudio.microsoft.com/vs/community/" target="_blank">available
         cost-free as Community Edition</a>) is now fully supported.
     </p>
     <div align="justify">
@@ -366,7 +385,7 @@
       multi-threading, since MPICH restricts processes to a single
       physical CPU thus it will run less efficient. </p>
     <hr>
-    <p>Last modified: Fri Aug  4 06:02:41 UTC 2023 by akohlmey</p>
+    <p>Last modified: Sat Sep 23 20:06:04 UTC 2023 by akohlmey</p>
   </body>
 </html>
 <!-- Local Variables: -->

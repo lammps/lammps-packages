@@ -283,7 +283,7 @@ if parflag == 'ms':
 if guiflag:
   cmd += " -DBUILD_LAMMPS_GUI=on -DDOWNLOAD_POTENTIALS=off -DQt5_DIR=/usr/x86_64-w64-mingw32/sys-root/mingw/lib/cmake/Qt5"
 cmd += " -DWITH_GZIP=on -DWITH_FFMPEG=on -DLAMMPS_EXCEPTIONS=on"
-cmd += " -DINTEL_LRT_MODE=c++11 -DBUILD_LAMMPS_SHELL=on"
+cmd += " -DPKG_INTEL=no -DBUILD_LAMMPS_SHELL=on"
 cmd += " -DCMAKE_CXX_COMPILER_LAUNCHER=ccache"
 cmd += " -DPKG_PLUGIN=yes -DPKG_PLUMED=yes"
 if pythonflag: cmd += " -DPKG_PYTHON=yes"

@@ -58,6 +58,13 @@
         package are small since the installer is not built with the
         Intel compilers.
       </div>
+      <div>
+        <br>
+        Starting with the 17 April 2024 version of LAMMPS the USER-REBOMOS
+        plugin installer is no longer created.  The corresponding pair style
+        has been improved, documented, and added to the MANYBODY package of
+        the regular LAMMPS distribution.
+      </div>
       <hr width="100%">
       <div style="display: inline; margin-left: 10px; margin-bottom: 5px; margin-top: 10px; border: 5px; float: right;">
         <img src="plugin-loaded.png" border="0" style="" width="514" height="180"></div>
@@ -81,7 +88,7 @@
           <li><a href="https://docs.lammps.org/Packages_details.html#pkg-ml-pace" target="_blank">ML-PACE</a>
           <li><a href="https://github.com/psaidi/AEAM" target="_blank">USER-AEAM</a>
           <li><a href="https://matsci.org/t/discrepency-beween-old-version-and-new-version/50014/5" target="_blank">USER-BFIELD</a>
-          <li><a href="https://sites.psu.edu/sinnott/software/" target="_blank">USER-REBOMOS</a>
+          <li><a href="https://sites.psu.edu/sinnott/software/" target="_blank">USER-REBOMOS</a> (only for LAMMPS versions before 17 April 2024)
         </ul>
       </div>
       <hr width="100%">
@@ -381,7 +388,6 @@
       being then number of parallel processes to start.
     </p>
     <p align="justify">
-
       <u><i>Known Issues:</i></u> while running in MPI parallel mode any
       output to the screen is block buffered and not line buffered as
       usual. That is, output will not show up immediately, but only
@@ -391,7 +397,7 @@
       multi-threading, since MPICH restricts processes to a single
       physical CPU thus it will run less efficient. </p>
     <hr>
-    <p>Last modified: Sat Sep 23 20:06:04 UTC 2023 by akohlmey</p>
+    <p>Last modified: Wed Apr 17 23:05:44 UTC 2024 by akohlmey</p>
   </body>
 </html>
 <!-- Local Variables: -->

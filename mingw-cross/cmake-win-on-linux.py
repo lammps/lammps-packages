@@ -432,7 +432,7 @@ if verbose: print(txt)
 txt = system('for f in $(find tools bench examples potentials python -name README -print); do  mv -v $f $f.txt; done')
 if verbose: print(txt)
 # mass rename in.<name> to in.<name>.lmp
-txt = system('for f in $(find bench examples -name in.\* -print); do  mv -v $f $f.lmp; done')
+txt = system('for f in $(find bench examples -name in.\\* -print); do  mv -v $f $f.lmp; done')
 if verbose: print(txt)
 print("Done")
 

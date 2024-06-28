@@ -180,7 +180,6 @@ Section "${LAMMPS}" SecLammps
   CreateDirectory "$INSTDIR\Potentials"
   CreateDirectory "$INSTDIR\Python"
   CreateDirectory "$INSTDIR\frc_files"
-  CreateDirectory "$INSTDIR\patches"
   CreateDirectory "$INSTDIR\plugins"
   CreateDirectory "$INSTDIR\qt5plugins"
   CreateDirectory "$INSTDIR\qt5plugins\imageformats"
@@ -248,9 +247,6 @@ Section "${LAMMPS}" SecLammps
   File /oname=README-msi2lmp.txt tools/msi2lmp/README.txt
   File /r tools/msi2lmp/frc_files/*
 
-  SetOutPath "$INSTDIR\patches"
-  File /r patches/*
-
   SetOutPath "$INSTDIR\Benchmarks"
   File /r /x log.*.4 bench/*
 
@@ -294,8 +290,6 @@ Section "${LAMMPS}" SecLammps
   EnVar::AddValue "LAMMPS_POTENTIALS" "$INSTDIR\Potentials"
   # add msi2lmp force fields
   EnVar::AddValue "MSI2LMP_LIBRARY" "$INSTDIR\frc_files"
-  # add plumed2 patch files
-  EnVar::AddValue "PLUMED_ROOT" "$INSTDIR"
   # add LAMMPS python module to Python search path
   EnVar::AddValue "PYTHONPATH" "$INSTDIR\Python"
   # add LAMMPS plugin folder to plugin search path
@@ -338,8 +332,6 @@ Section "Uninstall"
   EnVar::Delete "LAMMPS_POTENTIALS"
   # remove msi2lmp force field variable
   EnVar::Delete "MSI2LMP_LIBRARY"
-  # remove plumed patch environment
-  EnVar::Delete "PLUMED_ROOT"
   # remove LAMMPS python module from search path
   EnVar::DeleteValue "PYTHONPATH" "$INSTDIR\Python"
   # remove LAMMPS bundled plugins from search path
@@ -359,7 +351,6 @@ Section "Uninstall"
   RMDir /r /REBOOTOK "$INSTDIR\Potentials"
   RMDir /r /REBOOTOK "$INSTDIR\Python"
   RMDir /r /REBOOTOK "$INSTDIR\frc_files"
-  RMDir /r /REBOOTOK "$INSTDIR\patches"
   RMDir /r /REBOOTOK "$INSTDIR\plugins"
   RMDir /r /REBOOTOK "$INSTDIR\qt5plugins"
   RMDir /REBOOTOK "$INSTDIR"

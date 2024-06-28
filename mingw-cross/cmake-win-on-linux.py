@@ -285,7 +285,7 @@ if guiflag:
 cmd += " -DWITH_GZIP=on -DWITH_FFMPEG=on -DLAMMPS_EXCEPTIONS=on"
 cmd += " -DPKG_INTEL=no -DBUILD_LAMMPS_SHELL=on"
 cmd += " -DCMAKE_CXX_COMPILER_LAUNCHER=ccache"
-cmd += " -DPKG_PLUGIN=yes -DPKG_PLUMED=yes"
+cmd += " -DPKG_PLUGIN=yes"
 if pythonflag: cmd += " -DPKG_PYTHON=yes"
 
 print("Running: ",cmd)
@@ -335,6 +335,25 @@ if not adminflag and not pythonflag and not msixflag and not guiflag:
   txt = system("cmake --build paceplugin --target package")
   if verbose: print(txt)
   for exe in glob.glob('paceplugin/LAMMPS*plugin*.exe'):
+    shutil.move(exe,os.path.join('..',os.path.basename(exe)))
+  print("Done")
+
+  print("Configuring plumed plugin build with CMake")
+  cmd = "mingw%s-cmake -D CMAKE_BUILD_TYPE=Release" % bitflag
+  cmd += " -S %s/examples/PACKAGES/plumed/plugin -B plumedplugin" % gitdir
+  cmd += " -DBUILD_SHARED_LIBS=on -DBUILD_MPI=%s -DBUILD_OMP=%s" % (mpiflag,ompflag)
+  cmd += " -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DLAMMPS_SOURCE_DIR=%s/src" % gitdir
+  if parflag == 'ms': cmd += " -DUSE_MSMPI=on"
+
+  print("Running: ",cmd)
+  txt = system(cmd)
+  if verbose: print(txt)
+  print("Done")
+
+  print("Compiling and building installer")
+  txt = system("cmake --build plumedplugin --target package")
+  if verbose: print(txt)
+  for exe in glob.glob('plumedplugin/LAMMPS*plugin*.exe'):
     shutil.move(exe,os.path.join('..',os.path.basename(exe)))
   print("Done")
 

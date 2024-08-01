@@ -179,7 +179,6 @@ Section "${LAMMPS}" SecLammps
   File /r /x __pycache__ /x *.pyc python/lammps
 
   SetOutPath "$INSTDIR"
-  ${registerExtension} "$INSTDIR\bin\lammps-shell.exe" ".lmp" "LAMMPS Input File"
 
   # Register Application and its uninstaller
   WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\LAMMPS" \
@@ -221,11 +220,6 @@ Section "${LAMMPS}" SecLammps
   EnVar::AddValue LAMMPSHOME "$INSTDIR"
 
   WriteUninstaller "$INSTDIR\Uninstall.exe"
-
-  # Launch LAMMPS shell in the user's personal documents folder (not elegant or clean but seems to work)
-  SetOutPath "$DOCUMENTS"
-  CreateShortCut  "$SMPROGRAMS\${LAMMPS}\LAMMPS-Shell.lnk"          "$WINDIR\system32\cmd.exe"       \
-                  '/c "$INSTDIR\Bin\lammps-shell.exe"' "$INSTDIR\lammps.ico"  "" SW_SHOWNORMAL "" "The LAMMPS Shell"
 SectionEnd
 
 function un.onInit

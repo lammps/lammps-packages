@@ -166,6 +166,11 @@ Section "${LAMMPS}" SecLammps
   File ${MINGW}/libzstd.dll
   File ${MINGW}/tcl86.dll
   File ${MINGW}/tk86.dll
+  File ${MINGW}/libcurl-4.dll
+  File ${MINGW}/libssh2-1.dll
+  File ${MINGW}/libidn2-0.dll
+  File ${MINGW}/libcrypto-3-x64.dll
+  File ${MINGW}/libssl-3-x64.dll
   File ${MINGW}/zlib1.dll
 
   File *.exe

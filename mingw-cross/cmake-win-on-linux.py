@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 # Script to build windows installer packages for LAMMPS
-# (c) 2017,2018,2019,2020,2021,2022 Axel Kohlmeyer <akohlmey@gmail.com>
+# (c) 2017,2018,2019,2020,2021,2022,2023,2024 Axel Kohlmeyer <akohlmey@gmail.com>
 
 from __future__ import print_function
 import sys,os,shutil,glob,re,subprocess,tarfile,gzip,time,inspect
@@ -299,7 +299,7 @@ if guiflag:
     qtconf.close()
 
 print("Compiling")
-system("cmake --build . --parallel 8")
+system("cmake --build . --parallel %d" % numcpus)
 print("Done")
 
 print("Configuring demo plugin build with CMake")
@@ -332,7 +332,7 @@ if not adminflag and not pythonflag and not msixflag and not guiflag:
   print("Done")
 
   print("Compiling and building installer")
-  txt = system("cmake --build paceplugin --target package")
+  txt = system("cmake --build paceplugin --target package --parallel %d" % numcpus)
   if verbose: print(txt)
   for exe in glob.glob('paceplugin/LAMMPS*plugin*.exe'):
     shutil.move(exe,os.path.join('..',os.path.basename(exe)))
@@ -351,14 +351,17 @@ if not adminflag and not pythonflag and not msixflag and not guiflag:
   print("Done")
 
   print("Compiling and building installer")
-  txt = system("cmake --build plumedplugin --target package")
+  txt = system("cmake --build plumedplugin --target package --parallel %d" % numcpus)
   if verbose: print(txt)
   for exe in glob.glob('plumedplugin/LAMMPS*plugin*.exe'):
     shutil.move(exe,os.path.join('..',os.path.basename(exe)))
   print("Done")
 
   print("Cloning lammps-plugin package")
-  txt = system("git clone -b %s --depth 1 git@github.com:lammps/lammps-plugins.git" % revflag)
+  if revflag == 'stable' or revflag == 'release' or rev2.match(revflag):
+      txt = system("git clone -b %s --depth 1 git@github.com:lammps/lammps-plugins.git" % revflag)
+  else:
+      txt = system("git clone -b develop --depth 1 git@github.com:lammps/lammps-plugins.git")
   if verbose: print(txt)
   print("Configuring LAMMPS plugin collection build with CMake")
   cmd = "mingw%s-cmake -D CMAKE_BUILD_TYPE=Release" % bitflag

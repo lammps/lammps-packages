@@ -33,6 +33,7 @@
         <li><a href="https://docs.lammps.org/Packages_details.html#pkg-ml-quip" target="_blank">ML-QUIP</a> (not fully ported to Windows),
         <li><a href="https://docs.lammps.org/Packages_details.html#pkg-netcdf" target="_blank">NETCDF</a> (requires an external library),
         <li><a href="https://docs.lammps.org/Packages_details.html#pkg-qmmm" target="_blank">QMMM</a> (only useful when linking to a QM software),
+        <li><a href="https://docs.lammps.org/Packages_details.html#pkg-rheo" target="_blank">RHEO</a> (requires an external library)
         <li><a href="https://docs.lammps.org/Packages_details.html#pkg-scafacos" target="_blank">SCAFACOS</a> (requires an external library).
         <li><a href="https://docs.lammps.org/Packages_details.html#pkg-vtk" target="_blank">VTK</a> (requires an external library).
       </ul>
@@ -87,7 +88,7 @@
         The following packages are currently available as plugin installer packages:
         <ul>
           <li><a href="https://docs.lammps.org/Packages_details.html#pkg-ml-pace" target="_blank">ML-PACE</a>
-          <li><a href="https://docs.lammps.org/Packages_details.html#pkg-plumed" target="_blank">PLUMED (since 27 June 2024)</a>
+          <li><a href="https://docs.lammps.org/Packages_details.html#pkg-plumed" target="_blank">PLUMED</a> (since 27 June 2024)
           <li><a href="https://github.com/psaidi/AEAM" target="_blank">USER-AEAM</a>
           <li><a href="https://matsci.org/t/discrepency-beween-old-version-and-new-version/50014/5" target="_blank">USER-BFIELD</a>
           <li><a href="https://sites.psu.edu/sinnott/software/" target="_blank">USER-REBOMOS</a> (only for LAMMPS versions before 17 April 2024)
@@ -213,9 +214,9 @@
         python.org </a> but should be usable with any Python interpreter that
       is for the same architecture (32-bit or 64-bit x86).</div><br>
     <div align="justify">
-      This module is <u>always</u> included and the packages with a Python
-      runtime include may import the LAMMPS python module from within their
-      Python functions or classes.  However, the LAMMPS installer packages
+      This module with the <i>Python interface to LAMMPS</i> is <u>always</u> included
+      and the packages with a Python runtime include may import the LAMMPS python module
+      from within their Python functions or classes.  However, the LAMMPS installer packages
       do not include a Python executable for standalone use.
     </div>
     <div style="clear:both;"></div>
@@ -226,9 +227,9 @@
     </div>
     <div align="justify">
       Installer packages with GUI in the file name, include additionally the
-      <a href="https://docs.lammps.org/Tools.html#lammps-gui">LAMMPS GUI</a>.</div><br>
+      <a href="https://docs.lammps.org/Howto_lammps_gui.html">LAMMPS GUI</a>.</div><br>
     <div align="justify">
-      This is essentially a notepad like text editor for input files (with
+      This is essentially a notepad like text editor for LAMMPS input files (with
       syntax highlighting for LAMMPS input) that is linked to the LAMMPS library
       so it can run LAMMPS inputs directly without a console window. The screen
       output from the simulation is captured and shown in a separate log window.

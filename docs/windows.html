@@ -374,12 +374,12 @@
     <p align="justify">
       Only the executable from the LAMMPS-MPI packages supports parallel execution
       via MPI (which can be combined with OpenMP multi-threading). For that you also
-      need to install MS-MPI from Microssoft linked above.
+      need to install MS-MPI from Microsoft linked above.
     </p>
 
     <p align="justify">
       MPI parallel executables have to be launched
-      with <strong><code>mpiexec -localonly # lmp ...</code></strong>
+      with <strong><code>mpiexec -n # lmp ...</code></strong>
       or <strong><code>mpiexec -np # lmp ...</code></strong> with "#"
       being then number of parallel processes to start.
     </p>

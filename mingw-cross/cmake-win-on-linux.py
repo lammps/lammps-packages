@@ -384,6 +384,8 @@ if not adminflag and not pythonflag and not msixflag and not guiflag:
 
 print("Building PDF manual")
 os.chdir(os.path.join(gitdir,"doc"))
+txt = system("make upgrade")
+if verbose: print(txt)
 txt = system("make pdf")
 if verbose: print(txt)
 shutil.move("Manual.pdf",os.path.join(builddir,"LAMMPS-Manual.pdf"))

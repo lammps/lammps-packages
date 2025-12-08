@@ -43,11 +43,13 @@ def getexe(url,name):
     os.remove(gzname)
 
 def system(cmd):
+    print('System command: ', cmd)
     try:
         txt = subprocess.check_output(cmd,stderr=subprocess.STDOUT,shell=True)
     except subprocess.CalledProcessError as e:
         print("Command '%s' returned non-zero exit status" % e.cmd)
-        error(e.output.decode('UTF-8'))
+        print(e.output)
+        error("System command failed")
     return txt.decode('UTF-8')
 
 def which(program):

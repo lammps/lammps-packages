@@ -433,7 +433,7 @@ if os.path.exists("examples/PACKAGES/mesont/TABTP_10_10.mesont"):
 # convert text files to CR-LF conventions
 txt = system("unix2dos LICENSE.txt README.txt tools/msi2lmp/README")
 if verbose: print(txt)
-txt = system("find bench examples potentials python tools/msi2lmp/frc_files -type f -print | xargs unix2dos")
+txt = system("find bench examples potentials python tools/msi2lmp/frc_files -type f -print | xargs unix2dos || :")
 if verbose: print(txt)
 # mass rename README to README.txt
 txt = system('for f in $(find tools bench examples potentials python -name README -print); do  mv -v $f $f.txt; done')

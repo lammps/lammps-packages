@@ -150,23 +150,22 @@ Section "${LAMMPS}" SecLammps
   File ${MINGW}/libbz2-1.dll
   File ${MINGW}/libgfortran-5.dll
   File ${MINGW}/libgomp-1.dll
-  File ${MINGW}/libhistory8.dll
   File ${MINGW}/libjpeg-62.dll
   File ${MINGW}/libpng16-16.dll
   File ${MINGW}/libpython*.dll
   File ${MINGW}/libquadmath-0.dll
-  File ${MINGW}/libreadline8.dll
   File ${MINGW}/libsqlite3-0.dll
   File ${MINGW}/libssl-*.dll
   File ${MINGW}/libssp-0.dll
   File ${MINGW}/libstdc++-6.dll
-  File ${MINGW}/libtermcap-0.dll
   File ${MINGW}/libwinpthread-1.dll
   File ${MINGW}/libbz2-1.dll
   File ${MINGW}/libzstd.dll
   File ${MINGW}/tcl86.dll
   File ${MINGW}/tk86.dll
   File ${MINGW}/libcurl-4.dll
+  File ${MINGW}/libpsl-5.dll
+  File ${MINGW}/libunistring-2.dll
   File ${MINGW}/libssh2-1.dll
   File ${MINGW}/libidn2-0.dll
   File ${MINGW}/libcrypto-3-x64.dll

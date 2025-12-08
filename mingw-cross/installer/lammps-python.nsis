@@ -141,6 +141,7 @@ Section "${LAMMPS}" SecLammps
   File lammps.ico
 
   SetOutPath "$INSTDIR\bin"
+  File ${MINGW}/iconv.dll
   File ${MINGW}/libgcc_s*.dll
   File ${MINGW}/libatomic-1.dll
   File ${MINGW}/libcrypto-*.dll

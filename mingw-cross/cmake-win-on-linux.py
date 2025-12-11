@@ -297,7 +297,7 @@ if verbose: print(txt)
 # create qt.conf file
 if guiflag:
   with open("qt.conf", "w") as qtconf:
-    qtconf.write("[Paths]\nPlugins = ../qt5plugins\n")
+    qtconf.write("[Paths]\nPlugins = ../qt6plugins\n")
     qtconf.close()
 
 print("Compiling")

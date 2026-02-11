@@ -343,7 +343,7 @@ if not adminflag and not pythonflag and not msixflag and not guiflag:
     shutil.move(exe,os.path.join('..',os.path.basename(exe)))
   print("Done")
 
-  if False:
+  if True:
     print("Configuring plumed plugin build with CMake")
     cmd = "mingw%s-cmake -D CMAKE_BUILD_TYPE=Release" % bitflag
     cmd += " -S %s/examples/PACKAGES/plumed/plugin -B plumedplugin" % gitdir

@@ -43,11 +43,13 @@ def getexe(url,name):
     os.remove(gzname)
 
 def system(cmd):
+    print('System command: ', cmd)
     try:
         txt = subprocess.check_output(cmd,stderr=subprocess.STDOUT,shell=True)
     except subprocess.CalledProcessError as e:
         print("Command '%s' returned non-zero exit status" % e.cmd)
-        error(e.output.decode('UTF-8'))
+        print(e.output)
+        error("System command failed")
     return txt.decode('UTF-8')
 
 def which(program):
@@ -296,7 +298,7 @@ if verbose: print(txt)
 # create qt.conf file
 if guiflag:
   with open("qt.conf", "w") as qtconf:
-    qtconf.write("[Paths]\nPlugins = ../qt5plugins\n")
+    qtconf.write("[Paths]\nPlugins = ../qt6plugins\n")
     qtconf.close()
 
 print("Compiling")
@@ -391,6 +393,8 @@ if not adminflag and not pythonflag and not msixflag and not guiflag:
 
 print("Building PDF manual")
 os.chdir(os.path.join(gitdir,"doc"))
+txt = system("make upgrade")
+if verbose: print(txt)
 txt = system("make pdf")
 if verbose: print(txt)
 shutil.move("Manual.pdf",os.path.join(builddir,"LAMMPS-Manual.pdf"))
@@ -436,7 +440,7 @@ if os.path.exists("examples/PACKAGES/mesont/TABTP_10_10.mesont"):
 # convert text files to CR-LF conventions
 txt = system("unix2dos LICENSE.txt README.txt tools/msi2lmp/README")
 if verbose: print(txt)
-txt = system("find bench examples potentials python tools/msi2lmp/frc_files -type f -print | xargs unix2dos")
+txt = system("find bench examples potentials python tools/msi2lmp/frc_files -type f -print | xargs unix2dos || :")
 if verbose: print(txt)
 # mass rename README to README.txt
 txt = system('for f in $(find tools bench examples potentials python -name README -print); do  mv -v $f $f.txt; done')

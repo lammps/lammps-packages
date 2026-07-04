@@ -288,7 +288,7 @@ cmd += " -DWITH_GZIP=on -DWITH_FFMPEG=on -DLAMMPS_EXCEPTIONS=on"
 cmd += " -DPKG_INTEL=no -DBUILD_LAMMPS_SHELL=on"
 cmd += " -DCMAKE_CXX_COMPILER_LAUNCHER=ccache"
 cmd += " -DPKG_PLUGIN=yes"
-cmd += " -DCMAKE_CXX_STANDARD=17"
+cmd += " -DCMAKE_CXX_STANDARD=20"
 if pythonflag: cmd += " -DPKG_PYTHON=yes"
 
 print("Running: ",cmd)
@@ -311,7 +311,7 @@ cmd += " -S %s/examples/plugins -B plugins" % gitdir
 cmd += " -DBUILD_SHARED_LIBS=on -DBUILD_MPI=%s -DBUILD_OMP=%s" % (mpiflag,ompflag)
 if parflag == 'ms': cmd += " -DUSE_MSMPI=on"
 cmd += " -DCMAKE_CXX_COMPILER_LAUNCHER=ccache"
-cmd += " -DCMAKE_CXX_STANDARD=17"
+cmd += " -DCMAKE_CXX_STANDARD=20"
 
 print("Running: ",cmd)
 txt = system(cmd)
@@ -329,7 +329,7 @@ if not adminflag and not pythonflag and not msixflag and not guiflag:
   cmd += " -DBUILD_SHARED_LIBS=on -DBUILD_MPI=%s -DBUILD_OMP=%s" % (mpiflag,ompflag)
   cmd += " -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DLAMMPS_SOURCE_DIR=%s/src" % gitdir
   if parflag == 'ms': cmd += " -DUSE_MSMPI=on"
-  cmd += " -DCMAKE_CXX_STANDARD=17"
+  cmd += " -DCMAKE_CXX_STANDARD=20"
 
   print("Running: ",cmd)
   txt = system(cmd)
@@ -350,7 +350,7 @@ if not adminflag and not pythonflag and not msixflag and not guiflag:
     cmd += " -DBUILD_SHARED_LIBS=on -DBUILD_MPI=%s -DBUILD_OMP=%s" % (mpiflag,ompflag)
     cmd += " -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DLAMMPS_SOURCE_DIR=%s/src" % gitdir
     if parflag == 'ms': cmd += " -DUSE_MSMPI=on"
-    cmd += " -DCMAKE_CXX_STANDARD=17"
+    cmd += " -DCMAKE_CXX_STANDARD=20"
 
     print("Running: ",cmd)
     txt = system(cmd)
@@ -377,7 +377,7 @@ if not adminflag and not pythonflag and not msixflag and not guiflag:
   cmd += " -DBUILD_SHARED_LIBS=on -DBUILD_MPI=%s -DBUILD_OMP=%s" % (mpiflag,ompflag)
   cmd += " -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DLAMMPS_SOURCE_DIR=%s/src" % gitdir
   if parflag == 'ms': cmd += " -DUSE_MSMPI=on"
-  cmd += " -DCMAKE_CXX_STANDARD=17"
+  cmd += " -DCMAKE_CXX_STANDARD=20"
 
   print("Running: ",cmd)
   txt = system(cmd)

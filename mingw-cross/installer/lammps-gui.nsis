@@ -194,10 +194,10 @@ Section "${LAMMPS}" SecLammps
 
   SetOutPath "$INSTDIR\bin"
   File ${MINGW}/iconv.dll
-  File ${MINGW}/icuuc76.dll
-  File ${MINGW}/icuio76.dll
-  File ${MINGW}/icui18n76.dll
-  File ${MINGW}/icudata76.dll
+  File ${MINGW}/icuuc7?.dll
+  File ${MINGW}/icuio7?.dll
+  File ${MINGW}/icui18n7?.dll
+  File ${MINGW}/icudata7?.dll
   File ${MINGW}/libexpat-1.dll
   File ${MINGW}/libgcc_s*.dll
   File ${MINGW}/libfftw3-3.dll

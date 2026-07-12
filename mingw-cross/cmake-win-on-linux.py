@@ -48,7 +48,7 @@ def system(cmd):
         txt = subprocess.check_output(cmd,stderr=subprocess.STDOUT,shell=True)
     except subprocess.CalledProcessError as e:
         print("Command '%s' returned non-zero exit status" % e.cmd)
-        print(e.output)
+        print(e.output.decode('UTF-8', 'replace'))
         error("System command failed")
     return txt.decode('UTF-8')
 
@@ -510,13 +510,13 @@ shutil.rmtree(builddir,True)
 if guiflag:
     print("Checking GUI installer for missing DLL files")
     unpack = os.path.join(builddir, "dllcheck")
-    for exe in glob.glob(os.path.join('..', 'LAMMPS-*-GUI-%s*.exe' % version)):
-    shutil.rmtree(unpack, True)
-    system("7z x -y -o%s %s" % (unpack, exe))
-    dirs = [os.path.join(unpack, d) for d in ('bin', 'qt6plugins', 'plugins')
-            if os.path.isdir(os.path.join(unpack, d))]
-    print(system("%s --sysroot %s %s" % (os.path.join(homedir, 'check_missing_dlls.py'),
-                                         mingwdir, ' '.join(dirs))))
+    for exe in glob.glob('LAMMPS-*GUI-%s*.exe' % version):
+        print("Checking: ", exe);
+        shutil.rmtree(unpack, True)
+        system("7z x -y -o%s %s" % (unpack, exe))
+        dirs = [os.path.join(unpack, d) for d in ('bin', 'qt6plugins', 'plugins')
+               if os.path.isdir(os.path.join(unpack, d))]
+        print(system("%s --sysroot %s %s" % (os.path.join(homedir, 'check_missing_dlls.py'), mingwdir, ' '.join(dirs))))
     shutil.rmtree(unpack, True)
 
 print("Done.")

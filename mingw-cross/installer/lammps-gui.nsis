@@ -222,9 +222,8 @@ Section "${LAMMPS}" SecLammps
   File ${MINGW}/Qt6Core.dll
   File ${MINGW}/Qt6Gui.dll
   File ${MINGW}/Qt6Widgets.dll
-  File ${MINGW}/Qt6Charts.dll
-  File ${MINGW}/Qt6OpenGL.dll
-  File ${MINGW}/Qt6OpenGLWidgets.dll
+  File ${MINGW}/Qt6Network.dll
+  File ${MINGW}/Qt6Svg.dll
   File ${MINGW}/libharfbuzz-0.dll
   File ${MINGW}/libpcre2-8-0.dll
   File ${MINGW}/libpcre2-16-0.dll

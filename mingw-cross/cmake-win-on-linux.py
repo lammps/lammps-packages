@@ -503,9 +503,6 @@ else:
 # clean up after successful build
 os.chdir('..')
 
-print("Cleaning up...")
-shutil.rmtree(builddir,True)
-
 # check GUI package for missing dll files
 if guiflag:
     print("Checking GUI installer for missing DLL files")
@@ -518,6 +515,9 @@ if guiflag:
                if os.path.isdir(os.path.join(unpack, d))]
         print(system("%s --sysroot %s %s" % (os.path.join(homedir, 'check_missing_dlls.py'), mingwdir, ' '.join(dirs))))
     shutil.rmtree(unpack, True)
+
+print("Cleaning up...")
+shutil.rmtree(builddir,True)
 
 print("Done.")
 

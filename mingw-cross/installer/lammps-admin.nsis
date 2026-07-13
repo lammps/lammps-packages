@@ -186,8 +186,6 @@ Section "${LAMMPS}" SecLammps
   File /r /x __pycache__ /x *.pyc python/lammps
 
   SetOutPath "$INSTDIR\plugins"
-  File plugins/helloplugin.so
-
   SetOutPath "$INSTDIR"
 
   # Register Application and its uninstaller
